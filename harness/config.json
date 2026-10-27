@@ -1,0 +1,96 @@
+{
+  "comum": {
+    "caminhos_protegidos": [
+      ".claude/",
+      "CLAUDE.md",
+      "harness/config.json",
+      "harness/baseline/",
+      "harness/estado/",
+      "harness/matriz/",
+      "harness/relatorios/",
+      "harness/rascunho/historico/",
+      "harness/log_decisoes.jsonl"
+    ],
+    "bloqueios_parada_max": 3
+  },
+  "diretorios_testes": ["tests/"],
+  "execucao_testes": {
+    "comando": "",
+    "relatorio_junit": "harness/estado/junit.xml",
+    "codigos_saida_vermelho": [1],
+    "timeout_segundos": 600,
+    "exigir_conteiner_sem_rede": true
+  },
+  "requisitos": {
+    "documento_fonte": "harness/entrada/especificacao.md",
+    "trecho_max_linhas": 80,
+    "teto_iteracoes": 40,
+    "falhas_consecutivas_max": 3,
+    "limiar_ambiguidade": 0.3,
+    "termos_criticos": {
+      "dado_pessoal": ["dado pessoal", "dados pessoais", "cpf", "rg", "e-mail", "email", "telefone", "endereco", "data de nascimento", "registro de cliente", "registros de cliente", "dados do cliente"],
+      "dinheiro": ["pagamento", "cobranca", "fatura", "saldo", "reembolso", "cartao", "pix", "boleto", "preco", "desconto"],
+      "autenticacao": ["login", "senha", "autenticacao", "autenticar", "token", "sessao", "permissao", "perfil de acesso", "credencial"],
+      "conformidade": ["lgpd", "retencao", "auditoria", "consentimento", "anonimizacao", "conformidade"],
+      "operacao_destrutiva": ["excluir", "exclusao", "apagar", "remover", "deletar"]
+    }
+  },
+  "manutencao": {
+    "teto_iteracoes": 60,
+    "falhas_consecutivas_max": 3,
+    "teto_minutos_por_severidade": { "alta": 5, "media": 20, "baixa": 45 },
+    "severidade_padrao": "alta",
+    "hipoteses_descartadas_max": 3,
+    "diretorio_logs_brutos": "harness/logs/brutos/",
+    "linhas_log_max": 200,
+    "comandos_permitidos": ["node .claude/ferramentas/buscar-log.js"]
+  },
+  "testes": {
+    "teto_iteracoes": 120,
+    "falhas_consecutivas_max": 3,
+    "falhas_ambiente_max": 3,
+    "limiar_sem_criterio": 0.3,
+    "diretorios_suporte": ["tests/fixtures/", "tests/support/"],
+    "caminhos_contrato": [],
+    "caminhos_implementacao_bloqueados": [],
+    "padroes_assercao": ["\\bassert\\w*\\b", "\\bexpect\\s*\\(", "\\.should\\b", "\\bverify\\w*\\s*\\("],
+    "padroes_nao_deterministicos": [
+      "Math\\.random\\s*\\(",
+      "Date\\.now\\s*\\(",
+      "new Date\\s*\\(\\s*\\)",
+      "\\bsetTimeout\\s*\\(",
+      "\\b(time\\.)?sleep\\s*\\(",
+      "\\busleep\\s*\\(",
+      "Thread\\.sleep\\s*\\(",
+      "System\\.currentTimeMillis\\s*\\(",
+      "\\b(LocalDate|LocalDateTime|Instant)\\.now\\s*\\(\\s*\\)",
+      "\\brandom\\.(random|randint|choice)\\s*\\(",
+      "\\b(mt_)?rand\\s*\\(\\s*\\)",
+      "\\bnow\\s*\\(\\s*\\)",
+      "\\btime\\s*\\(\\s*\\)"
+    ]
+  },
+  "codificacao": {
+    "teto_iteracoes": 80,
+    "falhas_consecutivas_max": 3,
+    "teto_tentativas": 5,
+    "comando_analise": "",
+    "manifestos_dependencia": ["package.json", "package-lock.json", "composer.json", "composer.lock", "pom.xml", "build.gradle", "build.gradle.kts", "requirements.txt", "pyproject.toml", "go.mod", "Cargo.toml"],
+    "padroes_segredo": [
+      "-----BEGIN [A-Z ]*PRIVATE KEY-----",
+      "\\bAKIA[0-9A-Z]{16}\\b",
+      "\\bgh[pousr]_[A-Za-z0-9]{36,}\\b",
+      "\\bsk-[A-Za-z0-9_-]{20,}\\b",
+      "\\bxox[baprs]-[A-Za-z0-9-]{10,}\\b",
+      "(?i)(password|passwd|senha|secret|segredo|api[_-]?key|token)\\s*[:=]\\s*['\"][^'\"\\s]{6,}['\"]",
+      "\\b[a-z]+://[^:/\\s]+:[^@/\\s]+@[^\\s]+"
+    ]
+  },
+  "projeto": {
+    "teto_iteracoes": 80,
+    "falhas_consecutivas_max": 3,
+    "categorias_rnf_criticas": ["seguranca", "desempenho", "disponibilidade"],
+    "termos_remocao": ["remover", "remocao", "excluir", "exclusao", "apagar", "deletar", "descontinuar", "eliminar"],
+    "lacunas_bloqueantes_max": 3
+  }
+}

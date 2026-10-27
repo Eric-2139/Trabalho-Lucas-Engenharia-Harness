@@ -1,0 +1,4 @@
+estado/
+log_decisoes.jsonl
+logs/brutos/*
+!logs/brutos/.gitkeep
