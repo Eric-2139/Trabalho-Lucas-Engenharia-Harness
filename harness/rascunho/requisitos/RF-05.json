@@ -1,0 +1,11 @@
+{
+  "id": "RF-05",
+  "texto": "O editor oferece uma biblioteca de objetos padrão para arrastar ao canvas.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado o editor aberto, então a biblioteca contém pelo menos porta, quadro, janela e relógio; quando o criador arrasta um item da biblioteca e o solta no canvas, então o objeto é inserido na parede ativa no ponto em que foi solto.",
+  "trecho_fonte": "O editor oferece uma biblioteca de objetos padrão",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

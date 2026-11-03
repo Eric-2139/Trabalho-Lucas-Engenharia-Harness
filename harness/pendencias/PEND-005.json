@@ -1,0 +1,19 @@
+{
+  "id": "PEND-005",
+  "tipo": "ambiguidade",
+  "agente_origem": "requisitos",
+  "req_ids": [
+    "RF-12",
+    "RF-15"
+  ],
+  "chamado_id": null,
+  "pergunta": "O que acontece quando o criador edita uma fase já publicada, e o salvamento automático a cada 30 s altera a versão que os jogadores estão jogando?",
+  "opcoes": [
+    "Publicar congela uma versão; edições e salvamento automático vão para um rascunho, que só substitui a publicada ao republicar e passar de novo na validação (RF-14)",
+    "O salvamento automático altera direto a fase publicada",
+    "Fase publicada fica bloqueada para edição; para editar é preciso despublicar ou duplicar (RF-03)"
+  ],
+  "contexto": "Trecho RF-12 (linha 59): 'O editor salva automaticamente a cada 30 segundos e sempre que o criador troca de parede'. Trecho RF-15 (linha 62): 'O criador pode publicar fase'. O documento não fala em edição pós-publicação. Com salvamento automático direto, uma fase publicada pode ficar não jogável no meio da edição, o que esvazia a validação antes de publicar (RF-14, linha 61).",
+  "impacto": "Define se o modelo de dados (fase em JSONB, linha 79) precisa de versão publicada separada do rascunho; bloqueia o projeto do armazenamento (agente 5) e os testes de publicação (agente 3). RF-12 e RF-15 ficam OK no texto atual, mas o critério pode mudar.",
+  "status": "aberta"
+}

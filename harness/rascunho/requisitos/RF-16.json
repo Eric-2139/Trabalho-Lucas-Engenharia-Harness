@@ -1,0 +1,11 @@
+{
+  "id": "RF-16",
+  "texto": "O jogador joga uma fase publicada, com verificação de respostas no servidor.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um jogador em uma fase publicada, quando responde a um enigma ou digita a senha da porta, então a resposta é enviada ao servidor e o resultado (certo ou errado, dígitos revelados, fim da fase) vem do servidor; ao alterar o código do navegador para aceitar qualquer resposta, a fase não avança.",
+  "trecho_fonte": "O jogador joga uma fase publicada, com verificação de respostas no servidor.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

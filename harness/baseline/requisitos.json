@@ -1,0 +1,482 @@
+{
+  "versao": "2026-11-01.2",
+  "aprovado_por": "Roberta Telles",
+  "aprovado_em": "2026-11-03T20:41:18.970Z",
+  "fonte": "Math Scape – Documento de Requisitos v1.1 (seções 4, 5, 7 e 9): decisões tomadas pela Roberta e pela equipe em 01/11/2026, aplicadas ao rascunho do agente 1 (execução de 03/11/2026).",
+  "pendencias_abertas": [
+    "PEND-005",
+    "PEND-006"
+  ],
+  "nao_promovidos": [
+    {
+      "id": "RNF-11",
+      "motivo": "Restrições tecnológicas não viram requisito: ficam como \"Stack definida\" (seção 8 do Documento de Requisitos) e são entrada do Projeto do Sistema."
+    }
+  ],
+  "requisitos": [
+    {
+      "id": "RF-01",
+      "texto": "Cadastro e login; login exigido só para criar fases, jogar fases publicadas não exige login.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Dado um visitante, quando se cadastra com nome, e-mail e senha, então consegue fazer login. Sem login, ao tentar acessar o editor, é encaminhado ao login; sem login, consegue jogar uma fase publicada.",
+      "trecho_fonte": "O usuário pode se cadastrar e fazer login. O login é exigido só para criar fases; jogar fases publicadas não exige login.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RF-01",
+        "RF-02"
+      ]
+    },
+    {
+      "id": "RF-02",
+      "texto": "Criar, renomear, duplicar e excluir as próprias fases (sala de 5 paredes); excluir fase publicada exige confirmação; exclusão não se desfaz com Ctrl+Z.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Dado um criador logado, criar, renomear, duplicar e excluir refletem na lista dele. Excluir fase publicada pede confirmação: cancelando, nada muda; confirmando, ela sai da tela Escolher Fase. Ctrl+Z não restaura fase excluída. Tentar alterar fase de outro criador (interface ou API) é recusado.",
+      "trecho_fonte": "O criador pode criar, renomear, duplicar e excluir fase.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RF-03"
+      ]
+    },
+    {
+      "id": "RF-03",
+      "texto": "Editar as 5 paredes em área de proporção fixa, trocando por abas.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Dado o editor aberto, existem 5 abas; cada aba mostra só os objetos daquela parede, e a área mantém a proporção ao redimensionar a janela.",
+      "trecho_fonte": "O editor permite editar as 5 paredes da sala em um canvas com proporção fixa, alternando entre elas por abas.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RF-04"
+      ]
+    },
+    {
+      "id": "RF-04",
+      "texto": "Biblioteca de objetos: porta, quadro, janela, relógio e os objetos da fase original.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "A biblioteca contém porta, quadro, janela, relógio e cada objeto da fase original (entre eles giz, selo e árvore); arrastar qualquer um até a parede ativa o coloca nela.",
+      "trecho_fonte": "O editor oferece uma biblioteca de objetos padrão (porta, quadro, janela, relógio etc.) para arrastar ao canvas.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RF-05"
+      ]
+    },
+    {
+      "id": "RF-05",
+      "texto": "Mover, redimensionar, rotacionar, ordenar camadas, duplicar e excluir objetos.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Mover, redimensionar e rotacionar são mantidos após recarregar; mudar camada altera a sobreposição; duplicar cria cópia na mesma parede; excluir remove o objeto.",
+      "trecho_fonte": "O criador pode mover, redimensionar, rotacionar, ordenar camadas, duplicar e excluir objetos.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RF-06"
+      ]
+    },
+    {
+      "id": "RF-06",
+      "texto": "Enviar imagens PNG, JPG ou WebP de até 5 MB para fundo ou objeto.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Média",
+      "criterio_aceitacao": "PNG, JPG ou WebP de até 5 MB pode ser usado como fundo ou objeto; outro formato ou mais de 5 MB é recusado com mensagem e nada é gravado.",
+      "trecho_fonte": "O criador pode enviar imagem própria para fundo de parede e para objetos, nos formatos PNG, JPG ou WebP, com até 5 MB.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RF-07"
+      ]
+    },
+    {
+      "id": "RF-07",
+      "texto": "4 tipos de objeto: decoração (só visual), fala, enigma e porta.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Todo objeto tem exatamente um dos 4 tipos; a decoração não tem campos de comportamento; tipo fora dos quatro ou decoração com fala é recusado pelo schema.",
+      "trecho_fonte": "Cada objeto é de um dos 4 tipos: decoração, fala, enigma ou porta.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-001"
+      ],
+      "origem_rascunho": [
+        "RF-08"
+      ]
+    },
+    {
+      "id": "RF-08",
+      "texto": "Configurar fala (texto), enigma (pergunta, uma ou mais respostas, dica, zero ou mais dígitos) e porta (senha de 4 a 8 dígitos, padrão 5).",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Fala grava texto. Enigma grava pergunta, uma ou mais respostas, dica e zero ou mais dígitos (enigma sem dígito é aceito, como na parede esquerda). Porta começa com 5 dígitos, aceita de 4 a 8 e rejeita 3, 9 ou não dígitos.",
+      "trecho_fonte": "O criador configura a interação do objeto: fala (texto), enigma (pergunta, resposta, dica, dígito revelado), porta (senha final).",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-001",
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RF-08",
+        "RF-09",
+        "RF-10"
+      ]
+    },
+    {
+      "id": "RF-09",
+      "texto": "Desfazer e refazer com Ctrl+Z e Ctrl+Y.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Média",
+      "criterio_aceitacao": "Após mover um objeto, Ctrl+Z o devolve à posição anterior e Ctrl+Y à nova.",
+      "trecho_fonte": "O editor tem desfazer e refazer (Ctrl+Z / Ctrl+Y).",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RF-11"
+      ]
+    },
+    {
+      "id": "RF-10",
+      "texto": "Salvamento automático a cada 30 s, ao trocar de parede e ao mandar salvar.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Alteração não salva é gravada em até 30 s, ao trocar de parede e ao mandar salvar; ao recarregar, ela está presente.",
+      "trecho_fonte": "O editor salva automaticamente a cada 30 segundos e sempre que o criador troca de parede, além do salvamento manual.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-005"
+      ],
+      "origem_rascunho": [
+        "RF-12"
+      ]
+    },
+    {
+      "id": "RF-11",
+      "texto": "Jogar a fase dentro do editor para testar.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "O modo testar joga a fase com as regras do jogador, conferindo respostas no servidor; ao sair, a fase está inalterada.",
+      "trecho_fonte": "O modo testar permite jogar a fase dentro do editor.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RF-13"
+      ]
+    },
+    {
+      "id": "RF-12",
+      "texto": "Bloquear a publicação se algum dígito da senha não estiver ligado a um enigma, indicando quais.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Média",
+      "criterio_aceitacao": "Com todas as posições da senha ligadas a enigmas, publica. Com senha 92139 e posições 2 e 5 sem enigma, a publicação é recusada e o sistema mostra as posições 2 e 5.",
+      "trecho_fonte": "O sistema valida se a fase é jogável antes de publicar: todos os dígitos da senha atribuídos a um enigma.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RF-14"
+      ]
+    },
+    {
+      "id": "RF-13",
+      "texto": "Publicar fase; tela Escolher Fase lista as publicadas.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Fase não publicada não aparece em Escolher Fase; publicada, aparece e qualquer jogador consegue jogar.",
+      "trecho_fonte": "O criador pode publicar fase, e a tela Escolher Fase lista as fases publicadas.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-005"
+      ],
+      "origem_rascunho": [
+        "RF-15"
+      ]
+    },
+    {
+      "id": "RF-14",
+      "texto": "Exportar as próprias fases e importar fase em JSON.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Baixa",
+      "criterio_aceitacao": "Exportar e importar o mesmo arquivo gera fase igual; arquivo fora do schema é recusado; exportar fase de outro criador é recusado.",
+      "trecho_fonte": "O criador pode exportar e importar fase em JSON.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-004"
+      ],
+      "origem_rascunho": [
+        "RF-17"
+      ]
+    },
+    {
+      "id": "RF-15",
+      "texto": "Enigma resolvido revela dígitos; aceita qualquer resposta cadastrada; porta abre só com a senha completa.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Enigma com respostas A e B fica resolvido com A ou B e revela seus dígitos; outra resposta não revela nada. A porta abre só com a senha completa correta.",
+      "trecho_fonte": "O jogador joga uma fase publicada, com verificação de respostas no servidor.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RF-09",
+        "RF-16"
+      ]
+    },
+    {
+      "id": "RF-16",
+      "texto": "Decoração não reage ao clique; fala ao clicar é sempre objeto do tipo fala.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Média",
+      "criterio_aceitacao": "Clicar numa decoração não mostra fala nem muda o jogo; clicar numa fala com texto T mostra T.",
+      "trecho_fonte": "objetos decorativos mostram falas",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-001"
+      ],
+      "origem_rascunho": [
+        "RF-08"
+      ]
+    },
+    {
+      "id": "RF-17",
+      "texto": "Enigma com dica exibe ícone de dica que mostra a dica cadastrada.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Média",
+      "criterio_aceitacao": "Enigma com dica D mostra ícone que exibe D; enigma sem dica não mostra ícone; não existe objeto de dica separado.",
+      "trecho_fonte": "ícones de interrogação dão dicas",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-001"
+      ],
+      "origem_rascunho": [
+        "RF-08"
+      ]
+    },
+    {
+      "id": "RF-18",
+      "texto": "Fase original recriada com os mesmos enigmas, respostas, dígitos e senha 92139.",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "A fase original tem: esquerda, enigmas 15 e 40 (sem dígito, dados para o teto); teto 55 → 92; direita 123 → 1; frente 310 → 3; fundo -15 ou 80 → 9. Resolvendo tudo e digitando 92139, a porta abre. Perguntas iguais às do Math_Scape_Telas; animação do selo e da árvore não exigida.",
+      "trecho_fonte": "A fase original \"Escola\" é recriada no novo sistema com os mesmos enigmas, respostas, dígitos e senha",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-001"
+      ],
+      "origem_rascunho": [
+        "RF-18"
+      ]
+    },
+    {
+      "id": "RF-19",
+      "texto": "Usuário pode excluir a própria conta e seus dados (LGPD).",
+      "categoria": "funcional",
+      "subcategoria": null,
+      "prioridade": "Alta",
+      "criterio_aceitacao": "Ao excluir a própria conta e confirmar, a sessão acaba, o login é recusado e nome, e-mail e hash deixam de existir no banco; cancelando, a conta continua; excluir conta de outro usuário é recusado.",
+      "trecho_fonte": "Conformidade básica com a LGPD",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RNF-06"
+      ]
+    },
+    {
+      "id": "RNF-01",
+      "texto": "Duas últimas versões estáveis de Chrome, Edge e Firefox, no computador, tela mínima 1280x720; abaixo disso, aviso.",
+      "categoria": "nao_funcional",
+      "subcategoria": "compatibilidade",
+      "prioridade": null,
+      "criterio_aceitacao": "Nas duas últimas versões de Chrome, Edge e Firefox, a 1280x720 ou mais, o fluxo criar, publicar e jogar é concluído; abaixo disso aparece um aviso.",
+      "trecho_fonte": "Navegadores desktop atuais (Chrome, Edge, Firefox); resolução mínima 1280x720.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RNF-01"
+      ]
+    },
+    {
+      "id": "RNF-02",
+      "texto": "Sala em 16:9 com posições relativas, escalando a partir de 1280x720.",
+      "categoria": "nao_funcional",
+      "subcategoria": "portabilidade",
+      "prioridade": null,
+      "criterio_aceitacao": "Em 1280x720, 1920x1080 e 2560x1440, a sala fica em 16:9 e os objetos mantêm posição e tamanho relativos.",
+      "trecho_fonte": "Canvas em proporção 16:9 com coordenadas relativas (0 a 1), para a fase funcionar em qualquer tamanho de tela.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RNF-02"
+      ]
+    },
+    {
+      "id": "RNF-03",
+      "texto": "Arrastar objetos a pelo menos 30 quadros por segundo com até 50 objetos por parede.",
+      "categoria": "nao_funcional",
+      "subcategoria": "desempenho",
+      "prioridade": null,
+      "criterio_aceitacao": "Com 50 objetos numa parede, arrastar mantém pelo menos 30 quadros por segundo.",
+      "trecho_fonte": "Arrastar objetos com no mínimo 30 quadros por segundo com até 50 objetos por parede.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-006"
+      ],
+      "origem_rascunho": [
+        "RNF-03"
+      ]
+    },
+    {
+      "id": "RNF-04",
+      "texto": "Respostas e senha nunca vão ao navegador; conferência no servidor, inclusive no modo testar.",
+      "categoria": "nao_funcional",
+      "subcategoria": "seguranca",
+      "prioridade": null,
+      "criterio_aceitacao": "Inspecionando todas as respostas HTTP durante o jogo e no modo testar, nenhuma resposta nem senha aparece; o servidor devolve só certo/errado e dígitos revelados.",
+      "trecho_fonte": "Respostas e senha nunca enviadas ao navegador do jogador.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RNF-04"
+      ]
+    },
+    {
+      "id": "RNF-05",
+      "texto": "Senhas com hash (argon2 ou bcrypt); login por sessão em cookie httpOnly.",
+      "categoria": "nao_funcional",
+      "subcategoria": "seguranca",
+      "prioridade": null,
+      "criterio_aceitacao": "O banco guarda só hash argon2 ou bcrypt; o cookie de sessão tem o atributo HttpOnly.",
+      "trecho_fonte": "Senhas de usuário com hash (argon2 ou bcrypt); login por sessão em cookie httpOnly.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RNF-05"
+      ]
+    },
+    {
+      "id": "RNF-06",
+      "texto": "Cadastro coleta somente nome, e-mail e senha (LGPD).",
+      "categoria": "nao_funcional",
+      "subcategoria": "conformidade",
+      "prioridade": null,
+      "criterio_aceitacao": "O cadastro aceita e grava só nome, e-mail e senha; campo extra não é gravado.",
+      "trecho_fonte": "Conformidade básica com a LGPD: o cadastro coleta só nome, e-mail e senha.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-002"
+      ],
+      "origem_rascunho": [
+        "RNF-06"
+      ]
+    },
+    {
+      "id": "RNF-07",
+      "texto": "Interface em português, contraste WCAG 2.1 AA e navegação por teclado no login, Escolher Fase e barra do editor.",
+      "categoria": "nao_funcional",
+      "subcategoria": "usabilidade",
+      "prioridade": null,
+      "criterio_aceitacao": "Textos em português; contraste mínimo de 4,5:1 (3:1 para texto grande); login, Escolher Fase e barra do editor operáveis só pelo teclado, com foco visível.",
+      "trecho_fonte": "Interface em português; contraste e navegação por teclado nos menus.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [
+        "PEND-003"
+      ],
+      "origem_rascunho": [
+        "RNF-07",
+        "RNF-08"
+      ]
+    },
+    {
+      "id": "RNF-08",
+      "texto": "Pessoa que não programa cria e publica uma fase jogável em menos de 30 minutos.",
+      "categoria": "nao_funcional",
+      "subcategoria": "usabilidade",
+      "prioridade": null,
+      "criterio_aceitacao": "Participante que não programa, sem ajuda, publica uma fase jogável em menos de 30 minutos.",
+      "trecho_fonte": "Uma pessoa sem conhecimento de programação cria e publica uma fase jogável em menos de 30 minutos.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RNF-09"
+      ]
+    },
+    {
+      "id": "RNF-09",
+      "texto": "Toda fase é um documento JSON validado por um schema único.",
+      "categoria": "nao_funcional",
+      "subcategoria": "manutenibilidade",
+      "prioridade": null,
+      "criterio_aceitacao": "Documento fora do schema é recusado ao salvar, publicar e importar; documento válido é aceito nos três.",
+      "trecho_fonte": "Toda fase é um documento JSON (paredes, objetos, posições, interações), validado por um schema único.",
+      "status": "OK",
+      "conflita_com": [],
+      "pendencias": [],
+      "origem_rascunho": [
+        "RNF-10"
+      ]
+    }
+  ]
+}

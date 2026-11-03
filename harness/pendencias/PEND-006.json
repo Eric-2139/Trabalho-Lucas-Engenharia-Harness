@@ -1,0 +1,18 @@
+{
+  "id": "PEND-006",
+  "tipo": "ambiguidade",
+  "agente_origem": "requisitos",
+  "req_ids": [
+    "RNF-03"
+  ],
+  "chamado_id": null,
+  "pergunta": "Em qual máquina de referência os 30 quadros por segundo com 50 objetos por parede devem ser medidos?",
+  "opcoes": [
+    "Máquina de referência definida pela equipe (informar CPU, GPU e memória)",
+    "Computador típico de laboratório escolar (informar a configuração mínima)",
+    "Ambiente de CI com Playwright e CPU limitada (informar o fator de throttling)"
+  ],
+  "contexto": "Trecho (linha 70): 'Arrastar objetos com no mínimo 30 quadros por segundo com até 50 objetos por parede.' A métrica existe, mas sem hardware de referência ela passa ou falha conforme a máquina do testador. A linha 68 fixa navegadores e resolução, mas não o hardware.",
+  "impacto": "RNF-03 fica OK com critério, mas o teste de desempenho do agente 3 não é reprodutível até essa resposta.",
+  "status": "aberta"
+}

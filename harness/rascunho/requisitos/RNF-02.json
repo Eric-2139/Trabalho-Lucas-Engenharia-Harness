@@ -1,0 +1,11 @@
+{
+  "id": "RNF-02",
+  "texto": "O canvas usa proporção 16:9 com coordenadas relativas (0 a 1), para a fase funcionar em qualquer tamanho de tela.",
+  "categoria": "nao_funcional",
+  "subcategoria": "portabilidade",
+  "criterio_aceitacao": "Dado uma fase salva, então as posições e os tamanhos dos objetos no JSON estão entre 0 e 1, relativos à parede; quando a mesma fase é exibida em 1280x720 e em 1920x1080, então o canvas mantém 16:9 e cada objeto ocupa a mesma posição e o mesmo tamanho relativos.",
+  "trecho_fonte": "Canvas em proporção 16:9 com coordenadas relativas (0 a 1), para a fase funcionar em qualquer tamanho de tela.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

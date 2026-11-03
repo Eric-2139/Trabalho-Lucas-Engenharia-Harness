@@ -1,0 +1,11 @@
+{
+  "id": "RNF-03",
+  "texto": "Arrastar objetos no editor mantém no mínimo 30 quadros por segundo com até 50 objetos por parede.",
+  "categoria": "nao_funcional",
+  "subcategoria": "desempenho",
+  "criterio_aceitacao": "Dado uma parede com 50 objetos aberta no editor, em navegador coberto por RNF-01, quando o criador arrasta um objeto continuamente, então a taxa de quadros medida durante o arraste é de no mínimo 30 quadros por segundo.",
+  "trecho_fonte": "Arrastar objetos com no mínimo 30 quadros por segundo com até 50 objetos por parede.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": ["PEND-006"]
+}

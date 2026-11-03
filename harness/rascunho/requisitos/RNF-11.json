@@ -1,0 +1,11 @@
+{
+  "id": "RNF-11",
+  "texto": "O sistema segue as restrições tecnológicas da especificação para front, back, banco, testes e repositório.",
+  "categoria": "nao_funcional",
+  "subcategoria": "restricao_tecnologica",
+  "criterio_aceitacao": "Dado o repositório do MVP, então: front e back em TypeScript; front em React + Vite com react-konva no canvas do editor; estado e desfazer/refazer com Zustand + zundo; schema e validação com Zod no front e no back; backend em Node.js + Fastify; PostgreSQL com a fase em coluna JSONB, acessado via Prisma; imagens no disco do servidor; testes com Vitest, Testing Library e Playwright; monorepo com pnpm workspaces e CI em GitHub Actions.",
+  "trecho_fonte": "TypeScript no front e no back; React + Vite; react-konva no canvas do editor",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RNF-10",
+  "texto": "Toda fase é um documento JSON (paredes, objetos, posições, interações), validado por um schema único.",
+  "categoria": "nao_funcional",
+  "subcategoria": "interoperabilidade",
+  "criterio_aceitacao": "Dado qualquer fase salva, publicada, exportada ou importada, então ela é um documento JSON com paredes, objetos, posições e interações que passa na validação de um único schema; quando um documento não passa no schema, então não é aceito como fase.",
+  "trecho_fonte": "Toda fase é um documento JSON (paredes, objetos, posições, interações), validado por um schema único.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

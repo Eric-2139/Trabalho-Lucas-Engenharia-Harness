@@ -1,0 +1,11 @@
+{
+  "id": "RF-09",
+  "texto": "Um enigma pode ter mais de uma resposta certa e pode revelar mais de um dígito.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um enigma configurado com as respostas certas -15 e 80, quando o jogador responde -15 ou 80, então o enigma é resolvido, e quando responde outro valor, então a resposta é recusada; dado um enigma configurado para revelar os dígitos 9 e 2, quando é resolvido, então os dois dígitos são revelados.",
+  "trecho_fonte": "Um enigma pode ter mais de uma resposta certa",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

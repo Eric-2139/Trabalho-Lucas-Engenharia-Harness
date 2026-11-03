@@ -1,0 +1,11 @@
+{
+  "id": "RNF-04",
+  "texto": "As respostas dos enigmas e a senha final nunca são enviadas ao navegador do jogador.",
+  "categoria": "nao_funcional",
+  "subcategoria": "seguranca",
+  "criterio_aceitacao": "Dado um jogador em uma fase publicada, quando todo o tráfego de rede e todo o código e os dados recebidos pelo navegador são inspecionados (DevTools) do início ao fim da fase, então nenhuma resposta de enigma nem a senha final aparece neles.",
+  "trecho_fonte": "Respostas e senha nunca enviadas ao navegador do jogador.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

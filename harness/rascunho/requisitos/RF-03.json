@@ -1,0 +1,11 @@
+{
+  "id": "RF-03",
+  "texto": "O criador pode criar, renomear, duplicar e excluir fase.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um criador autenticado, quando cria uma fase, então ela aparece na lista de fases dele; quando renomeia a fase, então o novo nome é exibido; quando duplica a fase, então surge outra fase com as mesmas paredes, objetos e interações e identificador distinto; quando exclui a fase X, então X deixa de aparecer na lista dele.",
+  "trecho_fonte": "O criador pode criar, renomear, duplicar e excluir fase.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

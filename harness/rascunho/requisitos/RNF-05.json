@@ -1,0 +1,11 @@
+{
+  "id": "RNF-05",
+  "texto": "Senhas de usuário são armazenadas com hash argon2 ou bcrypt, e o login usa sessão em cookie httpOnly.",
+  "categoria": "nao_funcional",
+  "subcategoria": "seguranca",
+  "criterio_aceitacao": "Dado um usuário cadastrado, então o valor armazenado para a senha é um hash argon2 ou bcrypt, e não o texto original; quando o usuário faz login, então a sessão é mantida por um cookie com o atributo httpOnly, inacessível via document.cookie.",
+  "trecho_fonte": "Senhas de usuário com hash (argon2 ou bcrypt); login por sessão em cookie httpOnly.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

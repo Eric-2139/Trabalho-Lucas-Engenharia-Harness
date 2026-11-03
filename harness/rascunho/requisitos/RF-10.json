@@ -1,0 +1,11 @@
+{
+  "id": "RF-10",
+  "texto": "A senha final da fase tem de 4 a 8 dígitos, escolhidos pelo criador; o padrão é 5.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado o criador configurando a porta de uma fase nova, então o tamanho proposto é de 5 dígitos; quando define uma sequência de 4 a 8 dígitos, então ela é aceita; quando define 3 ou 9 dígitos, ou inclui caractere que não é dígito, então ela é recusada.",
+  "trecho_fonte": "A senha final tem de 4 a 8 dígitos, escolhidos pelo criador; o padrão é 5.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

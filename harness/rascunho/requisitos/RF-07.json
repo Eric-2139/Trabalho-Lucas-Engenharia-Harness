@@ -1,0 +1,11 @@
+{
+  "id": "RF-07",
+  "texto": "O criador pode enviar imagem própria para fundo de parede e para objetos, nos formatos PNG, JPG ou WebP, com até 5 MB.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um criador no editor, quando envia uma imagem PNG, JPG ou WebP de até 5 MB como fundo de parede ou como imagem de objeto, então a imagem é aceita e exibida no canvas; quando envia arquivo em outro formato ou com mais de 5 MB, então o envio é recusado com mensagem e nada muda na fase.",
+  "trecho_fonte": "O criador pode enviar imagem própria para fundo de parede e para objetos, nos formatos PNG, JPG ou WebP, com até 5 MB.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

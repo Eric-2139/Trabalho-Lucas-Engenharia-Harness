@@ -1,0 +1,11 @@
+{
+  "id": "RF-17",
+  "texto": "O criador pode exportar e importar fase em JSON.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "",
+  "trecho_fonte": "O criador pode exportar e importar fase em JSON.",
+  "status": "AMBIGUO",
+  "conflita_com": [],
+  "pendencias": ["PEND-004"]
+}

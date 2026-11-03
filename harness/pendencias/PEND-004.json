@@ -1,0 +1,21 @@
+{
+  "id": "PEND-004",
+  "tipo": "ambiguidade",
+  "agente_origem": "requisitos",
+  "req_ids": [
+    "RF-17"
+  ],
+  "chamado_id": null,
+  "pergunta": "Quais fases cada usuário pode exportar e importar em JSON, e o JSON exportado inclui respostas e senha final?",
+  "opcoes": [
+    "Só o autor exporta as próprias fases, com respostas e senha; a importação cria uma nova fase do importador e o JSON precisa passar no schema único, senão é recusado inteiro",
+    "Qualquer usuário exporta fases publicadas, mas sem respostas nem senha (o JSON exportado não é jogável sem o autor)",
+    "Qualquer usuário exporta fases publicadas com respostas e senha (contraria RNF-04)"
+  ],
+  "contexto": "Trecho (linha 64): 'O criador pode exportar e importar fase em JSON.' Não diz de quem é a fase. RNF-04 (linha 71): 'Respostas e senha nunca enviadas ao navegador do jogador'. Pela RNF-10 (linha 76), toda fase é um JSON com interações, então exportar fase de terceiros entregaria as respostas no navegador. O comportamento com JSON inválido na importação também não está definido.",
+  "impacto": "RF-17 fica sem critério de aceitação; a decisão afeta o desenho da API de exportação (agente 5) e o teste de sigilo de RNF-04 (agente 3).",
+  "status": "respondida",
+  "resposta": "Só o autor exporta as próprias fases (exportar fase de outro criador é recusado); importar cria fase do importador e arquivo fora do schema é recusado (RF-14).",
+  "respondida_por": "Roberta Telles",
+  "respondida_em": "2026-11-03T20:41:18.970Z"
+}

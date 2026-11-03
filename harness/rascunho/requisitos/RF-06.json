@@ -1,0 +1,11 @@
+{
+  "id": "RF-06",
+  "texto": "O criador pode mover, redimensionar, rotacionar, ordenar camadas, duplicar e excluir objetos.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um objeto selecionado no canvas, quando o criador o move, redimensiona ou rotaciona, então a posição, o tamanho e o ângulo salvos refletem a alteração; quando o envia para frente ou para trás, então a ordem de sobreposição entre objetos muda; quando o duplica, então surge uma cópia na mesma parede; quando o exclui, então o objeto deixa de existir na parede.",
+  "trecho_fonte": "O criador pode mover, redimensionar, rotacionar, ordenar camadas, duplicar e excluir objetos.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

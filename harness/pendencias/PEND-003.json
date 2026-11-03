@@ -1,0 +1,21 @@
+{
+  "id": "PEND-003",
+  "tipo": "ambiguidade",
+  "agente_origem": "requisitos",
+  "req_ids": [
+    "RNF-08"
+  ],
+  "chamado_id": null,
+  "pergunta": "Qual nível de contraste a interface deve atender?",
+  "opcoes": [
+    "WCAG 2.1 nível AA: razão mínima 4,5:1 para texto normal e 3:1 para texto grande e componentes de interface",
+    "WCAG 2.1 nível AAA: razão mínima 7:1 para texto normal",
+    "Outro (informar razão e escopo: só menus, ou também o canvas e as fases criadas pelos usuários)"
+  ],
+  "contexto": "Trecho (linha 74): 'Interface em português; contraste e navegação por teclado nos menus.' 'Contraste' não tem métrica nem escopo; não está claro se vale só para menus ou também para as imagens enviadas pelos criadores.",
+  "impacto": "Sem métrica, RNF-08 não tem teste automatizável (agente 3) nem paleta definível no projeto visual.",
+  "status": "respondida",
+  "resposta": "WCAG 2.1 AA (4,5:1; 3:1 para texto grande). Escopo dos menus: login, Escolher Fase e barra do editor (RNF-07).",
+  "respondida_por": "Roberta Telles",
+  "respondida_em": "2026-11-03T20:41:18.970Z"
+}

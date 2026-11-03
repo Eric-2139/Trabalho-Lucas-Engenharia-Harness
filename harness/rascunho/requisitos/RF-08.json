@@ -1,0 +1,11 @@
+{
+  "id": "RF-08",
+  "texto": "Cada objeto é de um dos 4 tipos (decoração, fala, enigma ou porta) e o criador configura a interação do objeto: fala (texto), enigma (pergunta, resposta, dica, dígito revelado), porta (senha final).",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um objeto no canvas, então ele tem exatamente um tipo entre decoração, fala, enigma e porta; quando o tipo é fala, o criador informa o texto; quando é enigma, informa pergunta, resposta, dica e dígito revelado; quando é porta, informa a senha final; no modo jogar, cada objeto executa a interação configurada para o seu tipo.",
+  "trecho_fonte": "O criador configura a interação do objeto",
+  "status": "CONFLITO",
+  "conflita_com": ["RF-18"],
+  "pendencias": ["PEND-001"]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RNF-07",
+  "texto": "A interface é em português e os menus são navegáveis por teclado.",
+  "categoria": "nao_funcional",
+  "subcategoria": "usabilidade",
+  "criterio_aceitacao": "Dado qualquer tela do editor e do player, então todos os textos da interface estão em português; dado qualquer menu, quando o usuário usa apenas o teclado, então alcança e aciona todas as opções do menu sem usar o mouse.",
+  "trecho_fonte": "Interface em português; contraste e navegação por teclado nos menus.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

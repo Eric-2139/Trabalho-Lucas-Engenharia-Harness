@@ -1,0 +1,11 @@
+{
+  "id": "RF-04",
+  "texto": "O editor permite editar as 5 paredes da sala em um canvas com proporção fixa, alternando entre elas por abas.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado o editor aberto em uma fase, então existem 5 abas (frente, direita, fundo, esquerda e teto); quando o criador seleciona uma aba, o canvas passa a exibir e editar a parede correspondente; quando a janela do navegador é redimensionada, o canvas mantém a mesma proporção.",
+  "trecho_fonte": "O editor permite editar as 5 paredes da sala em um canvas com proporção fixa, alternando entre elas por abas.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

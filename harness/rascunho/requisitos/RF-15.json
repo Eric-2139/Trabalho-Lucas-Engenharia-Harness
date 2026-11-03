@@ -1,0 +1,11 @@
+{
+  "id": "RF-15",
+  "texto": "O criador pode publicar fase, e a tela Escolher Fase lista as fases publicadas.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado uma fase que passa na validação de RF-14, quando o criador a publica, então ela passa a aparecer na tela Escolher Fase; dado uma fase não publicada, então ela não aparece nessa tela.",
+  "trecho_fonte": "O criador pode publicar fase, e a tela Escolher Fase lista as fases publicadas.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": ["PEND-005"]
+}

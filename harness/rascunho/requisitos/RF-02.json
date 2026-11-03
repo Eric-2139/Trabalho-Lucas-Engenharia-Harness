@@ -1,0 +1,11 @@
+{
+  "id": "RF-02",
+  "texto": "O login é exigido apenas para criar fases; jogar fases publicadas não exige login.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um visitante sem sessão, quando tenta criar uma fase, então é levado ao login e nenhuma fase é criada; dado o mesmo visitante, quando abre a tela Escolher Fase e inicia uma fase publicada, então joga a fase sem que o login seja solicitado.",
+  "trecho_fonte": "O login é exigido só para criar fases; jogar fases publicadas não exige login.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RF-01",
+  "texto": "O usuário pode se cadastrar e fazer login.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado um visitante sem conta, quando se cadastra informando nome, e-mail e senha, então a conta é criada; dado esse usuário cadastrado, quando faz login com as credenciais cadastradas, então inicia uma sessão autenticada; quando informa senha incorreta, então o login é recusado e nenhuma sessão é criada.",
+  "trecho_fonte": "O usuário pode se cadastrar e fazer login.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

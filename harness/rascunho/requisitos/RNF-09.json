@@ -1,0 +1,11 @@
+{
+  "id": "RNF-09",
+  "texto": "Uma pessoa sem conhecimento de programação cria e publica uma fase jogável em menos de 30 minutos.",
+  "categoria": "nao_funcional",
+  "subcategoria": "usabilidade",
+  "criterio_aceitacao": "Dado um participante sem conhecimento de programação diante do editor, quando recebe a tarefa de criar e publicar uma fase, então conclui com uma fase publicada que passou na validação de RF-14 em menos de 30 minutos, contados do início da tarefa.",
+  "trecho_fonte": "Uma pessoa sem conhecimento de programação cria e publica uma fase jogável em menos de 30 minutos.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

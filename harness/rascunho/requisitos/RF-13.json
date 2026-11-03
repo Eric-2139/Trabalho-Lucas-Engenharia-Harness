@@ -1,0 +1,11 @@
+{
+  "id": "RF-13",
+  "texto": "O modo testar permite jogar a fase dentro do editor.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado uma fase aberta no editor, quando o criador aciona o modo testar, então joga a fase dentro do editor com as falas, enigmas e porta configurados, sem precisar publicá-la, e ao sair do modo testar volta ao editor na mesma fase.",
+  "trecho_fonte": "O modo testar permite jogar a fase dentro do editor.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

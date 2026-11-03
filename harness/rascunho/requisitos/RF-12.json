@@ -1,0 +1,11 @@
+{
+  "id": "RF-12",
+  "texto": "O editor salva a fase automaticamente a cada 30 segundos e sempre que o criador troca de parede, além do salvamento manual.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado o criador com alterações não salvas no editor, quando se passam 30 segundos ou quando ele troca de aba de parede, então as alterações ficam persistidas sem ação dele (ao reabrir a fase, aparecem); quando ele aciona o salvamento manual, então as alterações ficam persistidas naquele momento.",
+  "trecho_fonte": "O editor salva automaticamente a cada 30 segundos e sempre que o criador troca de parede, além do salvamento manual.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": ["PEND-005"]
+}

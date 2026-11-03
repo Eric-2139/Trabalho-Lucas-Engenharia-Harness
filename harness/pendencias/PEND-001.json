@@ -1,0 +1,22 @@
+{
+  "id": "PEND-001",
+  "tipo": "conflito",
+  "agente_origem": "requisitos",
+  "req_ids": [
+    "RF-08",
+    "RF-18"
+  ],
+  "chamado_id": null,
+  "pergunta": "A fase 'Escola' deve se comportar igual ao legado (RF-18) mesmo onde o legado usa comportamentos que os 4 tipos de objeto e a configuração de interação do MVP (RF-08) não suportam?",
+  "opcoes": [
+    "Ampliar RF-08 no MVP: enigma que revela texto em vez de dígito, porta com mensagem final, dica por parede, objeto animado com a hora real e objeto que revela personagem",
+    "Manter RF-08 e reescrever RF-18 com a lista explícita do que fica para a versão 2 (como já foi feito com o selo e a árvore)",
+    "Adaptar a Escola aos 4 tipos: perguntas da esquerda viram falas, o relógio do teto vira decoração estática, o olho de Deus vira fala do Tet; 'igual ao legado' passa a valer só para enigmas, respostas, dígitos e senha"
+  ],
+  "contexto": "RF-18 (linha 65): 'é recriada no novo sistema com os mesmos enigmas, respostas, dígitos e senha, e se comporta igual ao legado'. Só a animação do selo e da árvore foi excluída. O inventário do legado (linhas 33-39) traz: (1) enigmas da esquerda com respostas 15 e 40 que revelam o texto 'Olhe para cima', e não um dígito; o glossário (linha 16) e RF-08 (linha 55) só preveem enigma que revela dígito; (2) 'um relógio animado com a hora real' no teto, que não é decoração estática, fala, enigma nem porta; (3) 'o olho de Deus, que revela o personagem Tet', o que se aproxima da 'mudança de cena', fora do escopo (linha 45); (4) porta que 'termina a fase com a mensagem do Tet e volta para Opções', mas RF-08 só configura a 'senha final' na porta e a tela Opções não existe no novo fluxo; (5) dica por parede ('Cada parede tem um ícone de dica'), mas RF-08 põe a dica dentro do enigma.",
+  "impacto": "Sem decisão, RF-18 não tem teste de aceitação fechado (agente 3), e o modelo de objetos do schema único (RNF-10) pode ter de mudar depois da implementação do editor. É o requisito com maior chance de virar defeito no teste de aceitação do cliente.",
+  "status": "respondida",
+  "resposta": "Manter os 4 tipos do MVP e reescrever RF-18 com o que fica fora (opção 2). A Escola mantém enigmas, respostas, dígitos e senha 92139. Enigmas da esquerda (15 e 40) são enigmas sem dígito, dados para o teto. A dica é a do próprio enigma (RF-17), sem objeto de dica separado. Decoração é só visual; objeto que fala usa o tipo fala (RF-16). Animação do selo e da árvore, relógio com hora real, revelação do Tet e volta para Opções não são exigidos (mudança de cena fica para a versão 2).",
+  "respondida_por": "Roberta Telles",
+  "respondida_em": "2026-11-03T20:41:18.970Z"
+}

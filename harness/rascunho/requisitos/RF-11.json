@@ -1,0 +1,11 @@
+{
+  "id": "RF-11",
+  "texto": "O editor tem desfazer e refazer pelos atalhos Ctrl+Z e Ctrl+Y.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado que o criador fez uma alteração no editor, quando pressiona Ctrl+Z, então a alteração é desfeita; quando em seguida pressiona Ctrl+Y, então a alteração é refeita.",
+  "trecho_fonte": "O editor tem desfazer e refazer",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

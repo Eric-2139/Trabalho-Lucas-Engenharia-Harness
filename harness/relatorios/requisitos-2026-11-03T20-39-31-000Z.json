@@ -1,0 +1,22 @@
+{
+  "agente": "requisitos",
+  "execucao": "a2a25d4951d954f48",
+  "inicio": "2026-11-03T20:32:59.571Z",
+  "fim": "2026-11-03T20:39:31.000Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "total_requisitos": 29,
+    "por_status": {
+      "OK": 16,
+      "AMBIGUO": 2,
+      "CONFLITO": 2,
+      "OK_PENDENTE_REVISAO": 9
+    },
+    "taxa_ambiguidade": 0.069,
+    "limiar_ambiguidade": 0.3,
+    "nao_fechados": 13
+  },
+  "bloqueios_por_politica": {}
+}

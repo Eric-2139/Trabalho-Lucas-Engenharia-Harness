@@ -1,0 +1,29 @@
+{
+  "id": "PEND-002",
+  "tipo": "revisao_critica",
+  "agente_origem": "requisitos",
+  "req_ids": [
+    "RF-01",
+    "RF-02",
+    "RF-03",
+    "RF-06",
+    "RF-10",
+    "RF-14",
+    "RNF-04",
+    "RNF-05",
+    "RNF-06"
+  ],
+  "chamado_id": null,
+  "pergunta": "Os critérios de aceitação dos requisitos em categoria crítica (autenticação, dado pessoal, conformidade, operação destrutiva e sigilo da senha do jogo) estão corretos e completos para irem ao baseline?",
+  "opcoes": [
+    "Aprovar todos como redigidos",
+    "Aprovar com ajustes (indicar por id)",
+    "Devolver para reanálise após as respostas dos pontos abertos listados no contexto"
+  ],
+  "contexto": "Pontos que o documento não define, por id: RF-01 (linha 48): recuperação de senha, logout, unicidade de e-mail e regra mínima de senha; o identificador do login não está definido (o legado tinha nickname, linha 24). RF-02: confirmar se modo testar, exportar e importar também exigem login. RF-03/RF-06: excluir fase pede confirmação? Excluir fase publicada a remove de Escolher Fase para jogadores em partida? A exclusão é lógica ou física? A exclusão de objeto é coberta por Ctrl+Z (RF-11)? RF-10/RF-14: aqui 'senha' é a senha final do jogo, não uma credencial (o termo entrou pela lista do P4), mas ela é segredo do jogo protegido por RNF-04; confirmar. A validação de RF-14 só checa dígitos atribuídos; uma fase sem porta é jogável? RNF-04 (linha 71): vale também para o modo testar e para o JSON exportado (ver PEND-004)? RNF-05 (linha 72): atributos Secure/SameSite e expiração de sessão não definidos. RNF-06 (linha 73): 'conformidade básica' não define base legal, consentimento, exclusão de conta pelo titular nem retenção; o legado coletava 'nickname', a especificação diz 'nome': nome civil ou apelido?",
+  "impacto": "Nenhum destes 9 requisitos vai ao baseline sem revisão humana (P4). Os de autenticação bloqueiam o agente 3 nos testes de cadastro e login e o agente 5 na decisão de sessão; RNF-04 bloqueia o desenho da API do player.",
+  "status": "respondida",
+  "resposta": "Aprovar com ajustes. RF-01: login por e-mail e senha; cadastro com nome, e-mail e senha. Criado o RF-19 (excluir a própria conta e seus dados). Excluir fase publicada exige confirmação; cada criador só mexe nas próprias fases; exclusão de fase não se desfaz com Ctrl+Z. Modo testar confere respostas no servidor (RNF-04). \"Senha\" em RF-08/RF-12 é a senha final do jogo, protegida por RNF-04. Recuperação de senha, expiração e atributos Secure/SameSite do cookie e consentimento formal não entram no baseline 1.1.",
+  "respondida_por": "Roberta Telles",
+  "respondida_em": "2026-11-03T20:41:18.970Z"
+}

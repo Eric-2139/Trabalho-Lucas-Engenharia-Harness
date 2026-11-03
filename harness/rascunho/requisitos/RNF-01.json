@@ -1,0 +1,11 @@
+{
+  "id": "RNF-01",
+  "texto": "O sistema funciona nos navegadores desktop atuais Chrome, Edge e Firefox, com resolução mínima de 1280x720.",
+  "categoria": "nao_funcional",
+  "subcategoria": "compatibilidade",
+  "criterio_aceitacao": "Dado a versão estável vigente de Chrome, Edge e Firefox para desktop na data do teste de aceitação, com a janela em 1280x720, quando os fluxos de cadastro, edição, teste, publicação e jogo são executados, então todos funcionam e nenhum controle fica fora da área visível.",
+  "trecho_fonte": "Navegadores desktop atuais (Chrome, Edge, Firefox); resolução mínima 1280x720.",
+  "status": "OK",
+  "conflita_com": [],
+  "pendencias": []
+}

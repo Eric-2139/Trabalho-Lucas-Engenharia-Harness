@@ -1,0 +1,11 @@
+{
+  "id": "RF-14",
+  "texto": "O sistema valida se a fase é jogável antes de publicar: todos os dígitos da senha final precisam estar atribuídos a um enigma.",
+  "categoria": "funcional",
+  "subcategoria": null,
+  "criterio_aceitacao": "Dado uma fase em que algum dígito da senha final não está atribuído a nenhum enigma, quando o criador tenta publicá-la, então a publicação é recusada e o(s) dígito(s) sem enigma são indicados; dado que todos os dígitos estão atribuídos a enigmas, quando o criador publica, então a validação não impede a publicação.",
+  "trecho_fonte": "O sistema valida se a fase é jogável antes de publicar: todos os dígitos da senha atribuídos a um enigma.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

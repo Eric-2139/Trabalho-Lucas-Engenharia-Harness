@@ -1,0 +1,11 @@
+{
+  "id": "RNF-06",
+  "texto": "Conformidade básica com a LGPD: o cadastro coleta só nome, e-mail e senha.",
+  "categoria": "nao_funcional",
+  "subcategoria": "conformidade",
+  "criterio_aceitacao": "Dado o formulário de cadastro, então ele solicita apenas nome, e-mail e senha; dado um usuário cadastrado, então o registro dele no banco não contém outro dado pessoal além desses.",
+  "trecho_fonte": "Conformidade básica com a LGPD: o cadastro coleta só nome, e-mail e senha.",
+  "status": "OK_PENDENTE_REVISAO",
+  "conflita_com": [],
+  "pendencias": ["PEND-002"]
+}

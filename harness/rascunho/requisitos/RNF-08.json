@@ -1,0 +1,11 @@
+{
+  "id": "RNF-08",
+  "texto": "A interface tem contraste adequado.",
+  "categoria": "nao_funcional",
+  "subcategoria": "acessibilidade",
+  "criterio_aceitacao": "",
+  "trecho_fonte": "contraste e navegação por teclado nos menus",
+  "status": "AMBIGUO",
+  "conflita_com": [],
+  "pendencias": ["PEND-003"]
+}
