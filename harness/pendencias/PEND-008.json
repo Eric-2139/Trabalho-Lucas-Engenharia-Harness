@@ -1,0 +1,24 @@
+{
+  "chamado_id": null,
+  "status": "respondida",
+  "criada_em": "2026-11-03T20:53:06.500Z",
+  "id": "PEND-008",
+  "tipo": "ambiguidade",
+  "agente_origem": "arquiteto",
+  "req_ids": [
+    "RF-15",
+    "RF-18"
+  ],
+  "pergunta": "Como a resposta digitada é comparada com as respostas cadastradas?",
+  "opcoes": [
+    "Exata após remover espaços nas pontas (\" 80 \" = \"80\"; \"Oitenta\" ≠ \"80\")",
+    "Também sem diferenciar maiúsculas e acentos (\"Tet\" = \"tet\")",
+    "Respostas numéricas comparadas como número (\"80\" = \"80,0\" = \"080\")"
+  ],
+  "contexto": "Questão 4 do Documento de Arquitetura. RF-15 diz que o enigma aceita qualquer resposta cadastrada, sem definir a comparação. A Escola tem respostas numéricas com sinal (\"-15\"). A regra fica isolada em respostaConfere (SchemaFase); até a decisão, vale a primeira opção.",
+  "impacto": "Muda o resultado do jogo para respostas digitadas com variação; define os casos de borda do RF-15 e do RF-18 (agente 3).",
+  "resposta": "Analisa somente o número: respostas são numéricas e a comparação é numérica (\" 80 \", \"080\", \"80,0\" = 80; texto sem número é errado).",
+  "respondida_por": "Roberta Telles",
+  "registrada_por": "Eric",
+  "respondida_em": "2026-11-03T21:05:36.830Z"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "LAC-010",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-01",
+    "Editor",
+    "Player"
+  ],
+  "justificativa": "RNF-01 tem duas partes: (1) duas últimas versões estáveis de Chrome, Edge e Firefox, com o fluxo criar, publicar e jogar concluído; (2) aviso abaixo de 1280x720. A ADR-006, mapeada na matriz, cobre só a parte (2). Para a parte (1) não há decisão: alvo de build (browserslist), APIs de navegador usadas (ex.: decodificação de WebP no canvas) nem matriz de navegadores no E2E (projetos Playwright chromium/firefox/msedge).",
+  "proposta": "Estender a ADR-006 ou registrar uma nota de decisão com o alvo de build e a matriz de navegadores do E2E que cobre o fluxo criar, publicar e jogar.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-006: browserslist das duas últimas versões e matriz Playwright chromium/msedge/firefox para criar, publicar e jogar.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

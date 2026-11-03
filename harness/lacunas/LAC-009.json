@@ -1,0 +1,19 @@
+{
+  "id": "LAC-009",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-07",
+    "Player"
+  ],
+  "justificativa": "RNF-07 exige contraste WCAG 2.1 AA e navegação por teclado com foco visível em login, Escolher Fase e barra do editor (escopo definido na resposta da PEND-003). A matriz mapeia RNF-07 para Editor e Player, sem decisão. O contrato do Editor cobre login e barra do editor. O contrato do Player, porém, não menciona contraste, teclado nem foco, e é nele que fica a tela Escolher Fase (apps/player). Na parte do Player, o mapeamento é só formal. Nenhum ADR define paleta ou tokens de cor que garantam 4,5:1 nos dois apps.",
+  "proposta": "Estender o contrato do Player (tela Escolher Fase) com as exigências do RNF-07 e, se quiser, registrar uma decisão leve de paleta/tokens comum a Editor e Player.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-003",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "Contrato do Player com as exigências do RNF-07 para Escolher Fase e tokens de cor comuns.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

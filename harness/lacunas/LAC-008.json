@@ -1,0 +1,20 @@
+{
+  "id": "LAC-008",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-04",
+    "Editor",
+    "Api"
+  ],
+  "justificativa": "O baseline diz, sem ressalva: 'Respostas e senha nunca vão ao navegador; conferência no servidor, inclusive no modo testar'. A ADR-003 (Consequências) restringe o alcance ao 'navegador do jogador e do modo testar' e manda o documento completo, com respostas e senha, ao navegador do autor (GET /fases/:id e GET /fases/:id/exportar). No modo testar, o contrato do Editor diz 'carrega projetarParaJogo do documento': a projeção é feita no cliente, a partir do documento completo já carregado no mesmo navegador. O critério ('inspecionando as respostas HTTP ... no modo testar, nenhuma resposta nem senha aparece') pode passar sem que o texto do requisito seja cumprido ao pé da letra. A leitura do arquiteto é razoável (o autor digita as respostas), mas é uma interpretação de RNF crítico de segurança, e nenhum humano a aprovou. A PEND-002 perguntou se o RNF-04 vale também para o modo testar e para o JSON exportado. A resposta tratou da conferência no servidor e de só o autor exportar, mas não do documento completo no navegador do autor.",
+  "proposta": "Pedir à responsável pelos requisitos que ratifique a interpretação da ADR-003 (o RNF-04 protege o navegador de quem joga; o autor recebe o próprio documento) e, se for o caso, ajustar o texto do RNF-04 numa próxima versão do baseline. Alternativa a avaliar: respostas e senha só de escrita no editor, o que entra em atrito com o RF-14.",
+  "bloqueante": false,
+  "dono_humano": "Roberta Telles (ratificar interpretação); Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-009",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "PEND-009 respondida (pode): leitura do RNF-04 da ADR-003 ratificada; texto do RNF-04 atualizado no baseline 2026-11-03.1.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:06:07.104Z",
+  "bloqueante_original": false
+}

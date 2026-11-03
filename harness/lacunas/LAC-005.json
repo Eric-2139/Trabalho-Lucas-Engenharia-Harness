@@ -1,0 +1,22 @@
+{
+  "id": "LAC-005",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-02",
+    "Api",
+    "Editor",
+    "Banco",
+    "SchemaFase"
+  ],
+  "justificativa": "RF-02 exige criar, renomear, duplicar e excluir. Criar, duplicar e excluir têm rota e contrato. Renomear não tem: não há rota própria, e PUT /fases/:id recebe só { revisao, documento }. Além disso, o título existe em dois lugares: a coluna fases.titulo (Banco; devolvida em GET /fases e GET /publicadas) e o campo documento.titulo (SchemaFase). Nenhum contrato diz qual é a fonte da verdade nem como os dois ficam iguais. A ADR-008 trata 'renomear fase' como operação de servidor fora do histórico, mas essa operação não existe na Api. Com a PEND-005 na opção 1, também falta definir se renomear uma fase publicada muda o título em Escolher Fase na hora ou só ao republicar.",
+  "proposta": "Estender a Api com uma operação de renomear (ex.: PATCH /fases/:id { titulo }) e definir uma única fonte para o título: a coluna, derivada do documento ao salvar, ou o documento, sem coluna. Isso estende os contratos existentes; não precisa de componente novo.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "PATCH /fases/:id { titulo } para renomear; documento.titulo é a fonte única e a coluna fases.titulo é cópia mantida pela Api (ADR-002, api.md, banco.md).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

@@ -1,0 +1,28 @@
+{
+  "id": "LAC-022",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-10",
+    "RF-11",
+    "RF-06",
+    "RF-14",
+    "RF-05",
+    "RF-18",
+    "RNF-07",
+    "Editor",
+    "Player",
+    "Banco",
+    "SchemaFase"
+  ],
+  "justificativa": "Parte da LAC-017 que a resolução não fechou. A matriz foi completada no sentido ADR → matriz: todo requisito citado no cabeçalho de um ADR tem o par na matriz (conferido nos 13 ADRs). Os componentes e os cabeçalhos dos contratos, porém, continuam divergindo. (1) A matriz liga RF-10/Editor à ADR-002, mas o Editor.json não lista a ADR-002. O Editor também usa a ADR-003 (jogo-teste, verificar modo=teste, no editor.md) e a ADR-010 (upload e regra de asset do dono), e nenhuma das duas está no Editor.json. (2) O Player.json não lista a ADR-012, embora o player.md use resolverImagem e cite a ADR-012. (3) O cabeçalho do editor.md não cita a ADR-013, que o corpo usa (exportar/importar), e o editor.md não menciona o tema de packages/player/src/tema.ts, que o player.md diz que o Editor importa (proposta da LAC-016). (4) arquitetura.md §2: a linha do Editor não tem a ADR-013 e a linha do Banco não tem a ADR-010, que estão nos JSON. (5) No sentido matriz → ADR, que o gerador não confere: RF-05/SchemaFase → ADR-001, mas a ADR-001 não cita o RF-05. (6) RF-18 está mapeado só para SchemaFase e Banco. O critério (\"digitando 92139, a porta abre\") passa pelo Player e pela verificação na Api, e o player.md diz que a Escola é jogável em Escolher Fase. Efeito: a análise de impacto pela matriz e o contexto do agente 4 (decisões do componente) deixam coisas de fora.",
+  "proposta": "Ajuste só de rastreabilidade, sem mudar o desenho: acrescentar ADR-002, ADR-003 e ADR-010 ao Editor.json e ADR-012 ao Player.json; acrescentar ADR-013 ao cabeçalho do editor.md e citar nele o tema do Player; alinhar a §2 do arquitetura.md com os JSON; incluir RF-05 no cabeçalho da ADR-001 ou trocar a decisão daquele par; mapear RF-18 → Player (ADR-009) e RF-18 → Api (ADR-003). Sugestão: o gerador da matriz passa a conferir também matriz → cabeçalho do ADR e matriz → decisoes do componente.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Decisões dos componentes, cabeçalhos dos contratos e seção 2 do Documento de Arquitetura passam a ser gerados da matriz; RF-18 mapeado para Player (ADR-009) e Api (ADR-003); editor.md cita o tema comum (ADR-014).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:13:13.308Z",
+  "bloqueante_original": false
+}

@@ -1,0 +1,22 @@
+{
+  "chamado_id": null,
+  "status": "respondida",
+  "criada_em": "2026-11-03T20:53:06.500Z",
+  "id": "PEND-009",
+  "tipo": "ambiguidade",
+  "agente_origem": "arquiteto",
+  "req_ids": [
+    "RNF-04"
+  ],
+  "pergunta": "O RNF-04 (\"respostas e senha nunca vão ao navegador\") permite que o editor do autor receba o próprio documento com respostas e senha?",
+  "opcoes": [
+    "Sim: o RNF-04 protege o navegador de quem joga, inclusive no modo testar; o autor vê e edita as próprias respostas (leitura da ADR-003)",
+    "Não: respostas e senha são só de escrita no editor (o autor não consegue rever o que digitou e o export do RF-14 precisaria omiti-las)"
+  ],
+  "contexto": "Lacuna LAC-008 do agente 5. O texto do baseline não tem ressalva para o autor. A ADR-003 entrega o documento completo ao dono em GET /fases/:id e no export; o jogo e o modo testar recebem só a projeção, sem respostas.",
+  "impacto": "Se a resposta for \"não\", mudam o contrato do editor, a rota GET /fases/:id e o export (ADR-013).",
+  "resposta": "Pode: o editor do autor recebe o próprio documento com respostas e senha; o RNF-04 protege o navegador de quem joga, inclusive no modo testar.",
+  "respondida_por": "Roberta Telles",
+  "registrada_por": "Eric",
+  "respondida_em": "2026-11-03T21:05:36.830Z"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "LAC-011",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-08",
+    "Editor"
+  ],
+  "justificativa": "RNF-08 (quem não programa publica uma fase jogável em menos de 30 minutos, sem ajuda) está mapeado para o Editor sem decisão, e o contrato do Editor não menciona o requisito. Nenhum elemento do projeto trata disso de forma explícita (ex.: fase inicial com porta já colocada, guia de primeiros passos, mensagens de jogabilidade que dizem como corrigir). Também não há plano de verificação (perfil e número de participantes, tarefa, critério de sucesso). Há um ponto ligado à LAC-003: se o salvamento automático falhar em estados intermediários, o participante pode perder trabalho e estourar os 30 minutos.",
+  "proposta": "Acrescentar ao contrato do Editor os elementos de projeto que sustentam o RNF-08 e combinar com o agente de testes e a equipe o protocolo do teste de usabilidade.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "Contrato do Editor com os elementos que sustentam o RNF-08 (fase inicial com porta, ADR-011, recusa de publicação que aponta o que falta); verificação no teste de aceitação.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

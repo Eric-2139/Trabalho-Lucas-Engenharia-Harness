@@ -1,0 +1,20 @@
+{
+  "id": "LAC-012",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-13",
+    "RNF-06",
+    "Api"
+  ],
+  "justificativa": "O contrato da Api devolve GET /publicadas → [{ id, titulo, autor }] para qualquer visitante, sem login. Isso expõe em público o nome do criador, um dado pessoal coletado no cadastro (RNF-06, LGPD). Nenhum requisito do baseline pede mostrar o autor: RF-13 só exige listar as fases publicadas. A PEND-002 levantou 'nome civil ou apelido?', e a resposta deixou o consentimento formal fora do baseline 1.1. O contrato acrescenta, sem requisito que o sustente, uma exposição pública de dado pessoal num tema de conformidade.",
+  "proposta": "Pedir à responsável pelos requisitos que decida se Escolher Fase mostra o autor. Se sim, registrar no baseline (e avaliar se 'nome' passa a ser apelido público). Se não, tirar o campo autor do contrato de GET /publicadas.",
+  "bloqueante": false,
+  "dono_humano": "Roberta Telles (requisitos/LGPD); Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-002",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "GET /publicadas devolve só id e título; nenhum dado do autor em rota pública.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

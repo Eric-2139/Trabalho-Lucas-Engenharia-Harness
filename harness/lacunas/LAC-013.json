@@ -1,0 +1,23 @@
+{
+  "id": "LAC-013",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "RF-13",
+    "RF-02",
+    "Api",
+    "Banco",
+    "SchemaFase",
+    "Player"
+  ],
+  "justificativa": "Parte da LAC-005 que a resolução não fechou. A LAC-005 já perguntava se renomear uma fase publicada muda o título em Escolher Fase na hora ou só ao republicar. Hoje os artefatos se contradizem nesse ponto. A ADR-002 diz que 'o jogo e /publicadas leem só documento_publicado'. Já o banco.md e a ADR-002 (Título) dizem que a coluna fases.titulo é cópia de documento.titulo, ou seja, do rascunho, atualizada a cada PUT e PATCH 'só para listar sem abrir o JSONB'. O índice fases(publicada_em) do banco.md serve justamente a lista de Escolher Fase. GET /publicadas → [{ id, titulo }] não diz de onde vem o titulo. Na opção 1 da PEND-005, que é a que o desenho assume, uma fase publicada passa a ter dois títulos: documento_publicado.titulo e documento.titulo, que é igual à coluna. Se a lista usar a coluna, o rascunho vaza para a lista pública, contra a ADR-002. Se usar documento_publicado.titulo, a coluna não serve para a lista e a 'fonte única' deixa de ser única. Na opção 3, também não está definido se PATCH (renomear) é permitido em fase publicada.",
+  "proposta": "O arquiteto define de onde GET /publicadas tira o título. Opções: (a) uma segunda coluna titulo_publicado, gravada ao publicar; (b) ler documento_publicado->>'titulo'; (c) renomear aplica também à versão publicada. Registrar a escolha na ADR-002 e no api.md. Rever junto com a resposta da PEND-005 (LAC-002), porque na opção 3 é preciso dizer se PATCH em fase publicada é recusado.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-005",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-002 e contratos api.md/banco.md: Escolher Fase mostra o título da versão publicada (documento_publicado.titulo; documento.titulo se a PEND-005 eliminar a coluna); a coluna fases.titulo serve só a \"Minhas fases\".",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:59:08.829Z",
+  "bloqueante_original": false
+}

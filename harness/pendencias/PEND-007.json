@@ -1,0 +1,23 @@
+{
+  "chamado_id": null,
+  "status": "respondida",
+  "criada_em": "2026-11-03T20:53:06.500Z",
+  "id": "PEND-007",
+  "tipo": "ambiguidade",
+  "agente_origem": "arquiteto",
+  "req_ids": [
+    "RF-12",
+    "RF-13"
+  ],
+  "pergunta": "Uma fase sem nenhuma porta pode ser publicada?",
+  "opcoes": [
+    "Não: a publicação é recusada e o sistema indica que falta a porta (acrescenta uma condição ao RF-12)",
+    "Sim: RF-12 continua checando só as posições da senha; a fase sem porta é publicada mesmo sem ter fim"
+  ],
+  "contexto": "Questão 3 do Documento de Arquitetura. O critério do RF-12 só exige que as posições da senha estejam ligadas a enigmas. A fase inicial do editor já traz uma porta (apoio ao RNF-08), mas o criador pode excluí-la e publicar uma fase que não termina.",
+  "impacto": "Define o que validarJogabilidade (SchemaFase) confere e o caso de teste do RF-12 (agente 3).",
+  "resposta": "Pode: fase sem porta pode ser publicada; RF-12 confere só as posições da senha.",
+  "respondida_por": "Roberta Telles",
+  "registrada_por": "Eric",
+  "respondida_em": "2026-11-03T21:05:36.830Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "LAC-019",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-12",
+    "RF-08",
+    "Editor",
+    "SchemaFase"
+  ],
+  "justificativa": "A PEND-007 decidiu que uma fase sem porta pode ser publicada, e o critério do RF-12 confere só as posições da senha. No projeto, a senha fica no nível da fase (schema.md: senha obrigatória, /^\\d{4,8}$/), mas a ADR-001 e o editor.md dizem que ela é configurada só pelo painel da porta. O editor.md também diz que a recusa de publicação leva \"ao enigma ou ao painel da porta\", e a ADR-011 põe nesse painel a recusa de encurtar a senha. Se o criador tira do palco a porta que a faseInicial traz (RF-05), a fase continua com uma senha de 5 dígitos que ele não vê nem altera. Mesmo assim, validarJogabilidade exige essas 5 posições ligadas a enigmas, e o link da recusa aponta para um painel que não existe. O caso que a PEND-007 liberou fica possível pelo critério, mas não tem caminho na interface. Isso afeta também o RNF-08, porque o criador não sabe o que corrigir.",
+  "proposta": "O arquiteto escolhe e registra: (a) a senha da fase também pode ser editada num painel da fase (independente da porta), e a recusa do RF-12 leva a esse painel quando não há porta (extensão do Editor, sem mudar o schema); ou (b) com a fase sem porta, a senha passa a ser opcional e validarJogabilidade não confere posições. A opção (b) muda a leitura do critério do RF-12 e precisa do aval da responsável pelos requisitos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); Roberta Telles se a saída for a opção (b)",
+  "pendencia_vinculada": "PEND-007",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Senha editável no painel Propriedades da fase (sem depender da porta) e também no da porta (ADR-001, editor.md). A leitura do RF-12 não muda: a senha continua obrigatória no schema e a validação confere só as posições.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:13:13.308Z",
+  "bloqueante_original": false
+}

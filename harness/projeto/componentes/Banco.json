@@ -1,0 +1,14 @@
+{
+  "id": "Banco",
+  "descricao": "PostgreSQL via Prisma: esquema, migrations e seed da fase original",
+  "camada": "dados",
+  "arquivos_previstos": [
+    "apps/api/prisma/**"
+  ],
+  "contrato": "harness/projeto/contratos/banco.md",
+  "decisoes": [
+    "ADR-002",
+    "ADR-004",
+    "ADR-010"
+  ]
+}

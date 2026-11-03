@@ -1,0 +1,27 @@
+{
+  "id": "LAC-025",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-05",
+    "RF-18",
+    "RF-19",
+    "ADR-001",
+    "ADR-003",
+    "ADR-009",
+    "ADR-010",
+    "SchemaFase",
+    "Player",
+    "Api"
+  ],
+  "justificativa": "A conferência no sentido matriz → cabeçalho do ADR, item (5) da LAC-022, não foi feita, e a resolução da LAC-022 criou casos novos. Comparei os 75 pares da matriz com o cabeçalho \"Requisitos:\" de cada ADR. No sentido ADR → matriz, está tudo coberto. No sentido matriz → ADR, há três pares sem o requisito no cabeçalho: (1) RF-05/SchemaFase → ADR-001, já apontado na LAC-022 (5); o cabeçalho da ADR-001 continua sem o RF-05. (2) RF-18/Player → ADR-009 e (3) RF-18/Api → ADR-003, os dois incluídos agora; os cabeçalhos da ADR-009 (RF-11, RF-15, RF-16, RF-17) e da ADR-003 (RNF-04, RF-11, RF-15) não citam o RF-18. Além disso, o arquitetura.md §9, que não é gerado, dá à ADR-010 só o RF-06, enquanto o ADR-010.md cita RF-06 e RF-19. Efeito: na análise de impacto a partir de um ADR (por exemplo, mudar o verificador da ADR-003), o RF-18 e a fase original ficam de fora.",
+  "proposta": "Incluir o RF-05 no cabeçalho da ADR-001 (ou trocar a decisão do par RF-05/SchemaFase) e o RF-18 nos cabeçalhos da ADR-003 e da ADR-009. Alinhar a linha da ADR-010 no §9 do arquitetura.md. Sugestão: gerar também o §9 e conferir matriz → cabeçalho no gerador.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "O gerador escreve o cabeçalho \"Requisitos:\" de cada ADR e a §9 do Documento de Arquitetura a partir da matriz, depois de conferir que tudo o que a ADR cita está mapeado; divergência ADR×matriz deixou de ser possível. Correção da justificativa: a matriz tinha 79 pares, não 75.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:17:02.024Z",
+  "bloqueante_original": false
+}

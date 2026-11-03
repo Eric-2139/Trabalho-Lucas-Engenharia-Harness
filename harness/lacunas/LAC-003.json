@@ -1,0 +1,24 @@
+{
+  "id": "LAC-003",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "RF-10",
+    "RNF-09",
+    "RF-05",
+    "RF-08",
+    "Editor",
+    "Api",
+    "SchemaFase"
+  ],
+  "justificativa": "Editor, Api e SchemaFase realizam juntos RF-10 e RNF-09, e os contratos são incompatíveis. O contrato do Editor salva qualquer alteração pendente a cada 30 s e ao trocar de aba (RF-10: 'alteração não salva é gravada em até 30 s ... ao recarregar, ela está presente'). O contrato da Api recusa com 400 em PUT /fases/:id todo documento fora do schema (RNF-09: 'recusado ao salvar'). O contrato do schema torna inválidos estados intermediários normais da edição: enigma recém-criado sem resposta (respostas.length >= 1), fala com texto vazio ('texto não vazio'), objeto arrastado parcialmente para fora da parede (x/y fora de 0..1, ADR-006; o Transformer da ADR-007 não limita), senha encurtada de 5 para 4 dígitos com enigma que revela a posição 5 (revela dentro de 1..senha.length). Nesses estados, o salvamento automático falha e a alteração se perde ao recarregar, o que viola RF-10. O mesmo vale para o modo testar (RF-11), que 'salva' antes de jogar. Nenhum contrato diz quem resolve: o editor nunca produzir estado inválido (limitar coordenadas, valores padrão) ou o schema separar 'rascunho' de 'publicável'.",
+  "proposta": "O arquiteto escolhe uma das saídas e registra numa ADR: (a) o Editor garante por construção que todo estado é válido (limita coordenadas a 0..1, cria enigma/fala com valores padrão, ajusta revela ao mudar o tamanho da senha), sem mudar o schema; ou (b) o SchemaFase passa a ter dois níveis (estrutural para salvar e completo para publicar e importar). A opção (b) muda a leitura de 'recusado ao salvar' do RNF-09 e precisa do aval da responsável pelos requisitos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); Roberta Telles se a saída mexer na interpretação do RNF-09",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-011: o store do editor só aceita documento válido (valores padrão, limites 0..1, painel com rascunho local, senha não encurta com posições em uso). O schema mantém um nível só e RNF-09 vale ao salvar.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": true
+}

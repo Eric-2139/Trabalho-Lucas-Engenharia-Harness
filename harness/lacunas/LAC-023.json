@@ -1,0 +1,20 @@
+{
+  "id": "LAC-023",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-12",
+    "RNF-08",
+    "Editor"
+  ],
+  "justificativa": "Resíduo da LAC-019, conferido nos artefatos. A resolução tornou a senha editável no painel Propriedades da fase (ADR-001; editor.md, Painel de propriedades), mas o destino da recusa de publicação não mudou: editor.md (Publicar) diz que as posições sem enigma vêm \"com link para o enigma ou para o painel da porta\", e editor.md (Elementos que sustentam o RNF-08) diz que a recusa \"leva ao enigma ou à porta\". Uma posição sem enigma, por definição, não tem enigma para onde o link possa levar. Em fase sem porta (caso liberado pela PEND-007), o painel da porta não existe. As duas formas de corrigir são ligar a posição a um enigma pelo campo revela ou encurtar a senha. Esta última só tem caminho pelo painel Propriedades da fase, que não é destino da recusa. A proposta (a) da LAC-019 incluía esse ponto (\"a recusa do RF-12 leva a esse painel quando não há porta\"). O critério do RF-12 (mostrar as posições) continua atendido. O que falta é o caminho de correção, do qual o RNF-08 depende.",
+  "proposta": "Estender o editor.md (Publicar e Elementos do RNF-08): a recusa leva ao painel Propriedades da fase (senha) e, quando houver, ao painel da porta; para a posição sem enigma, indicar que se escolha um enigma e marque a posição em revela. Sem mudança de schema, de Api nem de requisito.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-007",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "editor.md: a recusa de publicação e o apoio ao RNF-08 levam ao enigma ou a Propriedades da fase (onde fica a senha), também em fase sem porta.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:17:02.024Z",
+  "bloqueante_original": false
+}

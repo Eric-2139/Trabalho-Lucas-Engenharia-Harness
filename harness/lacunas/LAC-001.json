@@ -1,0 +1,19 @@
+{
+  "id": "LAC-001",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-03",
+    "Editor"
+  ],
+  "justificativa": "RNF-03 (desempenho, crítico) está mapeado para Editor/ADR-007, e a ADR descreve a técnica (Konva, posição só no nó durante o arraste, camada de fundo em cache, só a aba ativa montada). Mas o critério 'com 50 objetos numa parede, arrastar mantém pelo menos 30 fps' não tem como ser verificado: a máquina de referência está em aberto (PEND-006), e a própria ADR-007 e a seção 7 do Documento de Arquitetura dizem que dependem disso. A decisão pode não bastar: num computador de laboratório escolar (opção 2 da PEND-006), 50 imagens no Konva podem exigir medidas extras (limitar resolução das imagens enviadas, cache por objeto). Ou seja, a resposta pode mudar a ADR, não só o teste.",
+  "proposta": "Aguardar a resposta da PEND-006. Depois, o arquiteto confirma ou ajusta a ADR-007 (incluindo limite de resolução das imagens, se a máquina for modesta) e fixa o ambiente de medição do teste Playwright.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); resposta da PEND-006: Roberta Telles",
+  "pendencia_vinculada": "PEND-006",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "PEND-006 respondida (qualquer máquina): ADR-007 mede na máquina do teste e registra a configuração; critério do RNF-03 atualizado no baseline 2026-11-03.1.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:06:07.104Z",
+  "bloqueante_original": true
+}

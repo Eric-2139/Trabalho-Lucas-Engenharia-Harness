@@ -1,0 +1,19 @@
+{
+  "id": "Api",
+  "descricao": "Fastify: contas e sessão, CRUD de fases, publicar, exportar/importar, upload, verificação de respostas",
+  "camada": "servico",
+  "arquivos_previstos": [
+    "apps/api/src/**"
+  ],
+  "contrato": "harness/projeto/contratos/api.md",
+  "decisoes": [
+    "ADR-001",
+    "ADR-002",
+    "ADR-003",
+    "ADR-004",
+    "ADR-005",
+    "ADR-010",
+    "ADR-011",
+    "ADR-013"
+  ]
+}

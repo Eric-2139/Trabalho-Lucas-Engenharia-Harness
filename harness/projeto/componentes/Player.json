@@ -1,0 +1,17 @@
+{
+  "id": "Player",
+  "descricao": "Motor de interações reutilizável e app público (inicial, Escolher Fase, jogo)",
+  "camada": "apresentacao",
+  "arquivos_previstos": [
+    "packages/player/**",
+    "apps/player/**"
+  ],
+  "contrato": "harness/projeto/contratos/player.md",
+  "decisoes": [
+    "ADR-003",
+    "ADR-006",
+    "ADR-009",
+    "ADR-012",
+    "ADR-014"
+  ]
+}

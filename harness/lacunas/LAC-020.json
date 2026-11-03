@@ -1,0 +1,21 @@
+{
+  "id": "LAC-020",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-15",
+    "RF-08",
+    "SchemaFase",
+    "Api"
+  ],
+  "justificativa": "A PEND-008 e a ADR-003 definem a comparação das respostas de enigma (respostaConfere, numérica). Ficam dois pontos sem contrato. (1) Porta: RF-15 diz que a porta abre \"só com a senha completa correta\", mas nenhum artefato diz como a senha digitada é comparada. A senha é texto /^\\d{4,8}$/ e pode começar com zero. Se a implementação reaproveitar respostaConfere, que é numérica, \"123\" abre uma porta de senha \"0123\" e \"092139\" abre \"92139\". Isso viola o critério do RF-15, e um contrato que não diz nada deixa esse caminho aberto ao agente 4. (2) Enigma: o contrato diz que respostaConfere \"extrai o número digitado\" e aceita vírgula ou ponto decimal. Isso deixa sem definição entradas que o critério do RF-15 não cobre: texto com número (\"80 graus\": extrai 80 ou recusa?) e separador de milhar (\"1.000\" vira 1 ou 1000?). A resposta da PEND-008, \"analisa somente o número\", serve às duas leituras, e o agente 3 fica sem oráculo para esses casos.",
+  "proposta": "Estender o contrato do SchemaFase com uma função de comparação da senha da porta (sequência exata de dígitos, só espaços nas pontas ignorados) separada de respostaConfere, citada na ADR-003 e no api.md. Definir em respostaConfere se a entrada inteira precisa ser um número (com espaços nas pontas, sinal e um separador decimal) e como trata o ponto de milhar. Se o arquiteto não puder fixar esses casos de borda pela resposta da PEND-008, levá-los à responsável pelos requisitos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); Roberta Telles para os casos de borda fora do critério",
+  "pendencia_vinculada": "PEND-008",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "senhaConfere compara a sequência de dígitos exata (\"0123\" ≠ \"123\"); respostaConfere exige exatamente um número no texto, vírgula ou ponto decimal, sem separador de milhar (\"80 graus\" = 80, \"1.000\" = 1) (ADR-003, schema.md).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:13:13.308Z",
+  "bloqueante_original": false
+}

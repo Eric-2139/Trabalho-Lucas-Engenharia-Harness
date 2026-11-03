@@ -1,0 +1,22 @@
+{
+  "id": "LAC-018",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "RF-10",
+    "RF-13",
+    "Editor",
+    "Api",
+    "Banco"
+  ],
+  "justificativa": "Parte da LAC-002 que a resolução não fechou nos artefatos. ADR-002 (Consequências), arquitetura.md §4 e editor.md (Publicar) prometem que o editor indica \"alterações não publicadas\" quando o rascunho difere da versão publicada e oferece \"publicar de novo\". O contrato da Api não entrega ao Editor nenhum dado para isso: GET /fases/:id devolve { id, revisao, documento, publicada }, GET /fases devolve { id, titulo, publicada, atualizadaEm }, PUT devolve { revisao } e POST publicar devolve { publicadaEm }. Nenhum desses traz documento_publicado, a revisão publicada ou um indicador de diferença. O Banco também não guarda a revisão que foi publicada (fases tem só revisao e publicada_em). Do jeito que está, o Editor não consegue cumprir o próprio contrato. Pontos secundários que vêm do mesmo modelo de duas versões (PEND-005): (1) api.md não diz se GET /fases/:id/exportar e POST /fases/:id/duplicar usam documento ou documento_publicado numa fase publicada; (2) a ADR-002 (Título) ainda tem o caso condicional \"se a PEND-005 ... essa coluna, documento.titulo\", que perdeu o objeto com a resposta (opção 1).",
+  "proposta": "O arquiteto estende o contrato da Api com um dado que o Editor compare, por exemplo um campo alteracoesNaoPublicadas (ou revisaoPublicada) em GET /fases/:id, GET /fases e na resposta de PUT/PATCH/publicar, com uma coluna revisao_publicada gravada ao publicar no Banco. Na mesma revisão, dizer no api.md qual versão exportar e duplicar usam (provavelmente o documento de edição) e retirar da ADR-002 o caso condicional que já não se aplica.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-005",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "GET /fases/:id devolve alteracoesNaoPublicadas (Api compara rascunho e publicada); exportar e duplicar usam a versão em edição; texto condicional da ADR-002 removido.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:13:13.308Z",
+  "bloqueante_original": false
+}

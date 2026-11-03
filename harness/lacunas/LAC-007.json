@@ -1,0 +1,21 @@
+{
+  "id": "LAC-007",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-14",
+    "RF-19",
+    "Api",
+    "Banco"
+  ],
+  "justificativa": "RF-14: 'exportar e importar o mesmo arquivo gera fase igual'. O JSON exportado leva só ids de asset (objeto.imagem, parede.fundo), não as imagens. POST /fases/importar valida o schema, mas não confere se os assets referenciados existem nem de quem são. Daí vem um acoplamento oculto com o RF-19: quem importa um arquivo recebido de outro criador fica com uma fase que aponta para assets do autor. Quando o autor exclui a conta, o CASCADE em assets e a remoção do arquivo (ADR-004) apagam as imagens, e a fase importada quebra sem aviso. Fora da mesma instância, ou depois de o autor apagar uma imagem, 'gera fase igual' também não vale. Nenhum ADR trata disso.",
+  "proposta": "O arquiteto decide e registra em ADR: (a) a importação copia os assets referenciados para o importador; (b) a exportação embute as imagens (ex.: data URI ou zip); ou (c) a importação recusa ou sinaliza referências a assets de outro dono ou inexistentes. Pode ser preciso ajustar o critério do RF-14 com a responsável pelos requisitos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-013: exportação autocontida com imagens embutidas; importação recria as imagens como assets do importador.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

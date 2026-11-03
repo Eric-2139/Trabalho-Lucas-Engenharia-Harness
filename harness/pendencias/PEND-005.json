@@ -15,5 +15,9 @@
   ],
   "contexto": "Trecho RF-12 (linha 59): 'O editor salva automaticamente a cada 30 segundos e sempre que o criador troca de parede'. Trecho RF-15 (linha 62): 'O criador pode publicar fase'. O documento não fala em edição pós-publicação. Com salvamento automático direto, uma fase publicada pode ficar não jogável no meio da edição, o que esvazia a validação antes de publicar (RF-14, linha 61).",
   "impacto": "Define se o modelo de dados (fase em JSONB, linha 79) precisa de versão publicada separada do rascunho; bloqueia o projeto do armazenamento (agente 5) e os testes de publicação (agente 3). RF-12 e RF-15 ficam OK no texto atual, mas o critério pode mudar.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Só se publicar a fase: editar uma fase publicada não muda o que os jogadores veem até o criador publicar de novo (opção 1).",
+  "respondida_por": "Roberta Telles",
+  "registrada_por": "Eric",
+  "respondida_em": "2026-11-03T21:05:36.830Z"
 }

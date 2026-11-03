@@ -1,0 +1,427 @@
+{
+  "versao_baseline": "2026-11-03.1",
+  "atualizado_em": "2026-11-03T21:24:09.981Z",
+  "responsavel": "Eric (arquiteto)",
+  "mapeamentos": [
+    {
+      "req_id": "RF-01",
+      "componente_id": "Api",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RF-01",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RF-01",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RF-02",
+      "componente_id": "Api",
+      "decisao_id": "ADR-005"
+    },
+    {
+      "req_id": "RF-02",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-008"
+    },
+    {
+      "req_id": "RF-02",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-03",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-006"
+    },
+    {
+      "req_id": "RF-04",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-012"
+    },
+    {
+      "req_id": "RF-04",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-012"
+    },
+    {
+      "req_id": "RF-05",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-007"
+    },
+    {
+      "req_id": "RF-05",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-06",
+      "componente_id": "Api",
+      "decisao_id": "ADR-010"
+    },
+    {
+      "req_id": "RF-06",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-010"
+    },
+    {
+      "req_id": "RF-07",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-08",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-08",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-09",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-008"
+    },
+    {
+      "req_id": "RF-10",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-10",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RF-10",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RF-10",
+      "componente_id": "Api",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-11",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-009"
+    },
+    {
+      "req_id": "RF-11",
+      "componente_id": "Player",
+      "decisao_id": "ADR-009"
+    },
+    {
+      "req_id": "RF-11",
+      "componente_id": "Api",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RF-11",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RNF-04",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RF-18",
+      "componente_id": "Player",
+      "decisao_id": "ADR-012"
+    },
+    {
+      "req_id": "RF-02",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-10",
+      "componente_id": "Api",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RF-12",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-12",
+      "componente_id": "Api",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-12",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-13",
+      "componente_id": "Api",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-13",
+      "componente_id": "Player",
+      "decisao_id": null
+    },
+    {
+      "req_id": "RF-13",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-14",
+      "componente_id": "Api",
+      "decisao_id": "ADR-005"
+    },
+    {
+      "req_id": "RF-14",
+      "componente_id": "Api",
+      "decisao_id": "ADR-013"
+    },
+    {
+      "req_id": "RF-14",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-013"
+    },
+    {
+      "req_id": "RF-14",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-14",
+      "componente_id": "Editor",
+      "decisao_id": null
+    },
+    {
+      "req_id": "RF-15",
+      "componente_id": "Player",
+      "decisao_id": "ADR-009"
+    },
+    {
+      "req_id": "RF-15",
+      "componente_id": "Api",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RF-16",
+      "componente_id": "Player",
+      "decisao_id": "ADR-009"
+    },
+    {
+      "req_id": "RF-16",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-17",
+      "componente_id": "Player",
+      "decisao_id": "ADR-009"
+    },
+    {
+      "req_id": "RF-17",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-18",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-18",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-012"
+    },
+    {
+      "req_id": "RF-18",
+      "componente_id": "Banco",
+      "decisao_id": null
+    },
+    {
+      "req_id": "RF-19",
+      "componente_id": "Api",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RF-19",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RF-19",
+      "componente_id": "Editor",
+      "decisao_id": null
+    },
+    {
+      "req_id": "RNF-01",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-006"
+    },
+    {
+      "req_id": "RNF-01",
+      "componente_id": "Player",
+      "decisao_id": "ADR-006"
+    },
+    {
+      "req_id": "RNF-02",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-006"
+    },
+    {
+      "req_id": "RNF-02",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-006"
+    },
+    {
+      "req_id": "RNF-02",
+      "componente_id": "Player",
+      "decisao_id": "ADR-006"
+    },
+    {
+      "req_id": "RNF-03",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-007"
+    },
+    {
+      "req_id": "RNF-04",
+      "componente_id": "Api",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RNF-04",
+      "componente_id": "Player",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RNF-04",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RNF-05",
+      "componente_id": "Api",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RNF-05",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RNF-06",
+      "componente_id": "Api",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RNF-06",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-004"
+    },
+    {
+      "req_id": "RNF-07",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-014"
+    },
+    {
+      "req_id": "RNF-07",
+      "componente_id": "Player",
+      "decisao_id": "ADR-014"
+    },
+    {
+      "req_id": "RNF-08",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RNF-09",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RNF-09",
+      "componente_id": "Api",
+      "decisao_id": "ADR-001"
+    },
+    {
+      "req_id": "RF-19",
+      "componente_id": "Api",
+      "decisao_id": "ADR-005"
+    },
+    {
+      "req_id": "RF-19",
+      "componente_id": "Api",
+      "decisao_id": "ADR-013"
+    },
+    {
+      "req_id": "RNF-09",
+      "componente_id": "Api",
+      "decisao_id": "ADR-013"
+    },
+    {
+      "req_id": "RNF-09",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RF-05",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RF-08",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-011"
+    },
+    {
+      "req_id": "RF-06",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-012"
+    },
+    {
+      "req_id": "RF-06",
+      "componente_id": "Banco",
+      "decisao_id": "ADR-010"
+    },
+    {
+      "req_id": "RF-19",
+      "componente_id": "Api",
+      "decisao_id": "ADR-010"
+    },
+    {
+      "req_id": "RF-14",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-013"
+    },
+    {
+      "req_id": "RF-18",
+      "componente_id": "Player",
+      "decisao_id": "ADR-009"
+    },
+    {
+      "req_id": "RF-18",
+      "componente_id": "Api",
+      "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RF-13",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-002"
+    },
+    {
+      "req_id": "RF-15",
+      "componente_id": "SchemaFase",
+      "decisao_id": "ADR-003"
+    }
+  ]
+}

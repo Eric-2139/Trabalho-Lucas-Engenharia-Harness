@@ -1,0 +1,20 @@
+{
+  "id": "LAC-016",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-07",
+    "Editor",
+    "Player"
+  ],
+  "justificativa": "A LAC-009 foi de fato fechada: o player.md agora cobre Escolher Fase com contraste AA, teclado e foco visível. A resolução, porém, criou um artefato compartilhado sem dono. O player.md diz que 'Editor e Player usam os mesmos tokens de cor, conferidos contra 4,5:1', mas nenhum componente tem os tokens nos arquivos_previstos nem no contrato. Editor = apps/editor/**; Player = packages/player/** e apps/player/**; o editor.md não fala em tokens. É o mesmo acoplamento oculto da LAC-006 (sprites). Sem um dono, o agente 4 só pode escrever os tokens dentro do escopo de quem está implementando (P1 do agente 4), e o resultado são duas paletas que podem divergir. Além disso, RNF-07 é o único requisito sem nenhuma decisão na matriz (Editor e Player com decisao_id null). Ele não é crítico, mas a regra de contraste que o sustenta não está registrada em lugar nenhum.",
+  "proposta": "Dar os tokens de cor a um componente que já existe, por exemplo packages/player, que o Editor já importa, ou packages/schema, como foi feito com os sprites. Citar os tokens no contrato desse componente e no editor.md. Opcional: uma nota de decisão leve (paleta e verificação automática de contraste) referenciada na matriz para RNF-07.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-003",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "player.md: tema visual em packages/player/src/tema.ts (escopo do Player), importado pelo Editor.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:59:08.829Z",
+  "bloqueante_original": false
+}

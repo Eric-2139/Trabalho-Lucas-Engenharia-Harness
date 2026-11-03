@@ -1,0 +1,21 @@
+{
+  "id": "LAC-002",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-10",
+    "RF-13",
+    "Banco",
+    "Api"
+  ],
+  "justificativa": "O modelo de dados (fases.documento + documento_publicado), a ADR-002 e a rota POST /fases/:id/publicar assumem a opção 1 da PEND-005 (publicar congela uma versão; o salvamento automático vai para o rascunho). A PEND-005 está aberta. Com a opção 2, a coluna documento_publicado sai e o jogo passa a ler documento. Com a opção 3, falta no contrato da Api a recusa de PUT /fases/:id em fase publicada e, no Editor, o fluxo de despublicar/duplicar para editar. Nenhum dos dois casos está no contrato. Observação: a PEND-005 usa a numeração do rascunho (RF-12 e RF-15 no rascunho = RF-10 e RF-13 no baseline; as opções citam RF-14 e RF-03 do rascunho = RF-12 e RF-02 do baseline). O baseline vincula a PEND-005 a RF-10 e RF-13.",
+  "proposta": "Não decidir no projeto. Aguardar a resposta da PEND-005 e então: com a opção 1, manter o desenho e dizer no contrato do Editor como o criador vê que existe rascunho não republicado; com a opção 2, retirar documento_publicado da migration; com a opção 3, acrescentar 409/423 em PUT /fases/:id para fase publicada e a ação de despublicar.",
+  "bloqueante": false,
+  "dono_humano": "Roberta Telles (resposta da PEND-005); Eric (arquiteto) para ajustar ADR-002 e contratos",
+  "pendencia_vinculada": "PEND-005",
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "PEND-005 respondida (só muda ao publicar): ADR-002 confirmada; editor indica \"alterações não publicadas\" e oferece publicar de novo; RF-10 e RF-13 atualizados no baseline 2026-11-03.1.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:06:07.104Z",
+  "bloqueante_original": true
+}

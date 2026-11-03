@@ -14,5 +14,9 @@
   ],
   "contexto": "Trecho (linha 70): 'Arrastar objetos com no mínimo 30 quadros por segundo com até 50 objetos por parede.' A métrica existe, mas sem hardware de referência ela passa ou falha conforme a máquina do testador. A linha 68 fixa navegadores e resolução, mas não o hardware.",
   "impacto": "RNF-03 fica OK com critério, mas o teste de desempenho do agente 3 não é reprodutível até essa resposta.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Em qualquer uma: não há máquina de referência fixa; os 30 fps valem na máquina usada no teste, com a configuração registrada no relatório.",
+  "respondida_por": "Roberta Telles",
+  "registrada_por": "Eric",
+  "respondida_em": "2026-11-03T21:05:36.830Z"
 }

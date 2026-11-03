@@ -1,0 +1,25 @@
+{
+  "id": "LAC-015",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "RF-15",
+    "RF-11",
+    "RF-13",
+    "RF-18",
+    "RNF-04",
+    "Api",
+    "Player",
+    "Editor"
+  ],
+  "justificativa": "Inconsistência nova, criada pelo limite de 10 tentativas por minuto, por IP e por fase, acrescentado à ADR-003 depois da primeira verificação. (1) Contratos incompatíveis: o api.md devolve 429 em POST /fases/:id/verificar, inclusive com modo=teste. A interface Verificador do player.md só modela o sucesso ({ correto, digitos } e { aberta }). O motor não tem estado nem mensagem para 'aguarde', e o modo testar do editor injeta o mesmo verificador. Do jeito que está, um 429 vira erro não tratado ou é lido como resposta errada, e o RF-15 diz que resposta errada 'não revela nada'. (2) A justificativa da ADR-003 ('não muda o jogo para quem joga normalmente') não vale com IP compartilhado. Uma turma num laboratório escolar atrás de NAT, cenário que a própria PEND-006 cita, joga quase sempre a mesma fase (a Escola, RF-18). Só para terminar a Escola são 7 chamadas certas por aluno (6 enigmas e a porta). Com 20 alunos, o limite estoura no primeiro minuto, e RF-13 ('qualquer jogador consegue jogar') e RF-18 deixam de valer para quase todos. O autor que testa a fase várias vezes (RF-11) também esbarra no limite. A medida protege o RNF-04, que é decisão legítima do arquiteto, mas a forma de aplicar choca com requisitos funcionais de prioridade Alta.",
+  "proposta": "(a) Estender o contrato do Player (Verificador e motor) com o caso 'limite excedido': mensagem de espera, sem contar como resposta errada; mesmo tratamento no modo testar do Editor. (b) O arquiteto reavalia a chave e o valor do limite: por exemplo, contar só tentativas erradas, limitar mais forte a porta do que os enigmas, usar um identificador anônimo de partida junto com o IP, ou dispensar o limite no modo testar do dono. Se o uso em sala de aula estiver no escopo, confirmar com a responsável pelos requisitos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); Roberta Telles se for preciso confirmar o cenário de laboratório escolar",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-003, api.md e player.md: limite por partida (partidaId, 10/min) com teto por IP e fase de 600/min; modo testar sem limite; Verificador devolve Limitado e a interface pede para aguardar.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:59:08.829Z",
+  "bloqueante_original": false
+}

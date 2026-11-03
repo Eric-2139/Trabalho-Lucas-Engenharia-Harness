@@ -1,0 +1,21 @@
+{
+  "agente": "projeto",
+  "execucao": "aaf8557dfab463a1a",
+  "inicio": "2026-11-03T21:06:12.374Z",
+  "fim": "2026-11-03T21:10:22.602Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "versao_baseline": "2026-11-03.1",
+    "requisitos_rastreados": "28 de 28",
+    "percentual_rastreado": 1,
+    "rnf_criticos_sem_decisao": [],
+    "lacunas_por_tipo": {
+      "lacuna_parcial": 17,
+      "conflito_contrato": 5
+    },
+    "lacunas_bloqueantes": 0
+  },
+  "bloqueios_por_politica": {}
+}

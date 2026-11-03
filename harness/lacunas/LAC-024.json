@@ -1,0 +1,25 @@
+{
+  "id": "LAC-024",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-04",
+    "RF-11",
+    "RF-06",
+    "Editor",
+    "Player",
+    "ADR-003",
+    "ADR-010",
+    "ADR-012"
+  ],
+  "justificativa": "Resíduo da LAC-022, itens (1) e (2). Com a resolução, as decisões dos componentes, os cabeçalhos dos contratos e a §2 do arquitetura.md passaram a ser gerados da matriz, e de fato batem com ela (conferido nos 5 componentes). A matriz, porém, continua sem os pares que a LAC-022 apontava, e agora o gerador propaga a omissão. (1) Editor × ADR-003: o editor.md (Modo testar) usa GET /fases/:id/jogo-teste e o verificador modo=teste, e o arquitetura.md §3 descreve o fluxo Editor (modo testar) → Api, mas a matriz liga RF-11/Editor só à ADR-009 e não mapeia RNF-04 ao Editor. O texto do RNF-04 diz \"inclusive no modo testar\", e o modo testar fica no Editor. As obrigações do Editor nesse modo (conferir no servidor, passar ao motor só a projeção pedida à Api) estão na ADR-003, que hoje não chega ao contexto de quem implementa o Editor. É um RNF crítico (segurança). Não é rnf_sem_decisao, porque a decisão existe; o que falta é ela alcançar o componente que a executa. (2) Editor × ADR-010: o editor.md (Imagens) usa POST /assets, mas RF-06/Editor está com decisao_id null, e por isso a ADR-010 sumiu do Editor.json. (3) Player × ADR-012: o player.md diz que as imagens são resolvidas por resolverImagem (ADR-012), mas nenhum par da matriz liga o Player à ADR-012, que está fora do Player.json e do cabeçalho do player.md.",
+  "proposta": "O arquiteto acrescenta à matriz, por exemplo: RNF-04/Editor → ADR-003 (e/ou RF-11/Editor → ADR-003); RF-06/Editor → ADR-010 no lugar do null; RF-18/Player → ADR-012 ou RF-04/Player → ADR-012. Depois regenera componentes, cabeçalhos e a §2. Sugestão para o gerador: avisar quando o corpo de um contrato cita uma ADR que não está no cabeçalho gerado.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Matriz com RF-11/Editor e RNF-04/Editor → ADR-003, RF-06/Editor → ADR-010 e RF-18/Player → ADR-012 (82 pares); as decisões do Editor e do Player passam a incluir ADR-003, ADR-010 e ADR-012.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:17:02.024Z",
+  "bloqueante_original": false
+}

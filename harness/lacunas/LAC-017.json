@@ -1,0 +1,26 @@
+{
+  "id": "LAC-017",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-05",
+    "RF-08",
+    "RNF-09",
+    "RF-06",
+    "RF-19",
+    "RF-14",
+    "Editor",
+    "Player",
+    "Banco"
+  ],
+  "justificativa": "Os ADRs novos têm a rastreabilidade certa no cabeçalho e na seção 9 do arquitetura.md, mas a matriz e os componentes não acompanharam. Diferenças: (1) ADR-011 cita RF-05, RF-08 e RNF-09, e a matriz só liga a ADR-011 a RF-10 e RNF-08. (2) ADR-012 cita RF-06, que não tem mapeamento para ela. O Player usa resolverImagem (player.md), mas Player.json não lista ADR-012. (3) ADR-013 cita RF-19 e RNF-09, que a matriz não liga a ela. O Editor implementa exportar/importar o envelope da ADR-013 (editor.md, corpo), mas Editor.json, o cabeçalho do editor.md e a matriz (RF-14/Editor com decisao_id null) não citam a ADR-013. (4) Banco tem a tabela assets com bytes <= 5 MB, que realiza RF-06 e recebe as imagens da importação (ADR-013), mas não há mapeamento RF-06 → Banco e Banco.json não lista ADR-010. (5) O Editor depende de ADR-002 (revisao/409) e ADR-003 (jogo-teste), que não estão em Editor.json. O efeito concreto: a análise de impacto pela matriz deixa coisas de fora. Se a PEND-009 for respondida com 'não', mudam a ADR-013 e o export, e a matriz não leva ao Editor nem ao RF-19. Se a PEND-008 ou a ADR-011 mudarem, RF-05, RF-08 e RNF-09 não aparecem como afetados. O agente 4 também usa as decisões do componente como contexto.",
+  "proposta": "O arquiteto acrescenta os mapeamentos (RF-05/RF-08/RNF-09 → ADR-011; RF-06 → ADR-012 e RF-06 → Banco/ADR-010; RF-14/Editor → ADR-013; RF-19 e RNF-09 → ADR-013) e atualiza as decisões de Editor.json (ADR-002, ADR-003, ADR-013), Player.json (ADR-012) e Banco.json (ADR-010, ADR-013), além do cabeçalho do editor.md. É só ajuste de rastreabilidade; nada no desenho muda.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "Matriz completada (75 mapeamentos) e gerador da matriz passou a recusar ADR que cite requisito sem o par correspondente.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:59:08.829Z",
+  "bloqueante_original": false
+}

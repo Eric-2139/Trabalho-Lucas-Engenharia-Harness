@@ -1,0 +1,23 @@
+{
+  "id": "LAC-006",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-04",
+    "RF-18",
+    "Editor",
+    "Player",
+    "SchemaFase",
+    "Banco"
+  ],
+  "justificativa": "RF-04 exige uma biblioteca com porta, quadro, janela, relógio e cada objeto da fase original (giz, selo, árvore...). RF-18 exige a Escola jogável no player público. O contrato do Editor lista a biblioteca, mas nenhum componente é dono do catálogo de sprites: as imagens e o inventário de ids não estão nos arquivos_previstos de ninguém de forma explícita (Editor = apps/editor/**, SchemaFase = packages/schema/** e fases-exemplo/**). O schema diz só 'imagem: string // id de asset ou sprite da biblioteca', sem dizer como distinguir um do outro nem como o Player resolve um sprite em URL. A Api só serve GET /assets/:id, que são uploads com dono. Se os sprites ficarem em apps/editor, o Player e o seed da Escola (Banco) não conseguem renderizá-los. É um acoplamento oculto entre os quatro componentes. O inventário 'cada objeto da fase original' também não está listado em nenhum artefato de projeto.",
+  "proposta": "Dar a um componente existente o catálogo de sprites (ex.: SchemaFase ou um diretório de assets estáticos dentro dele), com um formato de referência que se distingue de asset de upload (ex.: prefixo 'sprite:') e uma regra de resolução usada por Editor e Player. Listar o inventário da Escola no contrato do schema. É extensão; não precisa de componente novo.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-012: catálogo de sprites no SchemaFase (packages/schema/biblioteca), referência sprite:/asset: e resolverImagem comum; inventário inicial no contrato do schema.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

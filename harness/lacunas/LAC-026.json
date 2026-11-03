@@ -1,0 +1,21 @@
+{
+  "id": "LAC-026",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-08",
+    "RF-12",
+    "Editor",
+    "ADR-001"
+  ],
+  "justificativa": "Mesma classe do item (1) da LAC-024, agora com a ADR-001. A resolução da LAC-019 pôs na ADR-001 (Decisão, 4º item) uma obrigação do Editor: \"a senha é editada no painel Propriedades da fase (aberto ao clicar no fundo da parede, junto com o título) e também no painel de qualquer porta. Assim a senha continua acessível numa fase sem porta, que pode ser publicada (PEND-007)\". O editor.md (Painel de propriedades) cita essa decisão: \"(PEND-007, ADR-001)\". Mas a matriz não tem nenhum par Editor × ADR-001: RF-08/Editor vai a null e ADR-011, e RF-12/Editor vai a null. Por isso o gerador deixa a ADR-001 fora do Editor.json, do cabeçalho do editor.md e da linha do Editor no §2 do arquitetura.md. Quem implementa o Editor não recebe a decisão que define onde a senha é editada e por que ela precisa estar acessível sem porta. Disso dependem o critério do RF-08 (porta começa com 5 dígitos e aceita de 4 a 8) e o caminho de correção do RF-12 em fase sem porta (LAC-023). A conferência do gerador cobre \"requisito citado na ADR ↔ matriz\", mas não \"componente com obrigação na ADR ↔ matriz\" nem \"ADR citada no corpo do contrato ↔ cabeçalho gerado\". Por isso o caso passou.",
+  "proposta": "O arquiteto acrescenta à matriz RF-08/Editor → ADR-001 (no lugar do par com null) e/ou RF-12/Editor → ADR-001 (no lugar do null) e regenera os componentes, os cabeçalhos e o §2. Sugestão para o gerador, já feita na LAC-024 e ainda não adotada: avisar quando o corpo de um contrato cita uma ADR que não está no cabeçalho gerado. Hoje isso acusaria este caso. Sem mudança de schema, de Api nem de requisito.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-007",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "RF-08/Editor e RF-12/Editor mapeados para ADR-001; o gerador passou a recusar contrato que cite no corpo uma ADR fora das decisões do componente. A checagem nova também exigiu RF-02/SchemaFase → ADR-002 e RF-10/Api → ADR-011 (84 pares).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:24:10.106Z",
+  "bloqueante_original": false
+}

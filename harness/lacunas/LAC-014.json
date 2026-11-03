@@ -1,0 +1,22 @@
+{
+  "id": "LAC-014",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-14",
+    "RF-19",
+    "RF-06",
+    "Api",
+    "SchemaFase"
+  ],
+  "justificativa": "A ADR-013 fecha a LAC-007 no fluxo normal: a exportação embute as imagens e a importação as recria como assets do importador. O acoplamento oculto com o RF-19, porém, continua por outros caminhos, porque nenhum contrato confere dono nem existência das referências 'asset:<uuid>'. (1) O schema só valida o formato 'asset:<string>' (schema.md, ADR-012). (2) PUT /fases/:id e POST /fases/:id/publicar validam só o schema, então um documento pode citar o asset de outro criador; GET /assets/:id é aberto a 'todos', e qualquer uuid visto numa fase publicada pode ser reaproveitado. Quando esse criador exclui a conta (CASCADE em assets e remoção do arquivo, ADR-004), a fase de terceiros fica sem a imagem, sem aviso. (3) Na importação, a ADR-013 reescreve as referências que estão no mapa 'imagens' do envelope, mas não diz o que acontece com uma referência asset: que não está no mapa (arquivo editado à mão ou parcial): ela fica apontando para um asset alheio ou inexistente, e validarEnvelope não lista essa checagem. Ponto menor do mesmo tema: a ADR-010 diz que 'o Fastify limita o corpo a 5 MB', e a ADR-013 fixa 50 MB para POST /fases/importar. Nenhum artefato diz que o limite de 5 MB vale só para POST /assets.",
+  "proposta": "Estender o contrato da Api, sem componente novo: em PUT, publicar e importar, toda referência asset: precisa existir e ser do dono da fase (ou ter imagem correspondente no envelope, na importação), senão 400. Acrescentar essa regra a validarEnvelope. Deixar explícito na ADR-010 que o limite de 5 MB é da rota POST /assets. Se o arquiteto preferir permitir asset compartilhado, registrar em ADR o efeito do RF-19 sobre fases de terceiros.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "ADR-010 e api.md: referências asset: conferidas em PUT, publicar e importar (existir e ser do dono, senão 400); limite de 5 MB por imagem distinto do limite de 50 MB do envelope de importação.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:59:08.829Z",
+  "bloqueante_original": false
+}

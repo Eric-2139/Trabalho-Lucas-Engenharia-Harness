@@ -1,0 +1,22 @@
+{
+  "id": "LAC-021",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RNF-04",
+    "RF-15",
+    "RF-08",
+    "Api",
+    "Player"
+  ],
+  "justificativa": "Efeito da resolução da LAC-015 sobre um RNF crítico de segurança. A ADR-003 justifica o limite em verificar porque \"sem ele, um script testa as 10^4 a 10^8 senhas e obtém a senha pela própria API, o que anula o RNF-04\". A chave escolhida, porém, é a partida, e GET /publicadas/:id/jogo devolve um partidaId novo a cada chamada, sem login e sem limite em nenhum contrato. Um script pede uma partida nova a cada 10 tentativas, e o único freio real passa a ser o teto de 600/min por IP e fase. Com ele, uma senha de 4 dígitos (permitida pelo RF-08) sai em no máximo ~17 min a partir de um único IP, e a de 5 dígitos (padrão) em no máximo ~2,8 h. Com vários IPs, sai mais rápido. Como o verificador é stateless (a porta abre sem resolver enigmas), isso dispensa o jogo inteiro. O critério de aceitação do RNF-04 (inspecionar as respostas HTTP) continua passando ao pé da letra. A lacuna está entre a ameaça que a própria ADR-003 declara e o mecanismo que ela adota: o limite por partida é só nominal. Não é rnf_sem_decisao, porque a decisão existe, mas não atinge o objetivo que ela mesma declara.",
+  "proposta": "O arquiteto reavalia o mecanismo na ADR-003, sem mudar o RNF-04. Opções: limitar a criação de partidas por IP; aplicar à porta um limite próprio por IP e fase, mais baixo que o dos enigmas (a turma de laboratório erra pouco a porta); espera progressiva após erros de senha; ou registrar explicitamente na ADR o risco residual aceito, com os tempos de ataque, para a responsável pelos requisitos ratificar. Manter o tratamento de Limitado já previsto no player.md.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); Roberta Telles se a saída for aceitar o risco residual",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Removido o partidaId; limite por IP e fase separado por tipo (enigma 300/min, porta 30 a cada 10 min: 10^4 senhas levam ~55 h de um IP). Risco residual de força bruta de respostas numéricas pequenas registrado na ADR-003. Campo pendencia_vinculada corrigido para null (o agente registrou PEND-009 por engano).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T21:13:13.308Z",
+  "bloqueante_original": false
+}

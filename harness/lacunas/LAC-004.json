@@ -1,0 +1,20 @@
+{
+  "id": "LAC-004",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "RF-17",
+    "SchemaFase",
+    "Player"
+  ],
+  "justificativa": "RF-17: 'Enigma com dica D mostra ícone que exibe D'. O contrato do SchemaFase define projetarParaJogo → FaseJogo 'sem senha, sem respostas, sem revela; com tamanhoSenha e temDica', ou seja, uma flag booleana, sem dizer que o texto da dica fica. O contrato do Player diz 'Se temDica, mostra ícone que exibe a dica'. Mas o motor só recebe FaseJogo (ADR-009) e a Api não tem rota para buscar a dica. Se a projeção levar só a flag, o Player não tem como exibir D. Se levar o texto, temDica é redundante e o contrato do schema está incompleto. Mais um ponto: com o motor stateless, a dica fica visível antes de qualquer tentativa. Isso atende RF-17, mas a decisão não está escrita.",
+  "proposta": "Deixar explícito no contrato do SchemaFase que FaseJogo mantém o campo dica (texto) do enigma, ou criar rota de dica na Api. A primeira opção é a extensão natural e não fere o RNF-04 (a dica não é resposta nem senha).",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-01.2",
+  "status": "resolvida",
+  "resolucao": "A projeção FaseJogo mantém o texto da dica (contratos/schema.md, player.md, ADR-003).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-03T20:53:06.500Z",
+  "bloqueante_original": false
+}

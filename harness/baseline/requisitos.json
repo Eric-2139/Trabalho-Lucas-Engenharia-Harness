@@ -1,12 +1,9 @@
 {
-  "versao": "2026-11-01.2",
+  "versao": "2026-11-03.1",
   "aprovado_por": "Roberta Telles",
-  "aprovado_em": "2026-11-03T20:41:18.970Z",
-  "fonte": "Math Scape – Documento de Requisitos v1.1 (seções 4, 5, 7 e 9): decisões tomadas pela Roberta e pela equipe em 01/11/2026, aplicadas ao rascunho do agente 1 (execução de 03/11/2026).",
-  "pendencias_abertas": [
-    "PEND-005",
-    "PEND-006"
-  ],
+  "aprovado_em": "2026-11-03T21:05:36.830Z",
+  "fonte": "Math Scape – Documento de Requisitos v1.1 (seções 4, 5, 7 e 9): decisões tomadas pela Roberta e pela equipe em 01/11/2026, aplicadas ao rascunho do agente 1 (execução de 03/11/2026). Versão 2026-11-03.1: respostas às PEND-005 a PEND-009 (03/11/2026).",
+  "pendencias_abertas": [],
   "nao_promovidos": [
     {
       "id": "RNF-11",
@@ -130,17 +127,18 @@
     },
     {
       "id": "RF-08",
-      "texto": "Configurar fala (texto), enigma (pergunta, uma ou mais respostas, dica, zero ou mais dígitos) e porta (senha de 4 a 8 dígitos, padrão 5).",
+      "texto": "Configurar fala (texto), enigma (pergunta, uma ou mais respostas numéricas, dica, zero ou mais dígitos) e porta (senha de 4 a 8 dígitos, padrão 5).",
       "categoria": "funcional",
       "subcategoria": null,
       "prioridade": "Alta",
-      "criterio_aceitacao": "Fala grava texto. Enigma grava pergunta, uma ou mais respostas, dica e zero ou mais dígitos (enigma sem dígito é aceito, como na parede esquerda). Porta começa com 5 dígitos, aceita de 4 a 8 e rejeita 3, 9 ou não dígitos.",
+      "criterio_aceitacao": "Fala grava texto. Enigma grava pergunta, uma ou mais respostas numéricas (resposta que não é número é recusada), dica e zero ou mais dígitos (enigma sem dígito é aceito, como na parede esquerda). Porta começa com 5 dígitos, aceita de 4 a 8 e rejeita 3, 9 ou não dígitos.",
       "trecho_fonte": "O criador configura a interação do objeto: fala (texto), enigma (pergunta, resposta, dica, dígito revelado), porta (senha final).",
       "status": "OK",
       "conflita_com": [],
       "pendencias": [
         "PEND-001",
-        "PEND-002"
+        "PEND-002",
+        "PEND-008"
       ],
       "origem_rascunho": [
         "RF-08",
@@ -169,7 +167,7 @@
       "categoria": "funcional",
       "subcategoria": null,
       "prioridade": "Alta",
-      "criterio_aceitacao": "Alteração não salva é gravada em até 30 s, ao trocar de parede e ao mandar salvar; ao recarregar, ela está presente.",
+      "criterio_aceitacao": "Alteração não salva é gravada em até 30 s, ao trocar de parede e ao mandar salvar; ao recarregar, ela está presente. Numa fase publicada, o salvamento altera só a versão em edição: os jogadores continuam vendo a versão publicada até o criador publicar de novo.",
       "trecho_fonte": "O editor salva automaticamente a cada 30 segundos e sempre que o criador troca de parede, além do salvamento manual.",
       "status": "OK",
       "conflita_com": [],
@@ -203,12 +201,13 @@
       "categoria": "funcional",
       "subcategoria": null,
       "prioridade": "Média",
-      "criterio_aceitacao": "Com todas as posições da senha ligadas a enigmas, publica. Com senha 92139 e posições 2 e 5 sem enigma, a publicação é recusada e o sistema mostra as posições 2 e 5.",
+      "criterio_aceitacao": "Com todas as posições da senha ligadas a enigmas, publica. Com senha 92139 e posições 2 e 5 sem enigma, a publicação é recusada e o sistema mostra as posições 2 e 5. Fase sem porta pode ser publicada: a validação confere só as posições da senha.",
       "trecho_fonte": "O sistema valida se a fase é jogável antes de publicar: todos os dígitos da senha atribuídos a um enigma.",
       "status": "OK",
       "conflita_com": [],
       "pendencias": [
-        "PEND-002"
+        "PEND-002",
+        "PEND-007"
       ],
       "origem_rascunho": [
         "RF-14"
@@ -220,7 +219,7 @@
       "categoria": "funcional",
       "subcategoria": null,
       "prioridade": "Alta",
-      "criterio_aceitacao": "Fase não publicada não aparece em Escolher Fase; publicada, aparece e qualquer jogador consegue jogar.",
+      "criterio_aceitacao": "Fase não publicada não aparece em Escolher Fase; publicada, aparece e qualquer jogador consegue jogar. Editar uma fase publicada não muda o que os jogadores veem; publicar de novo substitui a versão publicada.",
       "trecho_fonte": "O criador pode publicar fase, e a tela Escolher Fase lista as fases publicadas.",
       "status": "OK",
       "conflita_com": [],
@@ -250,15 +249,17 @@
     },
     {
       "id": "RF-15",
-      "texto": "Enigma resolvido revela dígitos; aceita qualquer resposta cadastrada; porta abre só com a senha completa.",
+      "texto": "Enigma resolvido revela dígitos; aceita qualquer resposta cadastrada, comparando só o número; porta abre só com a senha completa.",
       "categoria": "funcional",
       "subcategoria": null,
       "prioridade": "Alta",
-      "criterio_aceitacao": "Enigma com respostas A e B fica resolvido com A ou B e revela seus dígitos; outra resposta não revela nada. A porta abre só com a senha completa correta.",
+      "criterio_aceitacao": "Enigma com respostas A e B fica resolvido com A ou B e revela seus dígitos; outra resposta não revela nada. A porta abre só com a senha completa correta. A comparação analisa só o número: com resposta cadastrada 80, \"80\", \" 80 \", \"080\" e \"80,0\" resolvem o enigma; \"oitenta\" ou texto sem número não resolve.",
       "trecho_fonte": "O jogador joga uma fase publicada, com verificação de respostas no servidor.",
       "status": "OK",
       "conflita_com": [],
-      "pendencias": [],
+      "pendencias": [
+        "PEND-008"
+      ],
       "origem_rascunho": [
         "RF-09",
         "RF-16"
@@ -368,7 +369,7 @@
       "categoria": "nao_funcional",
       "subcategoria": "desempenho",
       "prioridade": null,
-      "criterio_aceitacao": "Com 50 objetos numa parede, arrastar mantém pelo menos 30 quadros por segundo.",
+      "criterio_aceitacao": "Com 50 objetos numa parede, arrastar mantém pelo menos 30 quadros por segundo. A medição vale em qualquer máquina usada no teste; o relatório registra a configuração da máquina e o navegador.",
       "trecho_fonte": "Arrastar objetos com no mínimo 30 quadros por segundo com até 50 objetos por parede.",
       "status": "OK",
       "conflita_com": [],
@@ -381,16 +382,17 @@
     },
     {
       "id": "RNF-04",
-      "texto": "Respostas e senha nunca vão ao navegador; conferência no servidor, inclusive no modo testar.",
+      "texto": "Respostas e senha nunca vão ao navegador de quem joga; conferência no servidor, inclusive no modo testar. O editor do autor recebe o próprio documento.",
       "categoria": "nao_funcional",
       "subcategoria": "seguranca",
       "prioridade": null,
-      "criterio_aceitacao": "Inspecionando todas as respostas HTTP durante o jogo e no modo testar, nenhuma resposta nem senha aparece; o servidor devolve só certo/errado e dígitos revelados.",
+      "criterio_aceitacao": "Inspecionando todas as respostas HTTP durante o jogo e no modo testar, nenhuma resposta nem senha aparece; o servidor devolve só certo/errado e dígitos revelados. O editor do próprio autor pode receber e mostrar as respostas e a senha da fase dele.",
       "trecho_fonte": "Respostas e senha nunca enviadas ao navegador do jogador.",
       "status": "OK",
       "conflita_com": [],
       "pendencias": [
-        "PEND-002"
+        "PEND-002",
+        "PEND-009"
       ],
       "origem_rascunho": [
         "RNF-04"
@@ -478,5 +480,6 @@
         "RNF-10"
       ]
     }
-  ]
+  ],
+  "versao_anterior": "2026-11-01.2"
 }
