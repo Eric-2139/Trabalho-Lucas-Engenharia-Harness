@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('node:fs');
+const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { lerArquivoSeExistir } = require('./contexto');
 const { interpretarJunit } = require('./junit');
@@ -36,6 +38,8 @@ function classificarExecucao(codigo, execucaoTestes) {
 }
 
 function executarSuite(raiz, execucaoTestes) {
+  // Um JUnit de execução anterior faria uma falha de ambiente parecer um resultado (baseline_verde e regressão sobre dados velhos).
+  if (execucaoTestes.relatorio_junit) fs.rmSync(path.join(raiz, execucaoTestes.relatorio_junit), { force: true });
   const { codigo, saida } = executarComando(raiz, execucaoTestes.comando, execucaoTestes.timeout_segundos);
   const xml = execucaoTestes.relatorio_junit ? lerArquivoSeExistir(raiz, execucaoTestes.relatorio_junit) : null;
   return {

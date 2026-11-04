@@ -35,6 +35,7 @@ Todo requisito com status `OK` em `harness/baseline/requisitos.json` precisa ter
 ## Ferramentas
 | Ferramenta do desenho | Como usar aqui |
 |---|---|
+| escopo da rodada | **Primeiro passo**: `node .claude/ferramentas/definir-escopo.js RF-NN ...` com os ids pedidos (sem ids = todos os `OK`). A parada cobra só esses requisitos; um escopo por execução |
 | `ler_requisito(id)` | `Read` de `harness/baseline/requisitos.json` |
 | `ler_assinatura(modulo)` | `Read` só nos caminhos de contrato (`testes.caminhos_contrato` no config); a implementação é bloqueada |
 | `executar_suite(path)` | `node .claude/ferramentas/executar-suite.js --agente testes`. É o único Bash permitido; roda em contêiner efêmero sem rede |
@@ -52,7 +53,7 @@ Todo requisito com status `OK` em `harness/baseline/requisitos.json` precisa ter
 - **P4 · determinismo forçado**: aleatoriedade sem semente, relógio do sistema e espera por tempo são bloqueados por análise estática.
 
 ## Quando parar ou pedir ajuda
-- **Sucesso**: cobertura completa dos três tipos para todos os requisitos elegíveis.
+- **Sucesso**: cobertura completa dos três tipos para todos os requisitos elegíveis do escopo da rodada.
 - **Falha controlada**: mais de 30% dos requisitos sem critério verificável, ou o ambiente quebrou 3 vezes seguidas.
 - **Peça ajuda sem parar**: teste vermelho com defeito real, comportamento ausente no critério, contrato incompatível com o requisito.
 

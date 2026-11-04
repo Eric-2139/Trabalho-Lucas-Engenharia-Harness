@@ -12,6 +12,7 @@ const { escritaSomenteEm, bashSomenteComandos } = require('./comum');
 
 const AGENTE = 'testes';
 const COMANDO_SUITE = 'node .claude/ferramentas/executar-suite.js --agente testes';
+const COMANDO_ESCOPO = 'node .claude/ferramentas/definir-escopo.js';
 
 function config(ctx) {
   return ctx.config.testes;
@@ -94,7 +95,9 @@ function atualizarMatrizRequisitoTeste(ctx) {
 function avaliarParada(ctx) {
   const matriz = (JSON.parse(lerArquivoSeExistir(ctx.raiz, CAMINHOS.matrizRequisitoTeste) || '{}').requisitos) || {};
   const baseline = lerBaseline(ctx.raiz).requisitos;
-  const elegiveis = baseline.filter((req) => req.status === 'OK');
+  // Rodada com escopo (definir-escopo.js) cobra só os requisitos pedidos; sem escopo, todos.
+  const escopo = lerEstado(ctx.raiz, AGENTE, 'escopo', null);
+  const elegiveis = baseline.filter((req) => req.status === 'OK' && (!escopo || escopo.requisitos.includes(req.id)));
   const devolvidos = new Set(
     lerPendencias(ctx.raiz)
       .filter((p) => p.agente_origem === AGENTE && p.tipo === 'devolucao_criterio')
@@ -113,6 +116,7 @@ function avaliarParada(ctx) {
     pendencias: semCobertura.map((req) => `${req.id} sem os três tipos de caso (feliz, borda, negativo) e sem devolução ao agente 1`),
     resultado,
     metricas: {
+      escopo: escopo ? (escopo.todos ? 'todos' : escopo.requisitos) : 'todos (sem definir-escopo)',
       requisitos_elegiveis: elegiveis.length,
       cobertos_completamente: elegiveis.filter((req) => coberturaCompleta(matriz[req.id])).length,
       devolvidos_ao_agente_1: [...devolvidos],
@@ -124,7 +128,7 @@ function avaliarParada(ctx) {
 
 module.exports = {
   verificacoes: [
-    bashSomenteComandos('P1', () => [COMANDO_SUITE]),
+    bashSomenteComandos('P1', () => [COMANDO_SUITE, COMANDO_ESCOPO]),
     escritaSomenteEm('P1', (ctx) => [...ctx.config.diretorios_testes, CAMINHOS.pendencias], 'este agente escreve apenas testes e pendências.'),
     somenteContratoNaoImplementacao,
     naoInventaRequisito,

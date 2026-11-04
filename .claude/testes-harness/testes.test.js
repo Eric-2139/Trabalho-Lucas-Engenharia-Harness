@@ -2,7 +2,8 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { criarProjeto, escrever, ler, gate, pos, caminhoAbsoluto } = require('./apoio');
+const fs = require('node:fs');
+const { criarProjeto, escrever, ler, gate, pos, parada, ferramenta, caminhoAbsoluto } = require('./apoio');
 
 const BASELINE = {
   versao: '2026-09-22.1',
@@ -84,4 +85,49 @@ test('P1: só o comando de suíte do harness roda no Bash', () => {
   const raiz = projeto();
   assert.equal(gate(raiz, 'testes', 'Bash', { command: 'vendor/bin/phpunit' }).codigo, 2);
   assert.equal(gate(raiz, 'testes', 'Bash', { command: 'node .claude/ferramentas/executar-suite.js --agente testes' }).codigo, 0);
+  assert.equal(gate(raiz, 'testes', 'Bash', { command: 'node .claude/ferramentas/definir-escopo.js RF-09' }).codigo, 0);
+  assert.equal(gate(raiz, 'testes', 'Bash', { command: 'node .claude/ferramentas/definir-escopo.js RF-09; rm -rf tests' }).codigo, 2);
+});
+
+/** Dois requisitos OK: RF-09 coberto pelos três tipos, RF-10 sem nenhum teste. */
+function projetoComDoisRequisitos() {
+  const raiz = criarProjeto({
+    'harness/baseline/requisitos.json': {
+      versao: '1',
+      requisitos: [
+        { id: 'RF-09', status: 'OK', criterio_aceitacao: '7 rejeita, 8 aceita' },
+        { id: 'RF-10', status: 'OK', criterio_aceitacao: 'grava em até 30 s' },
+      ],
+    },
+    'harness/estado/testes/execucao.json': { id: 'execucao-de-teste', inicio: '2026-01-01T00:00:00.000Z', bloqueios_parada: 0 },
+  });
+  const conteudo = `${TESTE_VALIDO}\n// @req RF-09 @tipo negativo\ntest_RF09_rejeita_vazia() { assertFalse(valida("")); }`;
+  escrever(raiz, 'tests/SenhaTest.php', conteudo);
+  pos(raiz, 'testes', 'Write', { file_path: caminhoAbsoluto(raiz, 'tests/SenhaTest.php'), content: conteudo });
+  return raiz;
+}
+
+test('parada: sem escopo, requisito OK sem os três tipos nega a parada', () => {
+  const r = parada(projetoComDoisRequisitos(), 'testes');
+  assert.equal(r.codigo, 2);
+  assert.match(r.stderr, /RF-10/);
+});
+
+test('parada: com escopo, só os requisitos da rodada são cobrados', () => {
+  const raiz = projetoComDoisRequisitos();
+  assert.equal(ferramenta(raiz, 'definir-escopo', ['RF-09']).codigo, 0);
+  const r = parada(raiz, 'testes');
+  assert.equal(r.codigo, 0, r.stderr);
+  const relatorio = JSON.parse(ler(raiz, `harness/relatorios/${fs.readdirSync(caminhoAbsoluto(raiz, 'harness/relatorios'))[0]}`));
+  assert.equal(relatorio.resultado, 'sucesso');
+  assert.deepEqual(relatorio.metricas.escopo, ['RF-09']);
+});
+
+test('escopo: id fora do baseline e segunda definição na mesma execução são recusados', () => {
+  const raiz = projetoComDoisRequisitos();
+  assert.equal(ferramenta(raiz, 'definir-escopo', ['RF-99']).codigo, 2);
+  assert.equal(ferramenta(raiz, 'definir-escopo', ['RF-09', 'RF-10']).codigo, 0);
+  const encolher = ferramenta(raiz, 'definir-escopo', ['RF-09']);
+  assert.equal(encolher.codigo, 2);
+  assert.match(encolher.stderr, /um escopo por execução/);
 });

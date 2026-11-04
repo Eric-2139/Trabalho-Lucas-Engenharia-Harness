@@ -21,6 +21,15 @@ const { pertenceAoRequisito } = require('../lib/junit');
 
 const LINHAS_DE_SAIDA_EXIBIDAS = 60;
 
+/**
+ * Código de saída da ferramenta: suíte vermelha é resultado, não falha. O Claude Code trata saída ≠ 0
+ * do Bash como PostToolUseFailure, que alimenta o disjuntor de falhas consecutivas (orcamento.js):
+ * três vermelhos seguidos encerrariam o agente 3 (cujos testes nascem vermelhos) e o agente 4 antes
+ * do teto de ciclos da P5. Só falha de ambiente e recusa saem com código ≠ 0.
+ */
+const SAIDA_RESULTADO = 0;
+const SAIDA_AMBIENTE = 1;
+
 function recusar(motivo) {
   process.stderr.write(`[harness] ${motivo}\n`);
   process.exit(2);
@@ -54,7 +63,7 @@ function executarParaTestes(raiz, config) {
     ambiente: `FALHA DE AMBIENTE (código ${execucao.codigo}); ${ambiente.falhas_consecutivas} de ${config.testes.falhas_ambiente_max}.`,
   };
   process.stdout.write(`[harness] ${avisos[execucao.situacao]}\n`);
-  process.exit(execucao.situacao === 'verde' ? 0 : 1);
+  process.exit(execucao.situacao === 'ambiente' ? SAIDA_AMBIENTE : SAIDA_RESULTADO);
 }
 
 /** P3 — restaura o conteúdo anterior a cada arquivo alterado no ciclo (null = arquivo novo, apagar). */
@@ -117,7 +126,7 @@ function executarParaCodificacao(raiz, config) {
     process.stdout.write(`[harness] nenhum teste com o id ${tarefa.requisito_alvo} no nome foi encontrado no relatório JUnit.\n`);
   }
   process.stdout.write(`[harness] ciclo ${tarefa.tentativas}/${config.codificacao.teto_tentativas} · requisito ${r.requisito_verde ? 'VERDE' : 'VERMELHO'} · análise ${r.analise_ok ? 'ok' : 'com problemas'}\n`);
-  process.exit(r.requisito_verde && r.analise_ok ? 0 : 1);
+  process.exit(SAIDA_RESULTADO);
 }
 
 function principal() {

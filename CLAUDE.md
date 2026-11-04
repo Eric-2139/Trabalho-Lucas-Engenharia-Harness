@@ -37,7 +37,7 @@ harness/entrada/especificacao.md ──(1)──> harness/rascunho/requisitos/ +
 - **Atualização de estado (PostToolUse/Failure)**: `.claude/hooks/pos.js <agente>`.
 - **Critério de parada (Stop → SubagentStop)**: `.claude/hooks/parada.js <agente>`. Grava o relatório em `harness/relatorios/`.
 - **Início de execução (SubagentStart)**: `.claude/hooks/ciclo.js`, que zera o estado da execução.
-- **Ferramentas determinísticas**: `.claude/ferramentas/` (`buscar-log`, `executar-suite`, `iniciar-tarefa`).
+- **Ferramentas determinísticas**: `.claude/ferramentas/` (`buscar-log`, `definir-escopo`, `executar-suite`, `iniciar-tarefa`). A suíte vermelha sai com código 0 (é resultado, não falha da ferramenta); só falha de ambiente ou recusa sai com outro código.
 - **Constantes**: `harness/config.json` (tetos, limiares, termos críticos, comando de testes).
 - **Log de decisões**: `harness/log_decisoes.jsonl`, uma linha por chamada de ferramenta.
 

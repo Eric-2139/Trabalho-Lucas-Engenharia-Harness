@@ -9,6 +9,7 @@ agent: testes
 Gerar testes para: **$ARGUMENTS** (vazio = todos os requisitos `OK` do baseline).
 
 Procedimento:
+0. **Primeiro passo**: `node .claude/ferramentas/definir-escopo.js $ARGUMENTS`. Fixa os requisitos desta rodada (sem ids = todos os `OK`); a parada cobra só eles. O escopo vale uma vez por execução.
 1. Leia `harness/baseline/requisitos.json` e `harness/matriz/requisito-teste.json`, para saber o que já está coberto.
 2. Para cada requisito elegível:
    - leia o critério de aceitação e **só** o contrato público do módulo (caminhos de contrato do config);

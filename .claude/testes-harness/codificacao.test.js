@@ -75,7 +75,7 @@ test('P3: regressão no baseline_verde é revertida automaticamente pelo harness
   assert.equal(editar(raiz, 'src/util.txt', 'quebrado').codigo, 0);
 
   const r = ferramenta(raiz, 'executar-suite', ['--agente', 'codificacao']);
-  assert.equal(r.codigo, 1);
+  assert.equal(r.codigo, 0, 'reversão é resultado da ferramenta, não falha');
   assert.match(r.stdout, /REVERTIDA/);
   assert.equal(ler(raiz, 'src/util.txt'), 'ok', 'arquivo compartilhado restaurado');
   assert.equal(ler(raiz, 'src/senha.txt'), 'minimo=7', 'a diferença inteira do ciclo é revertida');
@@ -108,6 +108,36 @@ test('P5: no teto de tentativas, edição e execução são bloqueadas', () => {
   escrever(raiz, 'harness/estado/codificacao/tarefa.json', JSON.stringify({ ...tarefa, tentativas: 5 }));
   assert.match(editar(raiz, 'src/senha.txt', 'minimo=8').stderr, /P5/);
   assert.equal(ferramenta(raiz, 'executar-suite', ['--agente', 'codificacao']).codigo, 2);
+});
+
+test('disjuntor: suíte vermelha sai com 0 nos dois agentes; só falha de ambiente sai com 1', () => {
+  // Saída ≠ 0 vira PostToolUseFailure e conta no disjuntor de 3 falhas: vermelho é resultado esperado, não falha.
+  const raiz = projeto();
+  ferramenta(raiz, 'iniciar-tarefa', ['--requisito', 'RF-09']);
+  const codificacao = ferramenta(raiz, 'executar-suite', ['--agente', 'codificacao']);
+  assert.equal(codificacao.codigo, 0, codificacao.stderr);
+  assert.match(codificacao.stdout, /requisito VERMELHO/);
+  const testes = ferramenta(raiz, 'executar-suite', ['--agente', 'testes']);
+  assert.equal(testes.codigo, 0, testes.stderr);
+  assert.match(testes.stdout, /SUÍTE VERMELHA/);
+
+  const ambiente = criarProjeto({ 'ambiente-falso.js': 'process.exit(3);' }, (config) => ({
+    ...config,
+    execucao_testes: { ...config.execucao_testes, comando: 'node ambiente-falso.js', exigir_conteiner_sem_rede: false },
+  }));
+  const r = ferramenta(ambiente, 'executar-suite', ['--agente', 'testes']);
+  assert.equal(r.codigo, 1);
+  assert.match(r.stdout, /FALHA DE AMBIENTE/);
+});
+
+test('JUnit de execução anterior não é reaproveitado quando o ambiente falha', () => {
+  const raiz = projeto();
+  escrever(raiz, 'suite-falsa.js', 'process.exit(3);'); // ex.: imagem velha após mudar o lockfile
+  escrever(raiz, 'harness/estado/junit.xml', '<testsuite><testcase classname="T" name="test_importacao"></testcase></testsuite>');
+  const r = ferramenta(raiz, 'iniciar-tarefa', ['--requisito', 'RF-09']);
+  assert.equal(r.codigo, 2);
+  assert.match(r.stderr, /JUnit não encontrado/);
+  assert.ok(!existe(raiz, 'harness/estado/codificacao/tarefa.json'), 'sem baseline_verde montado sobre resultado velho');
 });
 
 test('isolamento: comando de testes fora de contêiner sem rede é recusado quando exigido', () => {
