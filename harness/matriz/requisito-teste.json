@@ -1,0 +1,47 @@
+{
+  "gerado_em": "2026-11-04T20:28:39.213Z",
+  "requisitos": {
+    "RF-15": {
+      "feliz": 3,
+      "borda": 7,
+      "negativo": 6,
+      "arquivos": [
+        "tests/schema/comparacao.test.ts"
+      ]
+    },
+    "RNF-09": {
+      "feliz": 3,
+      "borda": 6,
+      "negativo": 6,
+      "arquivos": [
+        "tests/schema/envelope.test.ts",
+        "tests/schema/fase.test.ts"
+      ]
+    },
+    "RF-07": {
+      "feliz": 2,
+      "borda": 4,
+      "negativo": 3,
+      "arquivos": [
+        "tests/schema/fase.test.ts"
+      ]
+    },
+    "RF-08": {
+      "feliz": 6,
+      "borda": 10,
+      "negativo": 3,
+      "arquivos": [
+        "tests/schema/fase.test.ts",
+        "tests/schema/padroes.test.ts"
+      ]
+    },
+    "RF-12": {
+      "feliz": 2,
+      "borda": 4,
+      "negativo": 2,
+      "arquivos": [
+        "tests/schema/jogabilidade.test.ts"
+      ]
+    }
+  }
+}

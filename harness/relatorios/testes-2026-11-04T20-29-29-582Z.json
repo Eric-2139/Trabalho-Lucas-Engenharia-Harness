@@ -1,0 +1,32 @@
+{
+  "agente": "testes",
+  "execucao": "ae37a6ec7aa0015dd",
+  "inicio": "2026-11-04T20:24:53.782Z",
+  "fim": "2026-11-04T20:29:29.582Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "escopo": [
+      "RF-07",
+      "RF-08",
+      "RF-12",
+      "RF-15",
+      "RNF-09"
+    ],
+    "requisitos_elegiveis": 5,
+    "cobertos_completamente": 5,
+    "devolvidos_ao_agente_1": [],
+    "taxa_sem_criterio": 0,
+    "razao_negativo_por_feliz": {
+      "RF-15": 2,
+      "RNF-09": 2,
+      "RF-07": 1.5,
+      "RF-08": 0.5,
+      "RF-12": 1
+    }
+  },
+  "bloqueios_por_politica": {
+    "P1": 1
+  }
+}
