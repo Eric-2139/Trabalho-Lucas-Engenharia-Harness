@@ -1,0 +1,21 @@
+{
+  "id": "LAC-028",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "Banco",
+    "Api",
+    "RF-06",
+    "ADR-016"
+  ],
+  "justificativa": "O banco da suíte não é o banco que o contrato descreve. banco.md garante 'assets: bytes <= 5242880' e o índice parcial fases(publicada_em) WHERE publicada_em IS NOT NULL. modulos-banco.md diz que os dois ficam 'numa migration SQL', porque o Prisma não declara CHECK nem índice parcial no schema.prisma. Já a ADR-016 e infra/testes/entrada.sh preparam o banco de teste com 'prisma db push --accept-data-loss', que aplica só o schema.prisma e ignora prisma/migrations/. Resultado: nenhum teste consegue verificar a garantia do banco.md que sustenta o 'nada é gravado' do RF-06 na camada de dados. As migrations SQL que o agente 4 escrever também nunca são executadas antes da fase 8, e um erro de sintaxe nelas só aparece na implantação.",
+  "proposta": "O arquiteto escolhe: (a) o contêiner usa 'prisma migrate deploy' quando prisma/migrations/ existir (funciona sem rede) e 'db push' só como alternativa enquanto não houver migration; ou (b) mantém o db push e registra na ADR-016 e no banco.md que as garantias declaradas só em SQL não são cobertas pela suíte, com verificação delas na fase 6 ou 8.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Opção (a): o contêiner roda `prisma migrate deploy` quando houver prisma/migrations e `db push` só enquanto não houver (infra/testes/entrada.sh, ADR-016, modulos-banco.md). Verificado sem rede com uma migration de sonda: o CHECK bytes <= 5242880 recusou o INSERT.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:23:13.423Z",
+  "bloqueante_original": false
+}

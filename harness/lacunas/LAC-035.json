@@ -1,0 +1,21 @@
+{
+  "id": "LAC-035",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-15",
+    "RF-18",
+    "Player",
+    "SchemaFase"
+  ],
+  "justificativa": "modulos-schema.md §6 (resolução da LAC-033) diz que as mensagens de acerto do legado não são migradas porque 'o Player mostra a mensagem padrão com os dígitos revelados (ou, sem dígitos, só que a resposta está certa)'. Essa mensagem padrão não existe no contrato do Player. packages/player/contrato/motor.ts define MENSAGENS só para erro, senha incorreta, limite e falha de rede. ResultadoResposta 'correto' traz só os dígitos, sem mensagem. player.md e modulos-player.md não dizem o que a TelaJogo mostra no acerto. Isso pesa nos dois enigmas da parede esquerda da Escola (revela []): quem acerta 15 ou 40 pode não ver reação nenhuma, e um acerto sem retorno fica igual a 'nada aconteceu'. Também não está definido o que acontece ao clicar de novo num enigma já resolvido: o motor guarda enigmasResolvidos, mas clicar(objetoId) devolve sempre pedirResposta. Sem texto no contrato, o agente 3 não consegue escrever o teste que a §6 promete, e o agente 4 escolhe sozinho.",
+  "proposta": "O arquiteto define no contrato do Player (motor.ts, MENSAGENS, e player.md/modulos-player.md): (a) o texto da mensagem de acerto com dígitos e sem dígitos (ou um campo 'mensagem' em ResultadoResposta 'correto', como nos outros resultados); (b) o comportamento de clicar num enigma já em enigmasResolvidos (pedir resposta de novo, mostrar os dígitos já obtidos ou não reagir). É mudança de contrato e volta ao agente 3.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Contrato do Player completado: MENSAGENS.respostaCorreta(digitos) (\"Resposta correta!\" e, se houver, os dígitos por posição) e ResultadoResposta correto com mensagem; enigma sem dígitos também tem reação. Enigma já resolvido continua respondível, como no legado, sem mudar o estado (motor.ts, modulos-player.md, modulos-schema.md §6). É mudança de contrato antes de qualquer teste existir: o agente 3 escreve os testes do RF-15 já com ela.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:32:27.934Z",
+  "bloqueante_original": false
+}

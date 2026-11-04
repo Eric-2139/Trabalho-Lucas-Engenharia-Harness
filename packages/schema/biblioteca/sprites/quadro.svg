@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 705" width="420" height="705" role="img" aria-label="Quadro em branco">
+  <title>Quadro em branco</title>
+  <!-- Quadro genérico da biblioteca (RF-04). O quadro da Escola, com as setas do enigma da direita, é o sprite quadro-setas. -->
+  <rect x="10" y="10" width="400" height="685" rx="12" fill="#6b4a2b"/>
+  <rect x="34" y="34" width="352" height="637" rx="6" fill="#24382c"/>
+  <rect x="34" y="34" width="352" height="637" rx="6" fill="none" stroke="#1a2a20" stroke-width="6"/>
+</svg>

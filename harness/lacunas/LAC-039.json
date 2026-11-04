@@ -1,0 +1,20 @@
+{
+  "id": "LAC-039",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-12",
+    "Api",
+    "Editor"
+  ],
+  "justificativa": "Mesma classe das LAC-036 a 038. Em apps/editor/contrato/salvamento.ts (linhas 42-44), publicarFase devolve ResultadoHttp<{ publicadaEm }> | { ok: false; status: 422; recusa: RecusaPublicacao }. O texto não define quando o cliente produz a variante recusa. A regra do ResultadoHttp (salvamento.ts linhas 20-26, resolução da LAC-038) cobre só 'erro com corpo { erro, detalhes? }' e 'erro sem corpo JSON'. Já o corpo do 422 em api.md (linha 25) e em modulos-api.md (linha 31) é { posicoesSemEnigma }, sem erro, o que também contraria a regra geral da Api 'Erros: { erro, detalhes? }' (api.md linha 3). Ficam três escolhas em aberto: (a) a Api responde exatamente { posicoesSemEnigma } ou { erro, posicoesSemEnigma } ou { erro, detalhes: { posicoesSemEnigma } }; (b) o cliente devolve { ok: false, status: 422, recusa: { posicoesSemEnigma } } ou cai na regra geral (erro undefined, ou 'Erro 422 do servidor.' por falta de erro); (c) a variante recusa leva também erro. modulos-editor.md §5 (linha 56) diz só '422 mostra as posições sem enigma'. O agente 3, nos testes de integração da Api (toEqual no corpo) e do cliente do editor (fetch simulado), e o agente 4 podem escolher formatos diferentes.",
+  "proposta": "O arquiteto define em api.md (linha do publicar) o corpo exato do 422 e se ele é exceção declarada ao formato { erro, detalhes? }. No comentário de publicarFase (salvamento.ts) e em modulos-editor.md §5, define o mapeamento: 422 → { ok: false, status: 422, recusa: { posicoesSemEnigma } }, com ou sem erro. Vale aplicar antes de o agente 3 escrever os testes do RF-12.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "O 422 de publicar segue o formato de erro da Api: { erro: \"A fase não pode ser publicada: há posições da senha sem enigma.\", posicoesSemEnigma } (RecusaPublicacao extends RespostaErro em packages/schema/contrato/api.ts; api.md; modulos-api.md). O cliente do editor devolve { ok: false, status: 422, recusa } só para esse 422; as outras falhas seguem ResultadoHttp (salvamento.ts).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:40:22.634Z",
+  "bloqueante_original": false
+}

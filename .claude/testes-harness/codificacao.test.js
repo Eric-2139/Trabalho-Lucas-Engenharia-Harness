@@ -29,7 +29,12 @@ function projeto() {
       'src/util.txt': 'ok',
       'suite-falsa.js': SUITE_FALSA,
     },
-    (config) => ({ ...config, execucao_testes: { ...config.execucao_testes, comando: 'node suite-falsa.js', exigir_conteiner_sem_rede: false } }),
+    // Isola o teste do produto: suíte falsa e nenhuma análise estática (a do produto roda num contêiner que este projeto temporário não tem).
+    (config) => ({
+      ...config,
+      execucao_testes: { ...config.execucao_testes, comando: 'node suite-falsa.js', exigir_conteiner_sem_rede: false },
+      codificacao: { ...config.codificacao, comando_analise: '' },
+    }),
   );
 }
 

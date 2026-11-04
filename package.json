@@ -1,0 +1,42 @@
+{
+  "name": "math-scape",
+  "private": true,
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter \"./apps/*\" run dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "biome lint packages apps",
+    "format": "biome format --write packages apps tests",
+    "analise": "pnpm run lint && pnpm run typecheck",
+    "testes:imagem": "docker build -f infra/testes/Dockerfile -t math-scape-testes .",
+    "testes:conteiner": "docker run --rm --network none -v .:/src math-scape-testes testes"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.5",
+    "@math-scape/api": "workspace:*",
+    "@math-scape/app-editor": "workspace:*",
+    "@math-scape/app-player": "workspace:*",
+    "@math-scape/player": "workspace:*",
+    "@math-scape/schema": "workspace:*",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "jsdom": "^30.1.3",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  }
+}

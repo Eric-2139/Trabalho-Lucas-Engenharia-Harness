@@ -1,6 +1,8 @@
 # Contrato — Player (`packages/player` + `apps/player`)
 
-Decisões: ADR-003, ADR-006, ADR-009, ADR-012, ADR-014. Depende de: SchemaFase (tipo `FaseJogo`), Api.
+Decisões: ADR-003, ADR-006, ADR-009, ADR-012, ADR-014, ADR-017. Depende de: SchemaFase (tipo `FaseJogo`), Api.
+
+Os apps chamam a Api por `/api`, no mesmo site (ADR-017). Interfaces: `packages/player/contrato/` e `apps/player/contrato/`; especificação: `harness/projeto/programa/modulos-player.md`.
 
 ## Pacote `packages/player` (motor)
 ```ts
@@ -14,7 +16,7 @@ function criarPartida(fase: FaseJogo, verificador: Verificador): Partida;
 ```
 - O motor só recebe `FaseJogo` (sem respostas nem senha) e nunca decide acerto sozinho (RNF-04).
 - `decoracao`: clique não gera evento (RF-16). `fala`: evento com o texto (RF-16).
-- `enigma`: pede resposta; se `correto`, guarda os dígitos devolvidos por posição; errado mostra "Resposta Errada!!" e não revela nada (RF-15). Se o enigma tem `dica`, mostra ícone que exibe esse texto; sem `dica`, não há ícone (RF-17).
+- `enigma`: pede resposta; se `correto`, guarda os dígitos devolvidos por posição e mostra "Resposta correta!" com os dígitos revelados (`MENSAGENS.respostaCorreta`); errado mostra "Resposta Errada!!" e não revela nada (RF-15). Se o enigma tem `dica`, mostra o ícone de dica (`packages/player/recursos/icone-dica.png`) que exibe esse texto; sem `dica`, não há ícone (RF-17).
 - `Limitado`: mostra "Muitas tentativas, aguarde N s"; não conta como erro nem revela nada.
 - Imagens resolvidas por `resolverImagem` do pacote de schema (ADR-012).
 - **Tema visual** (`packages/player/src/tema.ts`): tokens de cor e foco, conferidos contra 4,5:1 (RNF-07); o Editor importa o mesmo tema.

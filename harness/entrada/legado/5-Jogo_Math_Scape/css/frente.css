@@ -1,0 +1,102 @@
+.config {
+    top: 84px;
+    left: 1487px;
+}
+
+.porta {
+    top: 352px;
+    left: 1145px;
+    cursor: pointer;
+}
+
+.quadro-negro {
+    top: 331px;
+    left: 388px;
+}
+
+.giz-quadro {
+    top: 662px;
+    left: 915px;
+    cursor: pointer;
+}
+
+.interrogacao {
+    top: 84px;
+    left: 1432px;
+    cursor: pointer;
+}
+
+.relogio-1 {
+    top: 160px;
+    left: 660px;
+    cursor: pointer;
+}
+
+.relogio-2 {
+    top: 160px;
+    left: 960px;
+    cursor: pointer;
+}
+
+.room p {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    top: 356px;
+    left: 435px;
+    width: 575px;
+    color: white;
+    line-height: 43px;
+}
+
+.resposta {
+    top: 665px;
+    left: 615px;
+    height: 31px;  
+    border-color: white;
+    outline: none;
+    border-radius: 30px;
+    color: #fff;
+    padding: 0 0 0 42px;
+    background-color: #112a04ff;
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    width: 129px;
+}
+
+.botao-resposta {
+    top: 663px;
+    left: 767px;
+    font-family: 'Pacifico', cursive, sans-serif;
+    color: white;
+    background-color: #112a04ff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.res{
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    color: rgb(211, 1, 1);
+    top: 778px;
+    left: 531px;
+}
+
+.input {
+    top: 593px;
+    left: 1233px;
+    height: 31px;
+    width: 100px;
+    border-radius: 30px;
+    background-color: #fff ;
+    border-color: blueviolet;
+}
+
+.button {
+    top: 590px;
+    left: 1177px;
+}
+
+.botao-futuro {
+    width: 35px;
+    cursor: pointer;
+}

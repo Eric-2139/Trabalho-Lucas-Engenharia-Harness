@@ -1,0 +1,20 @@
+{
+  "id": "LAC-032",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-05",
+    "Editor",
+    "SchemaFase"
+  ],
+  "justificativa": "RF-05: 'mudar camada altera a sobreposição'. O schema aceita camadas empatadas ('empate segue a ordem da lista', fase.ts e modulos-schema.md), e objetoPadrao cria todo objeto com camada 0. Mas a assinatura de mudarCamada (store.ts e modulos-editor.md §2) diz só 'troca a camada com o vizinho imediato'. Quando os dois objetos têm o mesmo valor, trocar 0 por 0 não muda nada: a ação é aplicada, gera um passo de histórico e a sobreposição continua igual, o que fere o critério. Isso acontece, por exemplo, em fase importada ou na Escola migrada, se os objetos vierem com camada igual. A especificação não diz se a ação também reordena a lista ou renumera as camadas da parede.",
+  "proposta": "Completar a especificação de mudarCamada (modulos-editor.md e o comentário em store.ts): com empate, renumerar as camadas da parede (0..n-1, na ordem visual atual) antes de trocar, ou trocar também a posição na lista. Dizer também o que acontece no extremo (já na frente ou atrás de todos): sem passo de histórico ou ok:false.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "mudarCamada renumera as camadas da parede de 0 a n-1 na ordem visual (camada, depois posição na lista) e então troca com o vizinho, então a sobreposição sempre muda. No extremo, ok:false sem passo de histórico (store.ts, modulos-editor.md §2).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:23:13.423Z",
+  "bloqueante_original": false
+}

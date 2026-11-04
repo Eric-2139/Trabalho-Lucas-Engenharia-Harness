@@ -1,0 +1,4 @@
+{
+  "//": "Os scripts do harness são CommonJS. Este arquivo os protege de um \"type\": \"module\" no package.json da raiz, que faria o gate falhar com exit 1 (não bloqueante).",
+  "type": "commonjs"
+}

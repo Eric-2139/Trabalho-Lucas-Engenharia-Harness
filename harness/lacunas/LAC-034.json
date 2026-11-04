@@ -1,0 +1,21 @@
+{
+  "id": "LAC-034",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-04",
+    "RF-18",
+    "SchemaFase",
+    "ADR-012"
+  ],
+  "justificativa": "Sobra da resolução da LAC-033. catalogo.ts e modulos-schema.md §5/§6 já têm o id novo 'quadro-setas' (o quadro do legado, usado na parede direita da Escola) e o 'quadro' em branco (quadro.svg). O inventário em texto ainda está como antes em dois artefatos: contratos/schema.md, seção 'Catálogo de sprites' (linha 64), e ADR-012, item 'Inventário do catálogo' (linha 12). Os dois listam 'porta, quadro, janela, relógio; da Escola: quadro-negro, relógio antigo, …' sem 'quadro-setas' e sem dizer que 'quadro' é em branco. O agente 3 lê contratos/ como contrato (config caminhos_contrato). Um teste do RF-04 ('cada objeto da fase original está na biblioteca') escrito a partir do schema.md deixaria de fora justamente o sprite do enigma da direita, que o RF-18 exige.",
+  "proposta": "O arquiteto acrescenta 'quadro-setas' ao inventário de contratos/schema.md e da ADR-012, e anota que 'quadro' é o quadro em branco (LAC-033). É só texto: o catálogo em código já está certo, então não muda o contrato executável nem os testes já escritos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Texto alinhado ao catálogo em código: contratos/schema.md e ADR-012 listam \"quadro (em branco)\" e \"quadro com setas\" (o quadro do legado, com o desenho do enigma da direita).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:32:27.934Z",
+  "bloqueante_original": false
+}

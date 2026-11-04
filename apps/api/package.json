@@ -1,0 +1,31 @@
+{
+  "name": "@math-scape/api",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contrato": "./contrato/index.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/servidor.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "prisma": "prisma"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/multipart": "^10.1.7",
+    "@fastify/rate-limit": "^11.2.2",
+    "@math-scape/schema": "workspace:*",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "argon2": "^0.45.2",
+    "fastify": "^5.12.8",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "prisma": "7.10.1",
+    "tsx": "^4.23.15"
+  }
+}

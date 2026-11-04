@@ -1,0 +1,2 @@
+# Scripts do contêiner rodam em Linux: sempre LF.
+*.sh text eol=lf

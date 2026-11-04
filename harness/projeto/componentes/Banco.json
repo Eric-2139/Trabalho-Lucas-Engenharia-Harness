@@ -6,6 +6,8 @@
     "apps/api/prisma/**"
   ],
   "contrato": "harness/projeto/contratos/banco.md",
+  "especificacao": "harness/projeto/programa/modulos-banco.md",
+  "codigo_contrato": [],
   "decisoes": [
     "ADR-002",
     "ADR-004",

@@ -1,0 +1,21 @@
+{
+  "id": "LAC-029",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-06",
+    "RF-04",
+    "Editor",
+    "Api"
+  ],
+  "justificativa": "RF-06: a imagem enviada 'pode ser usada como fundo ou objeto'. O store já cobre a parte de dados (definirFundo e alterarImagem) e a Api cobre o envio (POST /assets). O que falta é o caminho na interface entre o upload e o uso dele, e os três artefatos discordam sobre isso. (1) apps/editor/contrato/componentes.ts: PropsBibliotecaObjetos.aoEscolher(spriteId: string) só aceita sprite do catálogo, não 'asset:<uuid>'. aoEnviarImagem(arquivo) não diz o destino (fundo ou objeto). O comentário diz que a biblioteca lista 'os uploads', mas nenhuma prop traz essa lista. (2) modulos-editor.md §4 diz que a biblioteca lista CATALOGO de objetos 'e os fundos (categoria fundo)', e não fala em uploads. (3) editor.md diz 'upload para fundo ou objeto'. Nenhum módulo diz quem chama definirFundo: Propriedades da fase só tem título e senha. Além disso, a Api não tem rota que liste as imagens do criador (só GET /assets/:id), então uma imagem enviada e ainda não usada some da biblioteca ao recarregar. O agente 3 não tem assinatura para testar 'usar upload como fundo', e o agente 4 teria de inventar a interação.",
+  "proposta": "Estender o contrato do Editor (o desenho não muda): por exemplo, aoEscolher(ref: RefImagem, destino: 'objeto' | 'fundo') e uma prop com as imagens enviadas na sessão, ou um seletor de fundo em Propriedades da fase/parede que chame definirFundo. Alinhar componentes.ts, modulos-editor.md e editor.md. Decidir se é preciso uma rota GET /assets (do dono) para a lista sobreviver a recarregar a página, ou se basta listar os asset: já usados na fase.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Contrato do Editor estendido: PropsBibliotecaObjetos.aoEscolher(ref | null, destino: objeto | fundo) e imagensEnviadas (assets usados na fase + enviados na sessão). A biblioteca tem as seções Objetos, Fundos e Minhas imagens; fundo chama definirFundo. Sem rota de listagem de uploads (o RF-06 não pede galeria). componentes.ts, modulos-editor.md §4 e editor.md alinhados.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:23:13.423Z",
+  "bloqueante_original": false
+}

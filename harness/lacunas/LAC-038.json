@@ -1,0 +1,21 @@
+{
+  "id": "LAC-038",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-10",
+    "RF-13",
+    "Editor",
+    "Player"
+  ],
+  "justificativa": "ResultadoHttp<T> (apps/editor/contrato/salvamento.ts linha 20; apps/player/contrato/index.ts linha 7) só tem a variante de recusa { ok: false; status: number; erro: string }, que corresponde ao corpo de erro da Api ({ erro, detalhes? }, api.md linha 3). O texto não define o valor para falha sem resposta HTTP (fetch rejeita, sem rede) nem para resposta de erro sem corpo JSON (ex.: 502 do proxy /api da ADR-017). Para o VerificadorHttp do Player, o contrato diz explicitamente 'erro de rede rejeita a promessa' (motor.ts linha 92; modulos-player.md §VerificadorHttp). Para ClienteApiEditor (criarClienteApiEditor) e ClienteApiJogo (criarClienteApiJogo), nada é dito: rejeitar, ou devolver { ok: false, status: 0, erro: <?> }? Isso afeta o Salvamento (RF-10), cujo contrato diz 'outro erro → erro, mantendo a alteração local'. Se salvarFase rejeitar, não está definido se o Salvamento captura a rejeição ou se salvarAgora também rejeita. Também afeta EscolherFase/TelaJogo (RF-13) quando a Api está fora. É a mesma classe da LAC-036: um tipo do contrato sem valor definido no texto, e o agente 3 e o agente 4 podem escolher valores diferentes.",
+  "proposta": "O arquiteto define nos contratos dos dois clientes (salvamento.ts / modulos-editor.md §3 e apps/player/contrato/index.ts / modulos-player.md §2): (a) falha de rede → rejeitar a promessa ou devolver um valor fixo (ex.: { ok: false, status: 0, erro: <mensagem definida> }); (b) resposta de erro sem corpo JSON → o valor de erro; (c) no Salvamento, que salvarAgora nunca rejeita e que a falha de rede leva ao estado 'erro'. Vale aplicar antes de o agente 3 escrever os testes do RF-10 e do RF-13.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "ResultadoHttp documentado nos dois clientes (apps/editor/contrato/salvamento.ts e apps/player/contrato/index.ts): os clientes nunca rejeitam; erro sem corpo JSON → \"Erro <status> do servidor.\"; sem resposta → status 0 com a mensagem de falha de rede. Salvamento: salvarAgora nunca rejeita; 409 → conflito; qualquer outra falha, inclusive status 0 → erro, com a alteração guardada.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:36:48.069Z",
+  "bloqueante_original": false
+}

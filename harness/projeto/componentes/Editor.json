@@ -3,9 +3,15 @@
   "descricao": "App do criador: login, minhas fases, canvas das 5 paredes, biblioteca, propriedades, desfazer/refazer, salvamento, modo testar, exportar/importar, conta",
   "camada": "apresentacao",
   "arquivos_previstos": [
-    "apps/editor/**"
+    "apps/editor/src/**",
+    "apps/editor/index.html",
+    "apps/editor/public/**"
   ],
   "contrato": "harness/projeto/contratos/editor.md",
+  "especificacao": "harness/projeto/programa/modulos-editor.md",
+  "codigo_contrato": [
+    "apps/editor/contrato/"
+  ],
   "decisoes": [
     "ADR-001",
     "ADR-002",
@@ -19,6 +25,7 @@
     "ADR-011",
     "ADR-012",
     "ADR-013",
-    "ADR-014"
+    "ADR-014",
+    "ADR-017"
   ]
 }

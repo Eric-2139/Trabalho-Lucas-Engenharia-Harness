@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/fase_css">
+    <link rel="stylesheet" href="/fase_css_F">
+    <link rel="stylesheet" href="/fase_css_D">
+    <link rel="stylesheet" href="/fase_css_FU">
+    <link rel="stylesheet" href="/fase_css_E">
+    <link rel="stylesheet" href="/fase_css_T">
+    <link rel="shortcut icon" href="/ico_fase" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+    <title>Escola?</title>
+</head>
+
+<body>
+    <main>
+        <!--Frente-->
+        <div class="room selecionado">
+            <img src="/F_Roo" alt="room" class="frente">
+            <img src="/F_Conf" alt="configuracoes" class="config">
+            <img src="/F_Door" alt="door" class="porta" onclick="porta()">
+            <img src="/F_Quad" alt="quadro negro" class="quadro-negro">
+            <img src="/F_Giz" alt="giz" class="giz-quadro" onclick="giz()">
+            <img src="/F_Int" alt="interrogação" class="interrogacao"
+                onclick="dica_frente()">
+            <img src="/F_Rel" alt="relogio" class="relogio-1" onclick="relogio_1()">
+            <img src="/F_Rel" alt="relogio" class="relogio-2" onclick="relogio_2()">
+
+            <p>Bem-vindo a sua primeira (ou última) aula, ao lado, está a sua “salvação”, resolva o exercício abaixo
+                para conseguir o terceiro dígito da porta, bom, se você não conseguir resolver essa simples questão, não
+                ache
+                que irá conseguir lidar o que está por vir. Após escrever a resposta, clique no botão.
+                <br> <br>
+                10 + 15 x 20 =
+            </p>
+
+            <input type="password" class="input" placeholder="Digite a senha">
+            <button class="button">
+                <img src="/F_Bot_Fu" alt="botao" class="botao-futuro">
+            </button>
+
+            <input type="number" name="resposta" class="resposta">
+            <input type="button" value="Verificar resposta" class="botao-resposta" onclick="verificar_frente()">
+            <div class="res"></div>
+        </div>
+
+        <!--Direita-->
+        <div class="room">
+            <img src="/D_Roo" alt="room-2">
+            <img src="/D_Quad" alt="quadro" class="quadro">
+            <img src="D_Jan" alt="janela" class="janela-1" onclick="janela_1()">
+            <img src="D_Jan" alt="janela" class="janela-2" onclick="janela_2()">
+            <img src="D_Conf" alt="config" class="config">
+            <img src="/D_Int" alt="interrogação" class="interrogacao-direita"
+                onclick="dica_direita()">
+
+            <p class="regra"><strong>Respeite as regras de cálculo de equações!!</strong></p>
+            <p class="quadro-resposta"><strong> → ? =</strong></p>
+
+            <input type="number" name="resposta" class="resposta-direita">
+            <input type="button" value="Verificar resposta" class="botao-direita" onclick="verificar_direita()">
+            <div class="res-direita"></div>
+        </div>
+
+        <!--Fundo-->
+        <div class="room">
+            <img src="/Fu_Roo" alt="room">
+            <img src="/Fu_Jan" alt="janela" class="janela-1" onclick="janela_3()">
+            <img src="/Fu_Jan" alt="janela" class="janela-2" onclick="janela_4()">
+            <img src="/Fu_ArS" alt="arvore-seca" class="arvore-seca">
+            <img src="/Fu_Pen" alt="pentagrama" class="pentagrama" onclick="pentagrama()">
+            <img src="/Fu_Conf" alt="config" class="config">
+            <img src="/Fu_Int" alt="interrogação" class="interrogacao-fundo"
+                onclick="dica_fundo()">
+
+            <p class="num-pent-4">4</p>
+            <p class="num-pent-23">23</p>
+            <p class="num-pent-42">42</p>
+            <p class="num-pent-61">61</p>
+
+            <input type="number" name="resposta" class="resposta-fundo">
+            <input type="button" value="Quebrar o selo" class="botao-fundo" onclick="verificar_fundo()">
+            <div class="res-fundo"></div>
+        </div>
+
+        <!--Esquerda-->
+        <div class="room">
+            <img src="/E_Roo" alt="room_2">
+            <img src="/E_Rel_Ant" alt="relogio" class="relogio-antigo" onclick="relogio_antigo()">
+            <img src="E_Conf" alt="config" class="config">
+            <img src="E_Int" alt="interrogacao" class="interrogacao-esquerda"
+                onclick="dica_esquerda()">
+            <img src="E_GizV" alt="giz-vermelho" class="giz-vermelho" onclick="giz_vermelho()">
+
+            <p class="pergunta-horas" onclick="pergunta_horas()">
+                <strong>
+                    Você que conta as horas para sair daqui, pare, pois essas horas podem virar dias. Se não quiseres
+                    que
+                    dias virem semanas, descubra as horas do relógio.
+                    <br><br>
+                    (40 - 15 - 20) x 10 - 35 =
+                </strong>
+            </p>
+
+            <input type="number" name="resposta" class="resposta-esquerda-horas">
+            <input type="button" value="Verificar resposta" class="botao-esquerda-horas"
+                onclick="verificar_esquerda_horas()">
+            <div class="res-esquerda-horas"></div>
+
+            <p class="pergunta-minutos" onclick="pergunta_min()">
+                <strong>
+                    Dependendo de sua percepção, minutos passam como segundos ou horas, mas tenho certeza que você não
+                    quer
+                    que pareçam que os minutos aqui são dias , para evitar isso, descubra os minutos do relógio.
+                    <br>
+                    (60 - 20 + 10) ÷ 2 + 15 =
+                </strong>
+            </p>
+            <input type="number" name="resposta" class="resposta-esquerda-min">
+            <input type="button" value="Verificar resposta" class="botao-esquerda-min"
+                onclick="verificar_esquerda_min()">
+            <div class="res-esquerda-min"></div>
+        </div>
+
+        <!--Teto-->
+        <div class="room">
+            <img src="/T_tet" alt="teto">
+            <img src="/T_Lam" alt="lampada" class="lampada-1">
+            <img src="/T_Lam" alt="lampada" class="lampada-2">
+            <img src="/T_Lam" alt="lampada" class="lampada-3">
+            <img src="/T_Lam" alt="lampada" class="lampada-4">
+            <img src="/T_Conf" alt="config" class="config-teto">
+
+            <section>
+                <div class="clock" onclick="olho_de_deus()">
+                    <img src="T_God" alt="god eye" class="god-eye">
+                    <div class="hour-hand"></div>
+                    <div class="minute-hand"></div>
+                    <div class="second-hand"></div>
+
+                    <div class="center"></div>
+
+                    <div class="number number-1">Ⅰ <br> 1</div>
+                    <div class="number number-2">Ⅰ <br> 2</div>
+                    <div class="number number-3">Ⅰ <br> 3</div>
+                    <div class="number number-4">Ⅰ <br> 4</div>
+                    <div class="number number-5">Ⅰ <br> 5</div>
+                    <div class="number number-6">Ⅰ <br> 6</div>
+                    <div class="number number-7">Ⅰ <br> 7</div>
+                    <div class="number number-8">Ⅰ <br> 8</div>
+                    <div class="number number-9">Ⅰ <br> 9</div>
+                    <div class="number number-10">Ⅰ <br> 10</div>
+                    <div class="number number-11">Ⅰ <br> 11</div>
+                    <div class="number number-12">Ⅰ <br> 12</div>
+
+                    <div class="ponteiro pointer-1">|</div>
+                    <div class="ponteiro pointer-2">|</div>
+                    <div class="ponteiro pointer-3">|</div>
+                    <div class="ponteiro pointer-4">|</div>
+                    <div class="ponteiro pointer-5">|</div>
+                    <div class="ponteiro pointer-6">|</div>
+                    <div class="ponteiro pointer-7">|</div>
+                    <div class="ponteiro pointer-8">|</div>
+                    <div class="ponteiro pointer-9">|</div>
+                    <div class="ponteiro pointer-10">|</div>
+                    <div class="ponteiro pointer-11">|</div>
+                    <div class="ponteiro pointer-12">|</div>
+                    <div class="ponteiro pointer-13">|</div>
+                    <div class="ponteiro pointer-14">|</div>
+                    <div class="ponteiro pointer-15">|</div>
+                    <div class="ponteiro pointer-16">|</div>
+                    <div class="ponteiro pointer-17">|</div>
+                    <div class="ponteiro pointer-18">|</div>
+                    <div class="ponteiro pointer-19">|</div>
+                    <div class="ponteiro pointer-20">|</div>
+                    <div class="ponteiro pointer-21">|</div>
+                    <div class="ponteiro pointer-22">|</div>
+                    <div class="ponteiro pointer-23">|</div>
+                    <div class="ponteiro pointer-24">|</div>
+                    <div class="ponteiro pointer-25">|</div>
+                    <div class="ponteiro pointer-26">|</div>
+                    <div class="ponteiro pointer-27">|</div>
+                    <div class="ponteiro pointer-28">|</div>
+                    <div class="ponteiro pointer-29">|</div>
+                    <div class="ponteiro pointer-30">|</div>
+                    <div class="ponteiro pointer-31">|</div>
+                    <div class="ponteiro pointer-32">|</div>
+                    <div class="ponteiro pointer-33">|</div>
+                    <div class="ponteiro pointer-34">|</div>
+                    <div class="ponteiro pointer-35">|</div>
+                    <div class="ponteiro pointer-36">|</div>
+                    <div class="ponteiro pointer-37">|</div>
+                    <div class="ponteiro pointer-38">|</div>
+                    <div class="ponteiro pointer-39">|</div>
+                    <div class="ponteiro pointer-40">|</div>
+                    <div class="ponteiro pointer-41">|</div>
+                    <div class="ponteiro pointer-42">|</div>
+                    <div class="ponteiro pointer-43">|</div>
+                    <div class="ponteiro pointer-44">|</div>
+                    <div class="ponteiro pointer-45">|</div>
+                    <div class="ponteiro pointer-46">|</div>
+                    <div class="ponteiro pointer-47">|</div>
+                    <div class="ponteiro pointer-48">|</div>
+
+                    <img src="T_Int" alt="interrogação" class="interrogacao-teto"
+                        onclick="dica_teto()">
+                </div>
+            </section>
+
+            <p class="pergunta-teto">
+                Antes que pergunte, sim, eu sempre estive aqui observando o seu progresso, você está indo bem, e não se
+                incomode com o relógio, a eternidade poderia chegar e ele iria continuar funcionando. Agora, responda a
+                pergunta abaixo:
+                <br><br>
+                Horas + Minutos =
+            </p>
+            <input type="number" name="resposta" class="resposta-teto">
+            <input type="button" value="Verificar resposta" class="botao-teto" onclick="verificar_teto()">
+            <div class="res-teto"></div>
+        </div>
+    </main>
+
+    <ul class="botoes">
+        <li>
+            <button class="botao selecionado">Frente</button>
+        </li>
+
+        <li>
+            <button class="botao">Direita</button>
+        </li>
+
+        <li>
+            <button class="botao">Fundo</button>
+        </li>
+
+        <li>
+            <button class="botao">Esquerda</button>
+        </li>
+
+        <li>
+            <button class="botao">Teto</button>
+        </li>
+    </ul>
+
+    <script src="/Fase_scrip"></script>
+    <script src="/Fase_scrip_F"></script>
+    <script src="/Fase_scrip_D"></script>
+    <script src="/Fase_scrip_FU"></script>
+    <script src="/Fase_scrip_E"></script>
+    <script src="/Fase_scrip_T"></script>
+</body>
+
+</html>

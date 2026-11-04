@@ -1,0 +1,13 @@
+# PostgreSQL só para desenvolvimento local (modulos-banco.md). Sem senha: não use fora da sua máquina.
+services:
+  banco:
+    image: postgres:17
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: math_scape
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - dados:/var/lib/postgresql/data
+volumes:
+  dados:

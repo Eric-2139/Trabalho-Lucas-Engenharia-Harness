@@ -1,6 +1,8 @@
 # Contrato — Api (`apps/api`, HTTP JSON)
 
-Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-010, ADR-011, ADR-013. Autenticação: cookie `sid` (HttpOnly). Erros: `{ erro: string, detalhes?: any }`.
+Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-010, ADR-011, ADR-013, ADR-017. Autenticação: cookie `sid` (HttpOnly). Erros: `{ erro: string, detalhes?: any }`.
+
+Os apps chamam a Api pelo caminho `/api` no mesmo site em que são servidos (ADR-017); as rotas abaixo são escritas sem esse prefixo. Corpos de pedido e tipos de resposta: `packages/schema/contrato/api.ts`; fábrica do servidor e limites: `apps/api/contrato/`.
 
 ## Contas
 | Rota | Corpo | Sucesso | Erros |
@@ -20,7 +22,7 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-010, ADR-011, ADR-01
 | `PATCH /fases/:id` | `{ titulo }` | 200 `{ revisao }` (renomear: altera `documento.titulo` e a coluna) | 400 · 404 |
 | `DELETE /fases/:id` | — | 204 (sai de Escolher Fase se publicada) | 404 |
 | `POST /fases/:id/duplicar` | — | 201 `{ id }` (cópia da versão em edição, não publicada) | 404 |
-| `POST /fases/:id/publicar` | — | 200 `{ publicadaEm }` | 400 fora do schema · 422 `{ posicoesSemEnigma: [2,5] }` |
+| `POST /fases/:id/publicar` | — | 200 `{ publicadaEm }` | 400 fora do schema · 422 `{ erro: "A fase não pode ser publicada: há posições da senha sem enigma.", posicoesSemEnigma: [2,5] }` |
 | `GET /fases/:id/jogo-teste` | — | 200 `FaseJogo` do rascunho (modo testar) | 404 |
 | `GET /fases/:id/exportar` | — | 200 envelope `{ formato, versao, fase, imagens }` da versão em edição, com imagens embutidas (ADR-013) | 404 |
 | `POST /fases/importar` | envelope (até 50 MB) | 201 `{ id }` (fase e imagens novas do importador) | 400 fora do schema · 413 · 415 imagem inválida; nada é gravado em caso de erro |

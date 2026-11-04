@@ -1,0 +1,21 @@
+{
+  "id": "LAC-040",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-14",
+    "SchemaFase",
+    "Api",
+    "Editor"
+  ],
+  "justificativa": "Mesma classe das LAC-036 a 038. ResultadoEnvelope (packages/schema/contrato/funcoes.ts linhas 66-75) recusa com erros: ErroValidacao[], cujos campos caminho e mensagem são obrigatórios. Para validarFase, o caminho é o do safeParse dentro da fase (modulos-schema.md linha 97). Para validarEnvelope, o texto não define: (a) se os erros da fase embutida trazem o prefixo 'fase' (['fase','paredes','frente',...]) ou o caminho relativo à fase (['paredes','frente',...]). O comentário de Envelope.fase (fase.ts linha 216) diz 'para que os erros apontem o caminho dentro da fase', o que sugere o segundo, mas não chega a ser explícito; (b) o caminho e a mensagem das duas recusas que não vêm do Zod: imagem asset: usada na fase sem entrada em imagens e entrada em imagens que a fase não usa (funcoes.ts linhas 71-72; modulos-schema.md linhas 74 e 106). Esses erros chegam ao criador como detalhes do 400 de POST /fases/importar (modulos-api.md linhas 23 e 34) e são mostrados pelo editor (modulos-editor.md linha 58). O agente 3 tende a escrever toEqual no caminho, e o agente 4 escolhe outro valor.",
+  "proposta": "O arquiteto define em funcoes.ts (comentário de ValidarEnvelope) e em modulos-schema.md §Envelope: (a) o prefixo dos caminhos de erro da fase embutida; (b) para cada recusa de correspondência, o ErroValidacao exato, por exemplo { caminho: ['imagens', <uuid>], mensagem: ... } para entrada sem uso e { caminho: [<caminho do objeto ou fundo>, 'imagem'], mensagem: ... } para asset sem entrada. Outra saída é declarar que os testes comparam só ok e a presença de um erro com aquele caminho. Vale aplicar antes de o agente 3 escrever os testes do RF-14.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "validarEnvelope tem os caminhos definidos a partir da raiz do envelope: estrutura pelo campo, fase com prefixo \"fase\", imagens em [\"imagens\", \"<uuid>\"], com mensagens fixas para imagem usada sem entrada e entrada sem uso; ordem de conferência estrutura → fase → imagens (contrato/funcoes.ts, modulos-schema.md §4).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:40:22.634Z",
+  "bloqueante_original": false
+}

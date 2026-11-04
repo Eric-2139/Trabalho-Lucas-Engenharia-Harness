@@ -15,7 +15,7 @@
   },
   "diretorios_testes": ["tests/"],
   "execucao_testes": {
-    "comando": "",
+    "comando": "docker run --rm --network none -v .:/src math-scape-testes testes",
     "relatorio_junit": "harness/estado/junit.xml",
     "codigos_saida_vermelho": [1],
     "timeout_segundos": 600,
@@ -51,8 +51,8 @@
     "falhas_ambiente_max": 3,
     "limiar_sem_criterio": 0.3,
     "diretorios_suporte": ["tests/fixtures/", "tests/support/"],
-    "caminhos_contrato": [],
-    "caminhos_implementacao_bloqueados": [],
+    "caminhos_contrato": ["harness/projeto/contratos/", "harness/projeto/programa/", "packages/schema/contrato/", "packages/schema/biblioteca/", "packages/player/contrato/", "apps/editor/contrato/", "apps/player/contrato/", "apps/api/contrato/", "fases-exemplo/", "harness/entrada/legado/", "packages/player/recursos/"],
+    "caminhos_implementacao_bloqueados": ["packages/schema/src/", "packages/player/src/", "apps/editor/src/", "apps/player/src/", "apps/api/src/", "apps/api/prisma/"],
     "padroes_assercao": ["\\bassert\\w*\\b", "\\bexpect\\s*\\(", "\\.should\\b", "\\bverify\\w*\\s*\\("],
     "padroes_nao_deterministicos": [
       "Math\\.random\\s*\\(",
@@ -74,7 +74,7 @@
     "teto_iteracoes": 80,
     "falhas_consecutivas_max": 3,
     "teto_tentativas": 5,
-    "comando_analise": "",
+    "comando_analise": "docker run --rm --network none -v .:/src math-scape-testes analise",
     "manifestos_dependencia": ["package.json", "package-lock.json", "composer.json", "composer.lock", "pom.xml", "build.gradle", "build.gradle.kts", "requirements.txt", "pyproject.toml", "go.mod", "Cargo.toml"],
     "padroes_segredo": [
       "-----BEGIN [A-Z ]*PRIVATE KEY-----",

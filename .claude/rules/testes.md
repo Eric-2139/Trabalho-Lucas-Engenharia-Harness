@@ -15,3 +15,10 @@ Estes testes são escritos pelo agente 3 e são somente leitura para o agente 4.
 - **Dados sintéticos**: nunca copie dado real. Gere a partir das restrições do domínio, com semente fixa.
 - **Asserção é contrato**: depois de uma execução vermelha, asserções existentes não mudam (P2). Teste vermelho com defeito real vira pendência `defeito_codigo`.
 - **Arquivos de apoio** (fixtures, helpers) ficam nos `diretorios_suporte` do config e não precisam de anotação.
+
+## No Math Scape (fase 3, ADR-015 e ADR-016)
+- Pastas: `tests/schema/`, `tests/player/`, `tests/editor/` (jsdom + Testing Library), `tests/api/` (Node + PostgreSQL do contêiner). Um arquivo por **módulo** (`tests/schema/comparacao.test.ts`), nunca por requisito: o nome do arquivo entra no id do caso no JUnit.
+- Importe do pacote (`@math-scape/schema`, `@math-scape/player`, `@math-scape/app-editor`, `@math-scape/app-player`, `@math-scape/api`) e os tipos de `/contrato`. O contrato está nas pastas `contrato/` e em `harness/projeto/programa/`.
+- Api: `construirApp({ urlBanco: urlBancoDeTeste(), armazenamento })`, `app.inject(...)` e `limparBanco()` antes de cada caso (`tests/support/banco.ts`).
+- Tempo injetado (`Relogio`) ou `vi.useFakeTimers()`; ids passados explicitamente (`objetoPadrao(tipo, imagem, id)`).
+- RF-18: os valores esperados (perguntas, respostas, dígitos, senha) vêm do legado (`harness/entrada/legado/`) e de `modulos-schema.md` §6, **nunca** do `fases-exemplo/escola-01.json`, que é o que o agente 4 produz e o teste confere.

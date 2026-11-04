@@ -1,0 +1,23 @@
+{
+  "id": "LAC-030",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "RF-17",
+    "RF-04",
+    "RF-18",
+    "SchemaFase",
+    "Player",
+    "Editor"
+  ],
+  "justificativa": "RF-17 (resposta da PEND-001): 'não existe objeto de dica separado'; a dica é a do próprio enigma. Mas catalogo.ts, ADR-012 e schema.md põem o 'Ícone de interrogação' (id 'interrogacao') como sprite de categoria 'objeto'. Ele entra na biblioteca do editor (RF-04) e pode ser colocado na parede com qualquer tipo. No legado (especificacao.md, linha 39), 'cada parede tem um ícone de dica com uma fala da Voz desconhecida'. Uma migração literal da Escola (RF-18) tende a pôr um objeto 'interrogacao' do tipo fala em cada parede, que é justamente o objeto de dica separado que o RF-17 proíbe. Há duas outras lacunas no mesmo ponto: (1) modulos-player.md diz que o RenderizadorParede desenha 'um ícone de interrogação clicável' junto do enigma com dica, mas não diz de onde vem a imagem nem se é esse mesmo sprite; (2) nada diz em qual enigma vai a dica da parede esquerda, que tem dois.",
+  "proposta": "O arquiteto decide e registra em modulos-schema.md §5 e no player.md: (a) 'interrogacao' passa a ser um recurso do Player para o ícone de dica (fora da categoria 'objeto' e da biblioteca), e a migração leva as dicas da Voz desconhecida para enigma.dica; ou (b) o sprite fica na biblioteca como imagem decorativa, mas a especificação da migração diz explicitamente que escola-01.json não tem objeto 'interrogacao' e que cada dica vai para o campo dica do enigma da parede (definindo qual enigma da esquerda a recebe).",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-001",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Opção (a): \"interrogacao\" saiu do catálogo e virou recurso do Player (packages/player/recursos/icone-dica.png, a imagem do legado). A migração põe cada dica da Voz desconhecida no campo dica do enigma da parede; na esquerda, a mesma dica nos dois enigmas (modulos-schema.md §6, player.md, modulos-player.md).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:23:13.423Z",
+  "bloqueante_original": false
+}

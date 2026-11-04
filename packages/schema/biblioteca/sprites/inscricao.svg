@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200" role="img" aria-label="Inscrição na parede">
+  <title>Inscrição na parede</title>
+  <!-- Área de texto escrito na parede: as perguntas da Escola ficavam escritas direto na parede (legado). -->
+  <rect x="4" y="4" width="392" height="192" rx="10" fill="#1d2b22" fill-opacity="0.35" stroke="#f4f1e8" stroke-opacity="0.7" stroke-width="4" stroke-dasharray="14 10"/>
+  <path d="M60 80 h280 M60 110 h240 M60 140 h200" stroke="#f4f1e8" stroke-opacity="0.6" stroke-width="6" stroke-linecap="round"/>
+</svg>

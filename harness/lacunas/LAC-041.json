@@ -1,0 +1,22 @@
+{
+  "id": "LAC-041",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-05",
+    "RF-13",
+    "RF-14",
+    "Editor",
+    "Player"
+  ],
+  "justificativa": "As resoluções das LAC-037 e LAC-038 estão aplicadas, mas deixaram textos paralelos que divergem do valor exato. É a mesma classe: o agente 3, seguindo um texto, e o agente 4, seguindo outro, chegam a valores diferentes. (a) Texto de mudarCamada: store.ts linha 14 define 'O objeto já está na frente de todos.' / 'O objeto já está atrás de todos.' (maiúscula e ponto). Mas store.ts linha 49 e modulos-editor.md linha 30 ainda dizem \"o objeto já está na frente/atrás de todos\" (minúscula e sem ponto), sem caminho ['camada']. (b) ResultadoHttp do Player (apps/player/contrato/index.ts linha 14) não tem detalhes?, mas o comentário logo acima (linha 10) diz que o erro com corpo vira { ok: false, status, erro, detalhes }. Um retorno literal com detalhes não compila contra esse tipo (excesso de propriedade), e um teste escrito pelo comentário espera o campo. (c) modulos-editor.md linha 38 e modulos-player.md linha 56 dizem 'sem resposta → { ok: false, status: 0 }', sem o erro obrigatório pelo tipo e sem remeter ao texto fixo dos contratos ('Não foi possível falar com o servidor. Tente de novo.'). (d) A regra 2xx do ResultadoHttp do editor (salvamento.ts linha 22, 'corpo JSON; sem corpo, valor undefined') contradiz exportarFase: Promise<ResultadoHttp<Blob>> (linha 46), cujo valor é Blob e não JSON.",
+  "proposta": "O arquiteto alinha os textos paralelos ao valor exato, ou os troca por remissão ('texto exato em store.ts / salvamento.ts'): (a) store.ts linha 49 e modulos-editor.md linha 30; (b) acrescentar detalhes?: unknown ao ResultadoHttp do Player, ou tirar detalhes do comentário (as rotas públicas não devolvem detalhes); (c) modulos-editor.md §3 e modulos-player.md §2 citam o erro de status 0; (d) a regra 2xx abre exceção para exportarFase (valor = Blob do corpo). São ajustes de texto, sem mudança de arquitetura.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "(a) texto de mudarCamada igual em store.ts, ResultadoAcao e modulos-editor.md (\"O objeto já está na frente de todos.\" / \"atrás de todos.\"); (b) ResultadoHttp do Player com detalhes?; (c) falha de rede descrita com o erro em modulos-editor.md e modulos-player.md; (d) a regra de 2xx do editor cita o Blob de exportarFase.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:40:22.634Z",
+  "bloqueante_original": false
+}

@@ -1,6 +1,8 @@
 # Contrato — Editor (`apps/editor`)
 
-Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-009, ADR-010, ADR-011, ADR-012, ADR-013, ADR-014. Depende de: SchemaFase, Player (pacote), Api.
+Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-009, ADR-010, ADR-011, ADR-012, ADR-013, ADR-014, ADR-017. Depende de: SchemaFase, Player (pacote), Api.
+
+Chama a Api por `/api`, no mesmo site, para o cookie de sessão valer (ADR-017). Interfaces dos módulos: `apps/editor/contrato/`; especificação: `harness/projeto/programa/modulos-editor.md`.
 
 ## Telas
 | Tela | Comportamento observável | Requisito |
@@ -12,10 +14,10 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-00
 
 ## Edição
 - **Documento sempre válido (ADR-011)**: o store só aplica ações cujo resultado passa em `validarFase`. Objetos novos nascem com `objetoPadrao`; o painel de propriedades edita num rascunho local e só aplica quando válido; mover/redimensionar/rotacionar ficam limitados a 0..1; encurtar a senha com enigmas que revelam posições removidas é recusado com a lista dos enigmas.
-- **Biblioteca**: catálogo `sprite:` do pacote de schema (porta, quadro, janela, relógio e os objetos da Escola); arrastar até o palco insere na parede ativa (RF-04, ADR-012).
+- **Biblioteca**: catálogo `sprite:` do pacote de schema (porta, quadro, janela, relógio e os objetos da Escola), fundos e "Minhas imagens"; arrastar até o palco insere na parede ativa; um fundo ou uma imagem enviada pode virar o fundo da parede ativa (RF-04, RF-06, ADR-012).
 - **Seleção** com Transformer: mover, redimensionar, rotacionar; camada para frente/para trás; duplicar na mesma parede; excluir (RF-05).
 - **Painel de propriedades**: tipo do objeto; fala → texto; enigma → pergunta, respostas (só números), dica, posições reveladas; porta → senha da fase (4 a 8 dígitos, padrão 5) (RF-07, RF-08). **Propriedades da fase** (clique no fundo da parede): título e senha, editáveis mesmo sem porta (PEND-007, ADR-001).
-- **Imagens**: upload para fundo ou objeto via `POST /assets`; mensagem de recusa vinda da Api (RF-06).
+- **Imagens**: upload via `POST /assets`, depois "usar como objeto" ou "usar como fundo" na biblioteca; mensagem de recusa vinda da Api (RF-06).
 - **Desfazer/refazer**: Ctrl+Z / Ctrl+Y sobre o documento; um passo por gesto (RF-09, ADR-008).
 - **Salvamento**: automático a cada 30 s com alteração pendente, ao trocar de aba e no botão salvar (`PUT /fases/:id`); indicador "salvo"/"salvando"/"conflito"/"erro ao salvar" (este último mantém a alteração local) (RF-10).
 - **Publicar**: mostra as posições sem enigma devolvidas pela Api, com link para o enigma ou para **Propriedades da fase**, onde fica a senha, mesmo em fase sem porta (RF-12, RF-13, PEND-007). Em fase publicada, o editor indica "alterações não publicadas" quando o rascunho difere da versão publicada e oferece "publicar de novo" (PEND-005); o aviso usa `alteracoesNaoPublicadas` de `GET /fases/:id`; depois de cada `PUT` bem-sucedido numa fase publicada, o editor chama `GET /fases/:id` de novo para atualizar o aviso.

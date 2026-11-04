@@ -1,0 +1,78 @@
+.quadro {
+    top: 189px;
+    left: 699px;
+}
+
+.janela-1 {
+    top: 375px;
+    left: 410px;
+    cursor: pointer;
+}
+
+.janela-2 {
+    top: 375px;
+    left: 1215px;
+    cursor: pointer;
+}
+
+.room .regra {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 50px;
+    top: 130px;
+    left: 343px;
+    width: 350px;
+    color: rgb(211, 1, 1);
+    line-height: 65px;
+    text-align: center;
+}
+
+.room .quadro-resposta {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 50px;
+    top: 610px;
+    left: 992px;
+    width: 350px;
+    color: rgb(211, 1, 1);
+    line-height: 65px;
+    text-align: center;
+}
+
+.resposta-direita {
+    top: 623px;
+    left: 1242px;
+    height: 50px;  
+    border-color: white;
+    outline: none;
+    border-radius: 30px;
+    color:rgb(211, 1, 1);
+    padding: 0 0 0 42px;
+    background-color: #c9daf8;
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 40px;
+    width: 140px;
+}
+
+.botao-direita {
+    top: 688px;
+    left: 1236px;
+    font-family: 'Pacifico', cursive, sans-serif;
+    color: white;
+    background-color: #c9daf8;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.res-direita{
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    color: rgb(211, 1, 1); 
+    top: 200px;
+    left: 1135px;
+}
+
+.interrogacao-direita {
+    top: 84px;
+    left: 1432px;
+    cursor: pointer;
+}
+

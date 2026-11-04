@@ -3,15 +3,24 @@
   "descricao": "Motor de interações reutilizável e app público (inicial, Escolher Fase, jogo)",
   "camada": "apresentacao",
   "arquivos_previstos": [
-    "packages/player/**",
-    "apps/player/**"
+    "packages/player/src/**",
+    "apps/player/src/**",
+    "apps/player/index.html",
+    "apps/player/public/**"
   ],
   "contrato": "harness/projeto/contratos/player.md",
+  "especificacao": "harness/projeto/programa/modulos-player.md",
+  "codigo_contrato": [
+    "packages/player/contrato/",
+    "packages/player/recursos/",
+    "apps/player/contrato/"
+  ],
   "decisoes": [
     "ADR-003",
     "ADR-006",
     "ADR-009",
     "ADR-012",
-    "ADR-014"
+    "ADR-014",
+    "ADR-017"
   ]
 }

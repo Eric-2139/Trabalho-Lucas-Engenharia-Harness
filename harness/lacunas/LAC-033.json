@@ -1,0 +1,21 @@
+{
+  "id": "LAC-033",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-04",
+    "RF-18",
+    "SchemaFase",
+    "Editor"
+  ],
+  "justificativa": "Efeito da resolução da LAC-031 (sprites tirados do legado). O sprite 'quadro' do catálogo, que é o 'Quadro' do inventário mínimo do RF-04, é byte a byte a imagem legado/imagens/direita/quadro.png: um cavalete com a árvore de contas do enigma da parede direita (números 17, 10, 40, 20, 3, 12, 9, 15, 8, 2, setas, operadores e '= ?'). Consequências: (1) RF-04: todo criador que arrasta 'Quadro' para a parede recebe o enigma da Escola desenhado nele. Não existe quadro em branco no catálogo, e o 'quadro-negro' tem o tamanho de um quadro de aula. Isso pesa também no RNF-08 (criar uma fase sem ajuda). (2) RF-18: no legado, a pergunta da direita está quase toda na imagem. O HTML só tem 'Respeite as regras de cálculo de equações!!' e '→ ? ='. modulos-schema.md §6 diz 'perguntas com o texto exato do legado', mas a linha da direita (quadro · [123] → [3]) é a única sem o texto da pergunta e não diz que a pergunta depende da imagem. Se o quadro for trocado por um genérico, a pergunta da Escola deixa de existir. Ponto menor no mesmo trecho: o texto exato da frente diz 'para conseguir o terceiro dígito da porta', mas a §6 manda revelar a posição 4. No legado, 'terceiro' contava enigmas (o teto dava o 'primeiro dígito', 92). O jogador vai ver um texto que contradiz a posição revelada. A §6 também não diz se ficam fora as mensagens de acerto do legado ('O selo foi quebrado…', 'Resposta correta, olhe para cima', a fala do Tet ao abrir a porta). O schema não tem campo para elas.",
+  "proposta": "O arquiteto decide e registra em modulos-schema.md §5/§6 e catalogo.ts (mudança de contrato, volta ao agente 3): (a) manter um sprite só, renomeando para deixar claro que é o quadro do enigma (ex.: nome 'Quadro (árvore de contas)'), e escrever na §6 o texto da pergunta da direita (as duas linhas do HTML), dizendo que ela depende da imagem; ou (b) separar em dois sprites: 'quadro' em branco para o RF-04 (cavalete sem a árvore, derivado da mesma imagem) e 'quadro-arvore' (id novo) para a Escola, com a §6 apontando o novo id. Nos dois casos, decidir com a Roberta se o 'terceiro dígito' do texto da frente fica literal (critério do RF-18) ou ganha nota de adaptação, e registrar na §6 que as mensagens de acerto do legado ficam fora (o Player mostra só os dígitos revelados).",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Opção (b): o sprite do legado virou \"quadro-setas\" (objeto da Escola) e \"quadro\" passou a ser um quadro em branco (quadro.svg), então quem arrasta \"Quadro\" não recebe o enigma da Escola. A §6 traz o texto da pergunta da direita (\"Respeite as regras de cálculo de equações!! → ? =\", o resto desenhado no sprite) e registra que o \"terceiro dígito\" da frente fica como no legado (o critério do RF-18 pede perguntas iguais, e o comportamento, dígito 3 na posição 4, também é o do legado; não muda requisito, por isso não foi à Roberta) e que as mensagens de acerto do legado não são migradas.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:28:21.600Z",
+  "bloqueante_original": false
+}

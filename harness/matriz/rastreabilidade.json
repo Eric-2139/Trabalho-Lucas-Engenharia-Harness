@@ -1,6 +1,6 @@
 {
   "versao_baseline": "2026-11-03.1",
-  "atualizado_em": "2026-11-03T21:24:09.981Z",
+  "atualizado_em": "2026-11-04T18:42:31.603Z",
   "responsavel": "Eric (arquiteto)",
   "mapeamentos": [
     {
@@ -422,6 +422,26 @@
       "req_id": "RF-15",
       "componente_id": "SchemaFase",
       "decisao_id": "ADR-003"
+    },
+    {
+      "req_id": "RF-01",
+      "componente_id": "Editor",
+      "decisao_id": "ADR-017"
+    },
+    {
+      "req_id": "RF-01",
+      "componente_id": "Api",
+      "decisao_id": "ADR-017"
+    },
+    {
+      "req_id": "RNF-05",
+      "componente_id": "Api",
+      "decisao_id": "ADR-017"
+    },
+    {
+      "req_id": "RF-13",
+      "componente_id": "Player",
+      "decisao_id": "ADR-017"
     }
   ]
 }

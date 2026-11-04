@@ -1,0 +1,19 @@
+{
+  "id": "LAC-037",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-05",
+    "Editor"
+  ],
+  "justificativa": "Em apps/editor/contrato/store.ts, o ResultadoAcao de recusa exige erros: ErroValidacao[] (linhas 11-16), e ErroValidacao exige caminho: (string|number)[] e mensagem: string (packages/schema/contrato/funcoes.ts linhas 9-12). Quando a recusa vem de validarFase, os erros saem dela (ADR-011). Mas há recusas que não passam pela validação e cujo valor o texto não define: (a) mudarCamada no extremo. O store.ts (linha 41) e o modulos-editor.md §2 dizem só '{ ok: false } com a mensagem \"o objeto já está na frente/atrás de todos\"'. Não está definido se a mensagem vai em erros[0].mensagem, qual é o caminho, nem o texto exato de cada direção. A resolução da LAC-032 definiu ok:false, mas não o conteúdo de erros. (b) Ação com objetoId inexistente (mudarCamada, duplicarObjeto, excluirObjeto, alterarGeometria, alterarInteracao, alterarImagem): o texto não diz o resultado. É a mesma classe da LAC-036: o tipo obriga o agente 4 a escolher um valor, e o agente 3, seguindo o texto, escreve toEqual({ ok: false }) ou inventa o caminho, e o teste fica vermelho.",
+  "proposta": "O arquiteto define no store.ts e no modulos-editor.md §2: (a) para mudarCamada no extremo, o ResultadoAcao completo, por exemplo { ok: false, erros: [{ caminho: [<?>], mensagem: 'o objeto já está na frente de todos' | 'o objeto já está atrás de todos' }] }, ou que os testes comparem só ok e erros[0].mensagem; (b) para objetoId inexistente, o resultado (ok:false com mensagem própria, ou pré-condição 'não deve ser chamado'). Vale aplicar antes de o agente 3 escrever os testes do RF-05.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "ResultadoAcao documentado em store.ts e modulos-editor.md §2: recusa não muda nada nem cria passo de histórico; recusas fora do schema trazem exatamente um ErroValidacao com caminho e texto definidos (objeto inexistente → [\"objetoId\"]; mudarCamada no extremo → [\"camada\"]; senha encurtada → [\"senha\"] com enigmasAfetados).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:36:48.069Z",
+  "bloqueante_original": false
+}

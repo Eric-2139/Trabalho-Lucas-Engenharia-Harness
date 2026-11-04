@@ -1,0 +1,107 @@
+.relogio-antigo {
+    top: 160px;
+    left: 793px;
+    cursor: pointer;
+}
+
+.room .pergunta-horas {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 35px;
+    color: rgb(211, 1, 1); 
+    top: 149px;
+    left: 288px;
+    width: 400px;
+    text-align: center;
+    line-height: 55px;
+    cursor: pointer;
+}
+
+.resposta-esquerda-horas {
+    top: 597px;
+    left: 689px;
+    height: 45px;  
+    border-color: white;
+    outline: none;
+    border-radius: 30px;
+    color: rgb(211, 1, 1);
+    padding: 0 0 0 42px;
+    background-color: #c9daf8;
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 35px;
+    width: 129px;
+}
+
+.botao-esquerda-horas {
+    top: 667px;
+    left: 485px;
+    font-family: 'Pacifico', cursive, sans-serif;
+    color: white;
+    background-color: #c9daf8;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.res-esquerda-horas {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    color: rgb(211, 1, 1);
+    top: 744px;
+    left: 362px;
+}
+
+.room .pergunta-minutos {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 35px;
+    color: rgb(211, 1, 1); 
+    top: 149px;
+    left: 1017px;
+    width: 400px;
+    text-align: center;
+    line-height: 55px;
+    cursor: pointer;
+}
+
+.resposta-esquerda-min {
+    top: 595px;
+    left: 1424px;
+    height: 45px;  
+    border-color: white;
+    outline: none;
+    border-radius: 30px;
+    color: rgb(211, 1, 1);
+    padding: 0 0 0 42px;
+    background-color: #c9daf8;
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 35px;
+    width: 129px;
+}
+
+.botao-esquerda-min {
+    top: 667px;
+    left: 1226px;
+    font-family: 'Pacifico', cursive, sans-serif;
+    color: white;
+    background-color: #c9daf8;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.res-esquerda-min {
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    color: rgb(211, 1, 1);
+    top: 744px;
+    left: 1087px;
+}
+
+.interrogacao-esquerda {
+    top: 84px;
+    left: 1432px;
+    cursor: pointer;
+}
+
+.giz-vermelho {
+    top: 825px;
+    left: 276px;
+    cursor: pointer;
+}

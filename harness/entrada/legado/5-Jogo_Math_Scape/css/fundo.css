@@ -1,0 +1,110 @@
+.arvore-seca {
+    top: 120px;
+    left: 557px;
+}
+
+.interrogacao-fundo {
+    top: 84px;
+    left: 1432px;
+    cursor: pointer;
+}
+
+.pentagrama {
+    top: 222px;
+    left: 665px;
+    width: 500px;
+    height: 500px;
+    border-radius: 2000px;
+    background: rgba(65, 0, 243, 0.384);
+    cursor: pointer;
+}
+
+.room .num-pent-4 {
+    top: 494px;
+    left: 711px;
+    color: rgb(125, 237, 252);
+    background-color:rgb(148, 111, 250);
+    text-align: center;
+    width: 59px;
+    height: 59px;
+    border-radius: 59px;
+    font-size: 45px;
+}
+
+.room .num-pent-23 {
+    top: 292px;
+    left: 778px;
+    color: rgb(125, 237, 252);
+    background-color:rgb(148, 111, 250);
+    text-align: center;
+    width: 59px;
+    height: 59px;
+    border-radius: 59px;
+    font-size: 45px;
+}
+
+.room .num-pent-42 {
+    top: 292px;
+    left: 993px;
+    color: rgb(125, 237, 252);
+    background-color:rgb(148, 111, 250);
+    text-align: center;
+    width: 59px;
+    height: 59px;
+    border-radius: 59px;
+    font-size: 45px;
+}
+
+.room .num-pent-61 {
+    top: 494px;
+    left: 1060px;
+    color: rgb(125, 237, 252);
+    background-color:rgb(148, 111, 250);
+    text-align: center;
+    width: 59px;
+    height: 59px;
+    border-radius: 59px;
+    font-size: 45px;
+}
+
+.resposta-fundo {
+    top: 623px;
+    left: 883px;
+    color: rgb(125, 237, 252);
+    background-color:rgb(148, 111, 250);
+    border-color: rgb(148, 111, 250);
+    text-align: center;
+    width: 59px;
+    height: 59px;
+    border-radius: 59px;
+    font-size: 45px;
+    font-family: 'Pacifico', cursive, sans-serif;
+}
+
+.botao-fundo {
+    top: 604px;
+    left: 1249px;
+    font-family: 'Pacifico', cursive, sans-serif;
+    color:  rgb(125, 237, 252);
+    background-color: rgb(148, 111, 250);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.res-fundo {
+    top: 696px;
+    left: 1125px;
+    font-family: 'Pacifico', cursive, sans-serif;
+    font-size: 27px;
+    text-align: center;
+    width: 315px;
+    color: rgb(148, 111, 250);
+    text-shadow: 2px 2px 4px rgb(125, 237, 252);
+}
+
+.arvore {
+    top: 206px;
+    left: 607px;
+    width: 585px;
+    height: 710px;
+}

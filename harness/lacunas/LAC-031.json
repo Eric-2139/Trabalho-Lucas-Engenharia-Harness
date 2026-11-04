@@ -1,0 +1,20 @@
+{
+  "id": "LAC-031",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-18",
+    "SchemaFase",
+    "Player"
+  ],
+  "justificativa": "O RF-18 tem módulo (fases-exemplo/escola-01.json, no escopo do SchemaFase), mas nenhum artefato do projeto traz a fonte da migração. O critério exige 'Perguntas iguais às do Math_Scape_Telas'. O schema.md lista só respostas, posições e senha; a especificacao.md descreve as perguntas sem o texto ('conta seguindo setas', 'expressão com multiplicação e adição'). O repositório legado não está no workspace, e nenhum documento diz onde ele fica. modulos-schema.md §5 e ADR-012 dizem também que as imagens de biblioteca/sprites/ e os 5 fundos 'entram na fase 4, na migração conferida contra o Math_Scape_Telas', mas sprites/ só tem .gitkeep. Efeitos: o agente 3 não consegue escrever o teste 'perguntas iguais' (fases-exemplo/ está nos caminhos de contrato, mas vazio); o agente 4 teria de inventar as perguntas ou produzir imagens binárias sem ter a fonte. Esse é o RF que a PEND-001 já apontava como o de maior risco no teste de aceitação.",
+  "proposta": "O arquiteto põe a fonte num caminho legível pelos agentes 3 e 4 (ex.: harness/entrada/legado/ com os textos das perguntas, falas e dicas e as imagens originais), ou produz escola-01.json e os sprites ainda na fase 3, como dado de contrato. Se os textos tiverem de ser confirmados com o cliente, abrir pendência para a Roberta.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-001",
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "O jogo legado (Math_Scape_Telas @ f62627e) foi copiado para harness/entrada/legado/ e entrou em testes.caminhos_contrato. As imagens viraram os sprites do catálogo. modulos-schema.md §6 especifica a migração parede por parede (enigmas, sprites, dicas, falas, decorações e o que fica fora).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:23:13.423Z",
+  "bloqueante_original": false
+}

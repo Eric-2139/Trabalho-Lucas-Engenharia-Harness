@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+.vite/
+*.tsbuildinfo
+.env
+.env.*
+!.env.exemplo
+# imagens enviadas no ambiente local (ADR-010)
+apps/api/armazenamento/
+# saída do Playwright (fase 6)
+test-results/
+playwright-report/
+apps/api/src/gerado/

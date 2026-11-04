@@ -1,0 +1,8 @@
+# Contexto da imagem de testes: só manifestos e a pasta infra/testes. O código entra em tempo de execução (-v .:/src).
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!packages/*/package.json
+!apps/*/package.json
+!infra/testes/

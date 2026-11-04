@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["contrato", "src", "vite.config.ts"],
+  "compilerOptions": {
+    "types": ["node"]
+  }
+}

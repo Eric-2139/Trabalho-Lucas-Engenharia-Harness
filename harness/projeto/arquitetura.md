@@ -1,6 +1,6 @@
 # Math Scape — Documento de Arquitetura (Fase 2: Projeto do Sistema)
 
-Versão 1.1 · Responsável: Eric · Entrada: baseline de requisitos `2026-11-03.1` (`harness/baseline/requisitos.json`) · Saída para: Fase 3 (Projeto do Programa)
+Versão 1.2 · Responsável: Eric · Entrada: baseline de requisitos `2026-11-03.1` (`harness/baseline/requisitos.json`) · Saída para: Fase 3 (Projeto do Programa). A versão 1.2 acrescenta as decisões da fase 3 (ADR-015 a ADR-017 e a seção 10).
 
 ## 1. Visão geral
 
@@ -37,12 +37,12 @@ A regra que guia o desenho: **posição e visual rodam no cliente; resposta, sen
 | Id | Responsabilidade | Não faz | Decisões |
 |---|---|---|---|
 | `SchemaFase` | Schema Zod da fase; tipos TypeScript; `validarJogabilidade` (RF-12); `projetarParaJogo` (remove respostas e senha); catálogo de sprites; fase original `escola-01.json` | Nada de rede, interface ou banco | ADR-001, ADR-002, ADR-003, ADR-006, ADR-011, ADR-012, ADR-013 |
-| `Editor` | Login/cadastro, lista "minhas fases", abas das 5 paredes, canvas, biblioteca, painel de propriedades, desfazer/refazer, salvamento, modo testar, exportar/importar, excluir conta | Conferir resposta; guardar segredo fora do documento do dono | ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-009, ADR-010, ADR-011, ADR-012, ADR-013, ADR-014 |
-| `Player` | Biblioteca de renderização e motor de interações (fala, dica, enigma, porta) + app público (tela inicial, Escolher Fase, jogo) | Conhecer respostas ou senha; decidir acerto | ADR-003, ADR-006, ADR-009, ADR-012, ADR-014 |
-| `Api` | Contas e sessão, CRUD de fases, publicar, exportar/importar, upload de imagens, verificação de respostas | Renderizar; editar o documento por conta própria | ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-010, ADR-011, ADR-013 |
+| `Editor` | Login/cadastro, lista "minhas fases", abas das 5 paredes, canvas, biblioteca, painel de propriedades, desfazer/refazer, salvamento, modo testar, exportar/importar, excluir conta | Conferir resposta; guardar segredo fora do documento do dono | ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-009, ADR-010, ADR-011, ADR-012, ADR-013, ADR-014, ADR-017 |
+| `Player` | Biblioteca de renderização e motor de interações (fala, dica, enigma, porta) + app público (tela inicial, Escolher Fase, jogo) | Conhecer respostas ou senha; decidir acerto | ADR-003, ADR-006, ADR-009, ADR-012, ADR-014, ADR-017 |
+| `Api` | Contas e sessão, CRUD de fases, publicar, exportar/importar, upload de imagens, verificação de respostas | Renderizar; editar o documento por conta própria | ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-010, ADR-011, ADR-013, ADR-017 |
 | `Banco` | Esquema Prisma, migrations e seed (fase original) | Regra de negócio | ADR-002, ADR-004, ADR-010 |
 
-Contratos: `harness/projeto/contratos/` (`schema.md`, `api.md`, `editor.md`, `player.md`, `banco.md`). Componentes do harness: `harness/projeto/componentes/*.json`.
+Contratos: `harness/projeto/contratos/` (`schema.md`, `api.md`, `editor.md`, `player.md`, `banco.md`). Componentes do harness: `harness/projeto/componentes/*.json`. Na fase 3, o escopo de escrita de cada componente passou a ser a pasta `src/` (ADR-015), e os componentes ganharam o caminho da especificação de módulos e do código do contrato.
 
 ### Mudança em relação ao plano original
 O plano tinha o player só como `apps/player`. Como o **modo testar (RF-11)** joga a fase dentro do editor com as regras do jogador, o motor do player vira uma biblioteca (`packages/player`) usada pelo app público e pelo editor (ADR-009). Assim existe um único motor de regras.
@@ -153,5 +153,14 @@ Decidido no projeto após a primeira verificação do agente 5:
 | ADR-012 | Catálogo de sprites no pacote de schema | RF-04, RF-06, RF-18 |
 | ADR-013 | Exportação autocontida | RF-14, RF-19, RNF-09 |
 | ADR-014 | Tema visual e acessibilidade comuns a Editor e Player | RNF-07 |
+| ADR-015 | Monorepo com contrato separado da implementação em cada pacote | nenhum (processo) |
+| ADR-016 | Suíte em contêiner único, sem rede, com PostgreSQL local | nenhum (processo) |
+| ADR-017 | Api servida no mesmo site dos apps, sob /api | RF-01, RF-13, RNF-05 |
 
 Arquivos: `harness/projeto/decisoes/ADR-NNN.md`. A rastreabilidade completa (requisito → componente → decisão) está em `harness/matriz/rastreabilidade.json`.
+
+## 10. Projeto do programa (fase 3)
+
+A estrutura do monorepo, as interfaces de cada módulo e o ambiente de testes estão em `harness/projeto/programa/` (`README.md` e uma especificação de módulos por componente). As interfaces também existem como código, nas pastas `contrato/` de cada pacote, que o agente 3 lê para escrever os testes. Decisões da fase: ADR-015 (contrato separado da implementação), ADR-016 (suíte em contêiner sem rede, com PostgreSQL) e ADR-017 (Api no mesmo site dos apps, sob `/api`, para o cookie `SameSite=Lax` funcionar em produção).
+
+O gerador `harness/projeto/gerar-projeto.js` é a fonte única da matriz e dos cabeçalhos "Decisões:" e "Requisitos:" de contratos, especificações e ADRs. Ele recusa gerar quando um documento cita uma ADR que a matriz não liga ao componente, ou quando o escopo dos componentes não bate com o config do harness.

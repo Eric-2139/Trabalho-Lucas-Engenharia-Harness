@@ -1,0 +1,21 @@
+{
+  "id": "LAC-027",
+  "tipo": "conflito_contrato",
+  "itens": [
+    "SchemaFase",
+    "RF-04",
+    "RNF-09",
+    "ADR-015"
+  ],
+  "justificativa": "O catálogo é contrato e escopo de escrita do agente 4 ao mesmo tempo. A ADR-015 diz que o schema da fase é contrato e que o agente 4 'não tem contrato/ no escopo'. Só que packages/schema/contrato/fase.ts importa spriteDoCatalogo de ../biblioteca/catalogo.ts e valida cada RefImagem por ele (refImagem: sprite existe E categoria confere). contrato/index.ts reexporta CATALOGO e spriteDoCatalogo, e config.json/testes.caminhos_contrato lista packages/schema/biblioteca/ como contrato que o agente 3 lê. Mesmo assim, SchemaFase.arquivos_previstos inclui 'packages/schema/biblioteca/**', e o README §2 diz 'agente 4 acrescenta sprites na migração'. Assim, o agente 4 pode alterar o que o schema aceita (categoria de um sprite, ids, até a lógica de spriteDoCatalogo) e os tamanhos padrão que objetoPadrao e faseInicial usam, ou seja, o mesmo dado de que os testes do agente 3 derivam as expectativas. É exatamente o atalho que a separação contrato × implementação deveria fechar: deixar a suíte verde mexendo no contrato.",
+  "proposta": "O arquiteto escolhe: (a) restringir o glob do SchemaFase a 'packages/schema/biblioteca/sprites/**', e as entradas novas de catalogo.ts que a migração pedir voltam ao arquiteto como mudança de contrato; (b) separar dado de código: spriteDoCatalogo passa para contrato/, o inventário vira dado puro (ex.: catalogo.json validado por um schema no contrato) e o agente 4 só pode acrescentar entradas; ou (c) manter como está e registrar a exceção na ADR-015, com revisão humana do diff de catalogo.ts antes de cada merge.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Opção (a), mais forte: o catálogo e as imagens foram fechados na fase 3 a partir do legado e saíram do escopo do agente 4 (SchemaFase.arquivos_previstos = packages/schema/src/** e fases-exemplo/**). Acrescentar sprite é mudança de contrato (ADR-012, modulos-schema.md §5).",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:23:13.423Z",
+  "bloqueante_original": false
+}

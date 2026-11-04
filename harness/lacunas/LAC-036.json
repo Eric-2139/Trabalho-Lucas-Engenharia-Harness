@@ -1,0 +1,20 @@
+{
+  "id": "LAC-036",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-15",
+    "RF-16",
+    "Player"
+  ],
+  "justificativa": "Em packages/player/contrato/motor.ts, ResultadoResposta 'falha' exige mensagem: { tipo: 'falha'; mensagem: string } (linha 55). Mas dois textos do contrato descrevem a falha sem mensagem e não dizem qual texto usar: motor.ts linha 77 (responder em objeto que não é enigma nem porta → { tipo: 'falha' }) e modulos-player.md linha 30 (promessa rejeitada por rede → { tipo: 'falha' }). MENSAGENS.falhaDeRede ('Não foi possível falar com o servidor...') serve para o caso de rede. Para o caso de decoração, fala ou objeto inexistente, esse texto é falso, e não há outro definido. Risco concreto: o agente 3, seguindo o texto, escreve expect(r).toEqual({ tipo: 'falha' }), enquanto o agente 4 é obrigado pelo tipo a incluir mensagem. O teste fica vermelho, ou o agente 4 escolhe o texto sozinho. É o mesmo padrão da LAC-035 (resultado sem texto definido no contrato).",
+  "proposta": "O arquiteto define no contrato do Player (motor.ts linha 77 e modulos-player.md linha 30) o resultado completo dos dois casos: (a) rede → { tipo: 'falha', mensagem: MENSAGENS.falhaDeRede }; (b) responder em objeto que não é enigma nem porta: uma mensagem própria em MENSAGENS, ou outro tipo de resultado, ou 'não deve ser chamado' (pré-condição). É mudança de contrato antes de existir teste: vale aplicar antes de o agente 3 escrever os testes do RF-15/RF-16.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "Os dois casos de falha foram definidos com mensagem: rede → MENSAGENS.falhaDeRede; objeto inexistente na parede ativa, decoração ou fala → MENSAGENS.semPergunta (\"Este objeto não tem pergunta nem senha.\"). responder nunca rejeita e não muda o estado nesses casos (motor.ts, modulos-player.md). player.md também passou a citar a mensagem de acerto.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:34:25.787Z",
+  "bloqueante_original": false
+}

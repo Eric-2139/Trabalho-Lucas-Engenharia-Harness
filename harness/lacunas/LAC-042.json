@@ -1,0 +1,22 @@
+{
+  "id": "LAC-042",
+  "tipo": "lacuna_parcial",
+  "itens": [
+    "RF-01",
+    "RF-14",
+    "RF-05",
+    "Editor",
+    "SchemaFase"
+  ],
+  "justificativa": "É a mesma classe das LAC-036 a 041: textos paralelos que divergem do valor exato, que o agente 3 (toEqual) e o agente 4 podem ler de formas diferentes. (a) apps/editor/contrato/salvamento.ts, linhas 84-85 (CriarClienteApiEditor): 'qualquer resposta 401 chama aoNaoAutenticado ... e devolve { ok: false, status: 401 }'. Falta o erro, que é obrigatório no tipo ResultadoHttp (linha 27) e que a regra da linha 23 manda tirar do corpo { erro }. Foi o mesmo defeito que a LAC-041(c) corrigiu para o status 0. Além disso, 'qualquer resposta 401' inclui entrar() com credencial errada (api.md linha 11, POST /auth/login → 401; modulos-api.md linha 28). O texto não diz se o login recusado também chama aoNaoAutenticado. Um teste do cliente com fetch simulado pode afirmar tanto que é chamado quanto que não é. (b) packages/schema/contrato/fase.ts, linha 216, comentário de Envelope.fase: 'Validada à parte por Fase, para que os erros apontem o caminho dentro da fase'. A própria LAC-040 citou esse comentário como indício do caminho relativo. A resolução escolheu o caminho com prefixo 'fase' a partir da raiz do envelope (funcoes.ts linhas 74-76; modulos-schema.md linha 106), mas não atualizou o comentário. (c) Detalhe menor: modulos-editor.md, linha 30, traz a segunda mensagem só como '(ou \"atrás de todos\")', sem o texto completo 'O objeto já está atrás de todos.' que está em store.ts, linha 14. A resolução da LAC-041(a) diz que o texto ficou igual nos três lugares.",
+  "proposta": "Ajustes de texto, sem mudança de arquitetura. (a) Em salvamento.ts, linha 85, trocar por '{ ok: false, status: 401, erro } (erro conforme a regra do ResultadoHttp)' e dizer se entrar() é exceção, ou seja, se o login recusado devolve só o 401 sem chamar aoNaoAutenticado. Repetir a decisão em modulos-editor.md, linha 53. (b) Em fase.ts, linha 216, citar o prefixo: 'validada à parte por Fase; os erros levam o prefixo \"fase\" (ver ValidarEnvelope)'. (c) Em modulos-editor.md, linha 30, escrever a segunda mensagem por extenso ou remeter a store.ts. Vale aplicar antes de o agente 3 escrever os testes do cliente do editor (RF-01) e do envelope (RF-14).",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "resolvida",
+  "resolucao": "(a) salvamento.ts e modulos-editor.md: 401 de qualquer chamada, exceto entrar e cadastrar, chama aoNaoAutenticado; login recusado é só resultado; o 401 sempre volta como ResultadoHttp com erro (do corpo ou \"Erro 401 do servidor.\"). (b) comentário de Envelope.fase em fase.ts cita o prefixo \"fase\". (c) modulos-editor.md com as duas mensagens completas de mudarCamada.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-04T18:42:28.650Z",
+  "bloqueante_original": false
+}
