@@ -2,7 +2,9 @@
   "id": "PEND-013",
   "tipo": "arquitetura",
   "agente_origem": "codificacao",
-  "req_ids": ["RNF-07"],
+  "req_ids": [
+    "RNF-07"
+  ],
   "chamado_id": null,
   "pergunta": "test_RNF07_tab_percorre_as_fases_na_ordem_da_lista (tests/player/escolher-fase.test.tsx) só passa se a tela Escolher Fase tiver focáveis extras que não são entradas de fase. Isso contraria o projeto, que pede só a lista. Como resolver?",
   "opcoes": [
@@ -12,5 +14,9 @@
   ],
   "contexto": "O teste aperta Tab lista.length + 4 = 7 vezes e espera que as entradas focadas sejam exatamente as 3 da lista. O user-event 14 (utils/focus/getTabDestination.js) faz o Tab dar a volta: depois do último focável vai para document.body e então para o primeiro de novo. Com a implementação da especificação (3 <button> nativos em <ul>, sem outro focável), os focos são b1, b2, b3, body, b1, b2, b3, e a asserção recebe 6 elementos em vez de 3 ('expected [ …(6) ] to deeply equal [ …(3) ]'). Para passar, a tela precisaria de pelo menos 5 focáveis, com o primeiro fora da lista. Esses controles extras teriam que ser de tipo diferente das entradas, porque o helper entradas() conta todos os links (ou, sem links, todos os botões). modulos-player.md §2 e PropsEscolherFase não preveem nenhum desses controles. Os outros 14 testes do RNF-07 e os 5 do RF-13 em escolher-fase.test.tsx estão verdes, incluindo o de Shift+Tab e o de Enter.",
   "impacto": "RNF-07 fica parcial (14/15) até a decisão. O agente 4 não muda o teste (P2) e não acrescenta controles fora do projeto só para o teste passar.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Opção (a), já executada: o agente 3 corrigiu o teste do Tab na rodada 9 (testes-2026-11-05T19-21-22-271Z.json) e o RNF-07 ficou verde (codificacao-2026-11-05T19-23-24-323Z.json). Só faltava registrar o fechamento.",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-05T23:30:00.000Z"
 }

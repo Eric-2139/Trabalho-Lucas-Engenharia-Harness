@@ -1,0 +1,24 @@
+{
+  "agente": "codificacao",
+  "execucao": "a9a8d826765393c44",
+  "inicio": "2026-11-05T23:17:29.755Z",
+  "fim": "2026-11-05T23:22:40.404Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-16",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "packages/player/src/RenderizadorParede.tsx",
+      "packages/player/src/index.ts",
+      "apps/player/src/mensagens.ts",
+      "apps/player/src/telas/TelaJogo.tsx",
+      "apps/player/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

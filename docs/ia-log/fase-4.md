@@ -33,6 +33,13 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 23 | RNF-06 | Api | já escritos nas rodadas 4 a 6 | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (280 de 280) | `codificacao-2026-11-05T18-54-43-968Z.json` |
 | 24 | RNF-09 | Api | já escritos nas rodadas 4 a 6 | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (280 de 280) | `codificacao-2026-11-05T18-56-27-971Z.json` |
 | 25 | RNF-07 | Player | rodada 8 (15 casos em `tests/player/tema.test.ts` e `escolher-fase.test.tsx`; o teste do Tab corrigido na rodada 9) | `tema` e `razaoContraste` (WCAG 2.1) em `packages/player/src/tema.ts`; `EscolherFase` com botões nativos; 1ª rodada escalou por teste defeituoso (PEND-013), 2ª rodada verde com 0 ciclos | `codificacao-2026-11-05T19-17-30-128Z.json` (escalado), `testes-2026-11-05T19-21-22-271Z.json`, `codificacao-2026-11-05T19-23-24-323Z.json` |
+| 26 | RF-16 | Player | rodada 7 (5 casos de tela em `tests/player/tela-jogo.test.tsx`, mais os 7 do motor) | `RenderizadorParede` (Konva, fundo sem escuta, decoração sem handler) em `packages/player/src/RenderizadorParede.tsx`; `TelaJogo` com 5 botões de parede, palco 16:9 e caixa de fala em `apps/player/src/telas/TelaJogo.tsx`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T23-22-40-404Z.json` |
+
+Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
+- **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
+- **Imagem de testes ausente nesta máquina.** A IA abriu o Docker Desktop e construiu `math-scape-testes` (`pnpm testes:imagem`) antes da primeira rodada. Ponto de partida: 320 de 351 testes verdes.
+- **PEND-013 fechada no registro.** A opção (a) já tinha sido executada (teste do Tab corrigido na rodada 9); só faltava mudar o status.
+- **Achados do agente 4 no RF-16.** `@math-scape/player` passa a carregar konva e react-konva em todo teste que importa o pacote. O palco ocupa o maior 16:9 da janela sem descontar a barra de botões e pode transbordar na vertical no navegador real (fica para o E2E).
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -117,7 +124,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RNF-07 (1ª rodada) | `escalado`: PEND-013, teste defeituoso | 766.364 | 13.479 | medido |
 | 05/11 | idem, subagente `testes` | Corrigir o teste do Tab (PEND-013) e testar o relógio do limite (PEND-010) | `sucesso` | 487.656 | 13.629 | medido |
 | 05/11 | idem, subagente `codificacao` | Concluir RNF-07 | `sucesso` com 0 ciclos | 49.914 | 1.075 | medido |
-| **Total** | | | | **41.781.142** | **548.303** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-16 (`TelaJogo` e `RenderizadorParede`) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 2.054.043 | 22.020 | medido |
+| **Total** | | | | **43.835.185** | **570.323** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
