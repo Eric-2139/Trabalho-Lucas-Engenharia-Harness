@@ -1,0 +1,16 @@
+{
+  "agente": "codificacao",
+  "execucao": "a9099be2c3dd5eb50",
+  "inicio": "2026-11-05T18:49:35.321Z",
+  "fim": "2026-11-05T18:51:15.430Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-19",
+    "ciclos_editar_testar": 0,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": []
+  },
+  "bloqueios_por_politica": {}
+}
