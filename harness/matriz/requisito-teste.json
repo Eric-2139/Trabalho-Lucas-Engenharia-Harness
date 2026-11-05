@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-05T19:19:52.239Z",
+  "gerado_em": "2026-11-05T23:46:28.087Z",
   "requisitos": {
     "RF-06": {
       "feliz": 4,
@@ -11,11 +11,12 @@
       ]
     },
     "RF-01": {
-      "feliz": 3,
-      "borda": 4,
-      "negativo": 4,
+      "feliz": 7,
+      "borda": 9,
+      "negativo": 7,
       "arquivos": [
-        "tests/api/auth.test.ts"
+        "tests/api/auth.test.ts",
+        "tests/editor/cliente-api.test.ts"
       ]
     },
     "RNF-05": {
@@ -51,11 +52,13 @@
       ]
     },
     "RF-10": {
-      "feliz": 2,
-      "borda": 4,
-      "negativo": 2,
+      "feliz": 5,
+      "borda": 11,
+      "negativo": 9,
       "arquivos": [
-        "tests/api/fases.test.ts"
+        "tests/api/fases.test.ts",
+        "tests/editor/cliente-api.test.ts",
+        "tests/editor/salvamento.test.ts"
       ]
     },
     "RNF-09": {
@@ -126,6 +129,51 @@
         "tests/schema/comparacao.test.ts"
       ]
     },
+    "RF-09": {
+      "feliz": 4,
+      "borda": 7,
+      "negativo": 5,
+      "arquivos": [
+        "tests/editor/atalhos.test.ts",
+        "tests/editor/store.test.ts"
+      ]
+    },
+    "RF-04": {
+      "feliz": 3,
+      "borda": 4,
+      "negativo": 3,
+      "arquivos": [
+        "tests/editor/store.test.ts",
+        "tests/schema/imagens.test.ts"
+      ]
+    },
+    "RF-05": {
+      "feliz": 6,
+      "borda": 9,
+      "negativo": 7,
+      "arquivos": [
+        "tests/editor/store.test.ts"
+      ]
+    },
+    "RF-07": {
+      "feliz": 4,
+      "borda": 5,
+      "negativo": 5,
+      "arquivos": [
+        "tests/editor/store.test.ts",
+        "tests/schema/fase.test.ts"
+      ]
+    },
+    "RF-08": {
+      "feliz": 9,
+      "borda": 14,
+      "negativo": 6,
+      "arquivos": [
+        "tests/editor/store.test.ts",
+        "tests/schema/fase.test.ts",
+        "tests/schema/padroes.test.ts"
+      ]
+    },
     "RNF-07": {
       "feliz": 5,
       "borda": 6,
@@ -177,31 +225,6 @@
       "arquivos": [
         "tests/player/tela-jogo.test.tsx",
         "tests/schema/fase-exemplo.test.ts"
-      ]
-    },
-    "RF-07": {
-      "feliz": 2,
-      "borda": 4,
-      "negativo": 3,
-      "arquivos": [
-        "tests/schema/fase.test.ts"
-      ]
-    },
-    "RF-08": {
-      "feliz": 6,
-      "borda": 10,
-      "negativo": 3,
-      "arquivos": [
-        "tests/schema/fase.test.ts",
-        "tests/schema/padroes.test.ts"
-      ]
-    },
-    "RF-04": {
-      "feliz": 1,
-      "borda": 1,
-      "negativo": 1,
-      "arquivos": [
-        "tests/schema/imagens.test.ts"
       ]
     }
   }

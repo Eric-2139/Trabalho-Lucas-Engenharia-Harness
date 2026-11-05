@@ -47,6 +47,8 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Achados do agente 4 no RF-16.** `@math-scape/player` passa a carregar konva e react-konva em todo teste que importa o pacote. O palco ocupa o maior 16:9 da janela sem descontar a barra de botões e pode transbordar na vertical no navegador real (fica para o E2E).
 - **Achado do agente 4 no RF-15.** O `Contexto` da Api não carrega o relógio, então ele chega a `registrarRotaVerificar` como terceiro parâmetro. Se outras rotas precisarem do relógio, cabe ao arquiteto pô-lo no `Contexto`.
 - **Decisões da IA, delegadas pelo Eric.** PEND-014 → (c): browserslist e E2E Playwright do RNF-01 ficam para as fases 5-6, como a ADR-016 já prevê. PEND-015 e PEND-016 → (a): o aviso de resolução e a barra de publicação do Editor ganham testes do agente 3 antes da implementação.
+- **Contrato das telas do Editor** (commit `16d215c`, decisão da IA como arquiteta). O contrato da fase 3 não tipava as telas do editor. A IA acrescentou `apps/editor/contrato/telas.ts` (`PropsTelaEntrar`, `PropsMinhasFases`, `PropsTelaConta`, `PropsTelaEdicao`, `ROTULOS_EDITOR`) e os stubs, e registrou as convenções em `modulos-editor.md` §5. A matriz requisito → componente → decisão não mudou, então o gerador do projeto e o agente 5 não foram rodados.
+- **Rodada A do Editor (agente 3).** 89 casos em `tests/editor/{store,atalhos,salvamento,cliente-api}.test.ts` e o relógio falso em `tests/support/relogio-falso.ts`. A sessão principal conferiu os tipos dos testes com `tsc -p tests` no contêiner, sem erro. Pontos que o agente deixou sem asserção, por não estarem no critério: o eixo do deslocamento de +0,02 ao duplicar, a camada do primeiro objeto numa parede vazia, nada gravado antes de 30 s, o que vem depois de um `conflito` e se `assinar` notifica o estado atual.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -137,7 +139,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Confirmar RF-18 | `sucesso` com 0 ciclos | 72.232 | 1.430 | medido |
 | 05/11 | idem, subagente `codificacao` | Confirmar RNF-01 | `sucesso` com 0 ciclos; PEND-014 e PEND-015 | 252.087 | 6.748 | medido |
 | 05/11 | idem, subagente `codificacao` | Confirmar RF-13 (Player) | `sucesso` com 0 ciclos; PEND-016 | 195.067 | 3.699 | medido |
-| **Total** | | | | **46.606.626** | **604.308** | medido |
+| 05/11 | idem, subagente `testes` | Testes do Editor, rodada A: store, atalhos, salvamento e cliente HTTP (RF-01, RF-04, RF-05, RF-07, RF-08, RF-09, RF-10) | `sucesso`; 89 casos, todos vermelhos só pelos stubs; 1 bloqueio P1 | 1.555.263 | 52.666 | medido |
+| **Total** | | | | **48.161.889** | **656.974** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
