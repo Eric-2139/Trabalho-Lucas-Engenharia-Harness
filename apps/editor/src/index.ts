@@ -4,7 +4,6 @@
  * O app em si (main.tsx, rotas, telas) também fica em src/.
  */
 import type {
-  AtalhoTeclado,
   CriarClienteApiEditor,
   CriarSalvamento,
   PropsAbasParedes,
@@ -25,7 +24,7 @@ function naoImplementado(nome: string): never {
 }
 
 export { criarStoreEditor } from './store/index.ts';
-export const atalhoTeclado: AtalhoTeclado = () => naoImplementado('atalhoTeclado');
+export { atalhoTeclado } from './atalhos.ts';
 export const criarSalvamento: CriarSalvamento = () => naoImplementado('criarSalvamento');
 export const criarClienteApiEditor: CriarClienteApiEditor = () => naoImplementado('criarClienteApiEditor');
 
