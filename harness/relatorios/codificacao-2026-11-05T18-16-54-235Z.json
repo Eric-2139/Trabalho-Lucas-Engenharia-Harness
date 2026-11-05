@@ -1,0 +1,22 @@
+{
+  "agente": "codificacao",
+  "execucao": "a5c5114ef40393278",
+  "inicio": "2026-11-05T18:14:02.509Z",
+  "fim": "2026-11-05T18:16:54.235Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-02",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/api/src/plugins/exigir-dono.ts",
+      "apps/api/src/rotas/fases.ts",
+      "apps/api/src/app.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 1
+  }
+}

@@ -24,6 +24,8 @@ export const construirApp: ConstruirApp = async (opcoes) => {
   registrarTratamentoDeErros(app);
   await app.register(cookie);
   const sessoes = registrarSessao(app, banco, opcoes.producao === true);
+  // Preenchido pelo pré-handler `exigirDono` nas rotas `/fases/:id` (ADR-005).
+  app.decorateRequest('fase', null);
 
   const ctx: Contexto = { banco, armazenamento: opcoes.armazenamento, sessoes };
   registrarRotasAuth(app, ctx);

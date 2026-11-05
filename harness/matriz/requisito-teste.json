@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-05T17:59:32.752Z",
+  "gerado_em": "2026-11-05T18:11:57.114Z",
   "requisitos": {
     "RF-01": {
       "feliz": 3,
@@ -31,6 +31,57 @@
       "negativo": 2,
       "arquivos": [
         "tests/api/auth.test.ts"
+      ]
+    },
+    "RF-02": {
+      "feliz": 4,
+      "borda": 6,
+      "negativo": 10,
+      "arquivos": [
+        "tests/api/fases.test.ts"
+      ]
+    },
+    "RF-10": {
+      "feliz": 2,
+      "borda": 4,
+      "negativo": 2,
+      "arquivos": [
+        "tests/api/fases.test.ts"
+      ]
+    },
+    "RNF-09": {
+      "feliz": 4,
+      "borda": 8,
+      "negativo": 9,
+      "arquivos": [
+        "tests/api/fases.test.ts",
+        "tests/schema/envelope.test.ts",
+        "tests/schema/fase.test.ts"
+      ]
+    },
+    "RF-12": {
+      "feliz": 3,
+      "borda": 7,
+      "negativo": 3,
+      "arquivos": [
+        "tests/api/fases.test.ts",
+        "tests/schema/jogabilidade.test.ts"
+      ]
+    },
+    "RF-14": {
+      "feliz": 2,
+      "borda": 4,
+      "negativo": 3,
+      "arquivos": [
+        "tests/api/fases.test.ts"
+      ]
+    },
+    "RF-13": {
+      "feliz": 2,
+      "borda": 3,
+      "negativo": 3,
+      "arquivos": [
+        "tests/api/publicadas.test.ts"
       ]
     },
     "RF-16": {
@@ -67,15 +118,6 @@
         "tests/player/palco.test.ts"
       ]
     },
-    "RNF-09": {
-      "feliz": 3,
-      "borda": 6,
-      "negativo": 6,
-      "arquivos": [
-        "tests/schema/envelope.test.ts",
-        "tests/schema/fase.test.ts"
-      ]
-    },
     "RF-18": {
       "feliz": 9,
       "borda": 3,
@@ -99,14 +141,6 @@
       "arquivos": [
         "tests/schema/fase.test.ts",
         "tests/schema/padroes.test.ts"
-      ]
-    },
-    "RF-12": {
-      "feliz": 2,
-      "borda": 4,
-      "negativo": 2,
-      "arquivos": [
-        "tests/schema/jogabilidade.test.ts"
       ]
     }
   }
