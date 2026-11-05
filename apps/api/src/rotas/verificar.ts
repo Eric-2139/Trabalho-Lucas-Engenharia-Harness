@@ -5,7 +5,9 @@
  * - público: lê `documento_publicado`; fase não publicada ou inexistente → 404;
  * - `?modo=teste` (RF-11): lê o `documento` em edição, só para o dono (sem sessão → 401, outro dono → 404).
  * Objeto inexistente, ou que não é enigma nem porta → 404.
- * O limite de tentativas (`plugins/limite-verificar.ts`) entra com o RF-15.
+ * Limite de tentativas (RF-15, ADR-003; `plugins/limite-verificar.ts`): só no modo público, por
+ * IP + fase + tipo do objeto; conta depois de achar o enigma ou a porta e antes de conferir.
+ * Excedeu → 429 `{ tentarEmSegundos }`, sem conferir a resposta.
  */
 import {
   CorpoVerificar,
@@ -20,6 +22,7 @@ import {
 import type { FastifyInstance } from 'fastify';
 import type { Contexto } from '../contexto.ts';
 import { responderCorpoInvalido, responderErro } from '../erros.ts';
+import { criarLimiteVerificar } from '../plugins/limite-verificar.ts';
 import { faseGuardada } from '../projecao.ts';
 
 const MENSAGEM_FASE_NAO_ENCONTRADA = 'Fase não encontrada.';
@@ -43,6 +46,8 @@ function objetoDaFase(fase: Fase, objetoId: string): Objeto | undefined {
 
 export function registrarRotaVerificar(app: FastifyInstance, ctx: Contexto): void {
   const { banco } = ctx;
+  // Uma instância por app: cada `construirApp` começa com as janelas zeradas.
+  const limite = criarLimiteVerificar();
 
   app.post<Pedido>('/fases/:id/verificar', async (request, reply) => {
     const { id } = request.params;
@@ -73,6 +78,11 @@ export function registrarRotaVerificar(app: FastifyInstance, ctx: Contexto): voi
 
     const fase = faseGuardada(documento);
     const objeto = objetoDaFase(fase, corpo.data.objetoId);
+    const tipo = objeto?.interacao.tipo;
+    if (!modoTeste && (tipo === 'enigma' || tipo === 'porta')) {
+      const consumo = limite.consumir(request.ip, id.toLowerCase(), tipo);
+      if (!consumo.permitido) return reply.code(429).send({ tentarEmSegundos: consumo.tentarEmSegundos });
+    }
     if (objeto?.interacao.tipo === 'enigma') {
       const correto = respostaConfere(corpo.data.resposta, objeto.interacao.respostas);
       const resposta: RespostaVerificarEnigma = {
