@@ -5,4 +5,7 @@ export const mensagens = {
     rotuloLista: 'Fases publicadas',
     nenhumaFase: 'Nenhuma fase publicada ainda.',
   },
+  http: {
+    semRede: 'Não foi possível falar com o servidor. Tente de novo.',
+  },
 } as const;
