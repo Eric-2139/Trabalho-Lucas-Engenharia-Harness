@@ -23,6 +23,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 13 | RF-14 | Api | rodada 5 (9 casos de RF-14 e 2 de RNF-09 sobre importar) | exportar (envelope com data URL) e importar (`bodyLimit` de 50 MB, tipo pelos bytes, transação que desfaz banco e arquivos); `detectarTipoImagem` e `criarArmazenamentoEmDisco`; verde no 1º de 5 ciclos (214 de 220), sem reversão | `codificacao-2026-11-05T18-20-43-265Z.json` |
 | 14 | RNF-04 | SchemaFase + Api | rodada 6: 60 casos em `tests/schema/{projecao,imagens}.test.ts` e `tests/api/{verificar,projecoes,assets}.test.ts` para RNF-04, RF-15, RF-11, RF-06 (`sucesso`, 4 de 4; PEND-010 aberta) | `projetarParaJogo` (lista de campos permitidos), `/publicadas/:id/jogo`, `jogo-teste` e `verificar` sem o limite; verde no 1º de 5 ciclos, sem reversão; de carona todo o RF-11 e o RF-15 da Api menos os 3 casos de 429 | `testes-2026-11-05T18-29-55-702Z.json`, `codificacao-2026-11-05T18-34-29-867Z.json` |
 | 15 | RF-15 | Api | rodada 6 (3 casos de limite em `tests/api/verificar.test.ts`) | `plugins/limite-verificar.ts`: janela fixa por tipo + fase + IP, 429 com `tentarEmSegundos`, estado por instância; verde no 1º de 5 ciclos, sem reversão | `codificacao-2026-11-05T18-37-45-080Z.json` |
+| 16 | RF-06 | Api + SchemaFase | rodada 6 (14 casos em `tests/api/assets.test.ts` e `tests/schema/imagens.test.ts`) | `POST /assets` (multipart, 413 por `limits.fileSize`, 415 pelos bytes, transação com o arquivo) e `GET /assets/:id`; `resolverImagem`; verde no 1º de 5 ciclos, suíte 280 de 280, sem reversão; de carona os 3 casos de `resolverImagem` do RF-04 | `codificacao-2026-11-05T18-42-01-249Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -48,6 +49,7 @@ Pontos da Api (RF-01) para o arquiteto:
 - **PEND-010 (aberta, para o Eric).** `OpcoesApp` não tem relógio injetável, então a suíte não confere que o limite de tentativas libera depois da janela. Opções: acrescentar `relogio` ao contrato ou aceitar o risco.
 - **`verificar?modo=teste` sem sessão** responde 401, como as outras rotas do criador; o contrato só lista 404. Vale atualizar `contratos/api.md`.
 - **Limite atrás do proxy.** O limite usa `request.ip` e o Fastify está sem `trustProxy`. Atrás do proxy da ADR-017, todos os jogadores podem dividir o IP do proxy. Decidir na implantação. O estado fica em memória, por instância.
+- **URL da imagem enviada** usa o prefixo `/api` (`PREFIXO_PUBLICO`, ADR-017). Se a Api sair do mesmo site dos apps, rever.
 - **Índices a mais.** `sessoes(usuario_id)` e `assets(dono_id)`, além dos do contrato.
 
 Pontos do motor (RF-16) para o arquiteto:
@@ -91,7 +93,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `testes` | Testes: projeção, verificar, assets (RNF-04, RF-15, RF-11, RF-06) | `sucesso`; PEND-010 | 3.045.160 | 53.204 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RNF-04 (projeções) | `sucesso` no 1º ciclo | 1.550.916 | 15.334 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-15 (limite de tentativas) | `sucesso` no 1º ciclo | 357.267 | 6.513 | medido |
-| **Total** | | | | **34.539.644** | **416.712** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-06 (upload de imagens) | `sucesso` no 1º ciclo | 986.308 | 11.123 | medido |
+| **Total** | | | | **35.525.952** | **427.835** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

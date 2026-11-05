@@ -22,7 +22,7 @@ import { validarJogabilidade as validarJogabilidadeImpl } from './jogabilidade.t
 import { naoImplementado } from './nao-implementado.ts';
 import { faseInicial as faseInicialImpl } from './padroes.ts';
 import { projetarParaJogo as projetarParaJogoImpl } from './projecao.ts';
-import { referenciasDeAsset as referenciasDeAssetImpl } from './imagens.ts';
+import { referenciasDeAsset as referenciasDeAssetImpl, resolverImagem as resolverImagemImpl } from './imagens.ts';
 import { validarEnvelope as validarEnvelopeImpl, validarFase as validarFaseImpl } from './validar.ts';
 
 export * from '../contrato/index.ts';
@@ -34,6 +34,6 @@ export const faseInicial: FaseInicial = faseInicialImpl;
 export const objetoPadrao: ObjetoPadrao = () => naoImplementado('objetoPadrao');
 export const respostaConfere: RespostaConfere = respostaConfereImpl;
 export const senhaConfere: SenhaConfere = senhaConfereImpl;
-export const resolverImagem: ResolverImagem = () => naoImplementado('resolverImagem');
+export const resolverImagem: ResolverImagem = resolverImagemImpl;
 export const referenciasDeAsset: ReferenciasDeAsset = referenciasDeAssetImpl;
 export const validarEnvelope: ValidarEnvelope = validarEnvelopeImpl;

@@ -1,7 +1,23 @@
 /**
  * ADR-010, ADR-012, ADR-013: referências de imagem da fase.
  */
-import { type Fase, PADRAO_REF_ASSET, PAREDES } from '../contrato/fase.ts';
+import { spriteDoCatalogo } from '../biblioteca/catalogo.ts';
+import { type Fase, PADRAO_REF_ASSET, PAREDES, type RefImagem } from '../contrato/fase.ts';
+
+const PADRAO_REF_SPRITE = /^sprite:([a-z0-9-]+)$/;
+
+/**
+ * URL da imagem (ADR-012): `sprite:<id>` → "/sprites/<arquivo do catálogo>", servido pelo próprio app;
+ * `asset:<uuid>` → "<baseUrlApi>/assets/<uuid>". Sprite fora do catálogo ou referência malformada lança.
+ */
+export function resolverImagem(ref: RefImagem, baseUrlApi: string): string {
+  const asset = PADRAO_REF_ASSET.exec(ref)?.[1];
+  if (asset) return `${baseUrlApi}/assets/${asset}`;
+  const idSprite = PADRAO_REF_SPRITE.exec(ref)?.[1];
+  const sprite = idSprite === undefined ? undefined : spriteDoCatalogo(idSprite);
+  if (!sprite) throw new Error(`imagem fora do catálogo: ${ref}`);
+  return `/sprites/${sprite.arquivo}`;
+}
 
 /** uuids de todas as referências `asset:` da fase, sem repetição, na ordem em que aparecem. */
 export function referenciasDeAsset(fase: Fase): string[] {
