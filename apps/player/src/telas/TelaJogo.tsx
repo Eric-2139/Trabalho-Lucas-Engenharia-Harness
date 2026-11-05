@@ -1,7 +1,8 @@
 /**
  * TelaJogo (modulos-player.md §2, PEND-012): botões das 5 paredes, palco 16:9 com o
  * RenderizadorParede e a caixa de fala (RF-16). O motor decide o que cada clique faz;
- * decoração devolve `nenhum` e a tela não muda.
+ * decoração devolve `nenhum` e a tela não muda. Enigma e porta abrem um único campo de
+ * resposta ou senha num `<form>` (RF-15); a porta aberta mostra o fim e chama `aoConcluir`.
  */
 import {
   calcularPalco,
@@ -11,7 +12,7 @@ import {
   RenderizadorParede,
 } from '@math-scape/player';
 import type { ParedeId } from '@math-scape/schema/contrato';
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { type FormEvent, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import type { PropsTelaJogo } from '../../contrato/index.ts';
 import { mensagens } from '../mensagens.ts';
 
@@ -28,7 +29,7 @@ function useJanela() {
   return janela;
 }
 
-export function TelaJogo({ faseId, fase, baseUrlApi, verificador }: PropsTelaJogo) {
+export function TelaJogo({ faseId, fase, baseUrlApi, verificador, aoConcluir }: PropsTelaJogo) {
   const textos = mensagens.jogo;
   const partida = useMemo(
     () => criarPartida(fase, verificador ?? criarVerificadorHttp({ baseUrlApi, faseId, modo: 'jogo' })),
@@ -39,6 +40,10 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador }: PropsTelaJog
   const [fala, definirFala] = useState<string | null>(null);
   const [pergunta, definirPergunta] = useState<string | null>(null);
   const [dica, definirDica] = useState<string | null>(null);
+  // Enigma ou porta com o campo aberto; o resultado da última resposta (RF-15).
+  const [pedido, definirPedido] = useState<{ objetoId: string; modo: 'resposta' | 'senha' } | null>(null);
+  const [texto, definirTexto] = useState('');
+  const [resultado, definirResultado] = useState<string | null>(null);
 
   const sala = calcularPalco(janela.largura, janela.altura);
   const palco = { x: 0, y: 0, largura: sala.largura, altura: sala.altura };
@@ -51,15 +56,46 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador }: PropsTelaJog
     definirFala(null);
     definirPergunta(null);
     definirDica(null);
+    definirPedido(null);
+    definirResultado(null);
+  }
+
+  function abrirCampo(objetoId: string, modo: 'resposta' | 'senha') {
+    definirPedido({ objetoId, modo });
+    definirTexto('');
+    definirResultado(null);
   }
 
   function aoClicar(objetoId: string) {
     const evento = partida.clicar(objetoId);
     if (evento.tipo === 'fala') definirFala(evento.texto);
-    else if (evento.tipo === 'pedirResposta') definirPergunta(evento.pergunta);
-    else if (evento.tipo === 'pedirSenha') definirPergunta(null);
+    else if (evento.tipo === 'pedirResposta') {
+      definirPergunta(evento.pergunta);
+      abrirCampo(objetoId, 'resposta');
+    } else if (evento.tipo === 'pedirSenha') {
+      // No modo senha, a pergunta do enigma anterior deixa de aparecer (PEND-012).
+      definirPergunta(null);
+      abrirCampo(objetoId, 'senha');
+    }
     // 'nenhum' (decoração): nada muda (RF-16).
   }
+
+  // A conferência é do verificador (RNF-04); a tela só mostra o veredito e os dígitos.
+  async function aoEnviar(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    if (!pedido) return;
+    const resposta = await partida.responder(pedido.objetoId, texto);
+    if (resposta.tipo === 'aberta') {
+      definirPedido(null);
+      definirResultado(textos.fimDeJogo);
+      aoConcluir?.();
+      return;
+    }
+    definirResultado(resposta.mensagem);
+  }
+
+  const casasSenha = Array.from({ length: fase.tamanhoSenha }, (_, i) => estado.digitosRevelados[i + 1] ?? '_');
+  const algumDigito = Object.keys(estado.digitosRevelados).length > 0;
 
   function verDica(objetoId: string) {
     definirDica(partida.dica(objetoId));
@@ -104,6 +140,19 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador }: PropsTelaJog
       {fala !== null && <p aria-live="polite">{fala}</p>}
       {pergunta !== null && <p aria-live="polite">{pergunta}</p>}
       {dica !== null && <p aria-live="polite">{dica}</p>}
+      {pedido !== null && !estado.concluida && (
+        <form onSubmit={aoEnviar}>
+          <input
+            type="text"
+            aria-label={pedido.modo === 'senha' ? textos.rotuloSenha : textos.rotuloResposta}
+            value={texto}
+            onChange={(e) => definirTexto(e.target.value)}
+          />
+          <button type="submit">{textos.botaoResponder}</button>
+        </form>
+      )}
+      {resultado !== null && <p aria-live="polite">{resultado}</p>}
+      {algumDigito && <p>{textos.senhaRevelada(casasSenha)}</p>}
     </main>
   );
 }

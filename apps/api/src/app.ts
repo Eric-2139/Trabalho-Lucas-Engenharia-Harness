@@ -36,7 +36,7 @@ export const construirApp: ConstruirApp = async (opcoes) => {
   registrarRotasAuth(app, ctx);
   registrarRotasFases(app, ctx);
   registrarRotasPublicas(app, ctx);
-  registrarRotaVerificar(app, ctx);
+  registrarRotaVerificar(app, ctx, opcoes.relogio);
   registrarRotasAssets(app, ctx);
 
   await app.ready();

@@ -44,10 +44,11 @@ function objetoDaFase(fase: Fase, objetoId: string): Objeto | undefined {
   return undefined;
 }
 
-export function registrarRotaVerificar(app: FastifyInstance, ctx: Contexto): void {
+export function registrarRotaVerificar(app: FastifyInstance, ctx: Contexto, relogio?: () => number): void {
   const { banco } = ctx;
   // Uma instância por app: cada `construirApp` começa com as janelas zeradas.
-  const limite = criarLimiteVerificar();
+  // O relógio injetado (`OpcoesApp.relogio`, PEND-010) permite aos testes avançar até o fim da janela.
+  const limite = criarLimiteVerificar(relogio);
 
   app.post<Pedido>('/fases/:id/verificar', async (request, reply) => {
     const { id } = request.params;
