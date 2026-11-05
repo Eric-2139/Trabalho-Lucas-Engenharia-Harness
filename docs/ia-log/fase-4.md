@@ -17,6 +17,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 7 | RNF-02 | Player | rodada 3: 54 casos em `tests/player/` (`motor`, `verificador-http`, `palco`) para RF-15, RF-16, RF-17, RNF-02 (`sucesso`, 4 de 4 com feliz, borda e negativo) | `calcularPalco`, `paraPixels` e `precisaAvisoResolucao` em `packages/player/src/palco.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `testes-2026-11-05T17-38-25-719Z.json`, `codificacao-2026-11-05T17-39-41-453Z.json` |
 | 8 | RF-16 | Player | rodada 3 (7 casos em `tests/player/motor.test.ts`) | motor `criarPartida` em `packages/player/src/motor.ts` e `estado-partida.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão; de carona, os casos de motor do RF-17 (5) e do RF-15 (18) | `codificacao-2026-11-05T17-41-45-139Z.json` |
 | 9 | RF-15 | Player | rodada 3 (10 casos em `tests/player/verificador-http.test.ts`, mais os de motor) | `criarVerificadorHttp` em `packages/player/src/verificador-http.ts`; verde no 1º de 5 ciclos (136 de 136), análise limpa, sem reversão | `codificacao-2026-11-05T17-43-17-924Z.json` |
+| 10 | RF-17 | Player | rodada 3 (5 casos em `tests/player/motor.test.ts`) | nenhuma edição: `dica` do motor (entrega 8) já atendia; o harness confirmou verde com 0 ciclos e análise limpa | `codificacao-2026-11-05T17-44-13-740Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -61,15 +62,22 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RNF-02 (palco) | `sucesso` no 1º ciclo | 227.390 | 4.547 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-16 (motor) | `sucesso` no 1º ciclo | 574.758 | 7.560 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-15 (verificador HTTP) | `sucesso` no 1º ciclo | 228.341 | 3.942 | medido |
-| **Total** | | | | **14.277.007** | **168.313** | medido |
+| 05/11 | idem, subagente `codificacao` | Confirmar RF-17 | `sucesso` com 0 ciclos | 47.628 | 1.087 | medido |
+| 05/11 | Claude Code / Opus 5.5 | Ler o projeto, orquestrar os agentes 3 e 4, revisar cada entrega, commitar (sessão principal) | entregas 2 a 10 | 8.920.590 | 43.941 | medido |
+| **Total** | | | | **23.245.225** | **213.341** | medido |
 
-A linha da sessão principal de 04/11 foi medida ao escrever este log; a de 05/11 entra quando a sessão fechar a camada SchemaFase.
+As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
 ## Onde a IA acertou
 - **Achou, antes de rodar, o defeito que pararia a fase.** O disjuntor e o JUnit velho só apareceriam na primeira rodada real, como falha controlada sem causa aparente.
 - **O agente 3 separou critério de contrato.** Testou "80 graus" e "80 ou 90" pelo contrato de `respostaConfere`, e deixou de fora os limites D-03 e a senha "00000", que nenhum critério pede.
 - **O gate funcionou como desenhado.** Os dois agentes tentaram prefixar `cd "..." &&` nos comandos, o gate bloqueou (P1) e eles refizeram com o comando puro.
 
+- **05/11: dez entregas sem reversão.** Todas as rodadas do agente 4 ficaram verdes no 1º ciclo. Os relatórios são aproveitáveis: cada agente apontou o que inferiu fora do contrato (convenção de `x`/`y`, base de 1920×1080 do legado, `dica` só na parede ativa, 429 sem tempo).
+- **A sessão principal conferiu cada entrega antes do commit.** Leu o diff, o relatório do harness e a análise de tipos dos testes novos (o agente 3 só roda o Vitest). Também confirmou, por exemplo, que a regex de `asset:` não tem a flag `g` (o `exec` com estado quebraria `referenciasDeAsset`).
+
 ## Onde errou ou precisou de correção humana
+- **Docker parado no início da sessão de 05/11.** A IA abriu o Docker Desktop e esperou o daemon antes da primeira rodada.
+- **Aviso do Vitest.** `vitest.config.ts` usa ESM num arquivo carregado como CommonJS. Hoje não quebra nada. Corrigir (renomear para `.mts` ou `"type": "module"` na raiz, que exige cuidado com o `.claude/package.json`) é decisão do arquiteto.
 - **Edição do `.claude/settings.json` negada.** O classificador do modo automático barrou a permissão da nova ferramenta, por ser autoconfiguração. Ficou para o Eric pôr à mão.
 - **O gerador do projeto foi rodado sem querer** (`--help` não existe e ele escreve arquivos). Só o carimbo de data da matriz mudou, e foi revertido.

@@ -1,0 +1,16 @@
+{
+  "agente": "codificacao",
+  "execucao": "a1668f53ecdcd3913",
+  "inicio": "2026-11-05T17:43:51.991Z",
+  "fim": "2026-11-05T17:44:13.740Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-17",
+    "ciclos_editar_testar": 0,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": []
+  },
+  "bloqueios_por_politica": {}
+}
