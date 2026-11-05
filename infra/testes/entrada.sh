@@ -63,7 +63,7 @@ case "$MODO" in
     ;;
   analise)
     preparar_prisma || { cat /tmp/prisma.log >&2; exit 1; }
-    pnpm run --silent lint && pnpm run --silent typecheck
+    pnpm run --silent lint && pnpm run typecheck
     ;;
   *)
     ambiente "modo desconhecido: $MODO (use testes ou analise)."
