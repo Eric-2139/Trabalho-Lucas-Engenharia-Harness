@@ -20,6 +20,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 10 | RF-17 | Player | rodada 3 (5 casos em `tests/player/motor.test.ts`) | nenhuma edição: `dica` do motor (entrega 8) já atendia; o harness confirmou verde com 0 ciclos e análise limpa | `codificacao-2026-11-05T17-44-13-740Z.json` |
 | 11 | RF-01 | Api + Banco | rodada 4: 28 casos em `tests/api/auth.test.ts` para RF-01, RF-19, RNF-05, RNF-06 (`sucesso`, 4 de 4) | esquema Prisma e migration SQL escrita à mão; `construirApp`, sessão, cadastro, login, logout, excluir conta e o mínimo de `/fases` e `/publicadas`; verde no 1º de 5 ciclos (163 de 164), sem reversão; de carona RNF-05 e RNF-06 inteiros e 5 de 6 do RF-19 (o 6º precisa do upload, RF-06) | `testes-2026-11-05T18-00-04-985Z.json`, `codificacao-2026-11-05T18-05-21-075Z.json` |
 | 12 | RF-02 | Api | rodada 5: 56 casos em `tests/api/fases.test.ts` e `publicadas.test.ts` para RF-02, RF-10, RF-12, RF-13, RF-14, RNF-09 (`sucesso`, 6 de 6) | `exigir-dono`, abrir, salvar com revisão (UPDATE condicional), renomear, excluir, duplicar e publicar; verde no 1º de 5 ciclos, sem reversão; de carona 7 de 8 do RF-10, 4 de 6 do RNF-09, 4 de 5 do RF-12 | `testes-2026-11-05T18-13-29-379Z.json`, `codificacao-2026-11-05T18-16-54-235Z.json` |
+| 13 | RF-14 | Api | rodada 5 (9 casos de RF-14 e 2 de RNF-09 sobre importar) | exportar (envelope com data URL) e importar (`bodyLimit` de 50 MB, tipo pelos bytes, transação que desfaz banco e arquivos); `detectarTipoImagem` e `criarArmazenamentoEmDisco`; verde no 1º de 5 ciclos (214 de 220), sem reversão | `codificacao-2026-11-05T18-20-43-265Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -41,6 +42,7 @@ Pontos da Api (RF-01) para o arquiteto:
 - **Chave da imagem.** `assets.arquivo` é a chave no `Armazenamento`: o upload (RF-06) tem de gravar com ela.
 - **Escopo do RF-13.** Um caso do RF-13 compara o jogo publicado com `projetarParaJogo`, stub do schema que pertence ao RNF-04. O RF-13 não inclui o SchemaFase, então o RNF-04 vem antes.
 - **Excluir fase não apaga imagens.** As imagens são do usuário (ADR-010), não da fase; nenhum requisito trata imagem órfã.
+- **Importação longa.** Os arquivos são gravados dentro da transação interativa do Prisma (limite padrão de 5 s). Um envelope perto de 50 MB em disco lento pode estourar o tempo; a importação falha sem gravar nada.
 - **Índices a mais.** `sessoes(usuario_id)` e `assets(dono_id)`, além dos do contrato.
 
 Pontos do motor (RF-16) para o arquiteto:
@@ -80,7 +82,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-01 (Banco + Api) | `sucesso` no 1º ciclo | 2.040.271 | 28.367 | medido |
 | 05/11 | idem, subagente `testes` | Testes da Api: fases do criador e publicadas | `sucesso` | 1.782.278 | 48.563 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-02 (rotas de fase) | `sucesso` no 1º ciclo | 906.684 | 12.549 | medido |
-| **Total** | | | | **28.709.747** | **327.045** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-14 (exportar/importar) | `sucesso` no 1º ciclo | 876.554 | 14.616 | medido |
+| **Total** | | | | **29.586.301** | **341.661** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
