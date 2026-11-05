@@ -1,0 +1,19 @@
+{
+  "agente": "codificacao",
+  "execucao": "a373ae02ee7f359a6",
+  "inicio": "2026-11-05T17:42:28.324Z",
+  "fim": "2026-11-05T17:43:17.924Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-15",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "packages/player/src/verificador-http.ts",
+      "packages/player/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {}
+}

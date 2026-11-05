@@ -16,6 +16,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 6 | RF-18 | SchemaFase | rodada 2: 15 casos em `tests/schema/fase-exemplo.test.ts` (`sucesso`; feliz 9, borda 3, negativo 3) | `fases-exemplo/escola-01.json` migrado do legado; verde no 1º de 5 ciclos (82 de 82), análise limpa, sem reversão | `testes-2026-11-05T17-30-32-086Z.json`, `codificacao-2026-11-05T17-33-34-997Z.json` |
 | 7 | RNF-02 | Player | rodada 3: 54 casos em `tests/player/` (`motor`, `verificador-http`, `palco`) para RF-15, RF-16, RF-17, RNF-02 (`sucesso`, 4 de 4 com feliz, borda e negativo) | `calcularPalco`, `paraPixels` e `precisaAvisoResolucao` em `packages/player/src/palco.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `testes-2026-11-05T17-38-25-719Z.json`, `codificacao-2026-11-05T17-39-41-453Z.json` |
 | 8 | RF-16 | Player | rodada 3 (7 casos em `tests/player/motor.test.ts`) | motor `criarPartida` em `packages/player/src/motor.ts` e `estado-partida.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão; de carona, os casos de motor do RF-17 (5) e do RF-15 (18) | `codificacao-2026-11-05T17-41-45-139Z.json` |
+| 9 | RF-15 | Player | rodada 3 (10 casos em `tests/player/verificador-http.test.ts`, mais os de motor) | `criarVerificadorHttp` em `packages/player/src/verificador-http.ts`; verde no 1º de 5 ciclos (136 de 136), análise limpa, sem reversão | `codificacao-2026-11-05T17-43-17-924Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -32,6 +33,7 @@ Camada Player (rodada 3): o RF-16 e o RF-17 são testados pelo motor (`clicar`, 
 Pontos do motor (RF-16) para o arquiteto:
 - **`dica` só na parede ativa.** O agente 4 fez `dica(objetoId)` procurar o enigma só na parede ativa, como `clicar` e `responder`. O projeto não fixa isso e nenhum teste distingue os dois casos.
 - **Assinante que lança exceção.** Se um assinante lança dentro da atualização, `responder` devolve "falha de rede" com o estado já mudado. Nenhum teste cobre esse caso.
+- **Verificador HTTP (RF-15).** Duas escolhas fora do contrato: o `faseId` passa por `encodeURIComponent`, e um 429 sem `tentarEmSegundos` numérico rejeita a promessa, em vez de virar `Limitado`.
 
 De carona com o RF-07 ficaram verdes os casos de schema do RF-08 e do RNF-09 em `tests/schema/fase.test.ts`. Com as entregas 2 a 5, a suíte da camada SchemaFase está toda verde (67 de 67). Ainda são stubs `projetarParaJogo`, `objetoPadrao` e `resolverImagem`, que nenhum teste da rodada 1 cobre. Elas entram com os requisitos do Player e do editor (RNF-04, RF-17, ADR-011, ADR-012). Salvar e publicar pela Api (RNF-09) ficam para a camada da Api.
 
@@ -58,7 +60,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `testes` | Testes da camada Player (RF-15, RF-16, RF-17, RNF-02) | `sucesso`; nenhuma devolução | 1.039.820 | 25.892 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RNF-02 (palco) | `sucesso` no 1º ciclo | 227.390 | 4.547 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-16 (motor) | `sucesso` no 1º ciclo | 574.758 | 7.560 | medido |
-| **Total** | | | | **14.048.666** | **164.371** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-15 (verificador HTTP) | `sucesso` no 1º ciclo | 228.341 | 3.942 | medido |
+| **Total** | | | | **14.277.007** | **168.313** | medido |
 
 A linha da sessão principal de 04/11 foi medida ao escrever este log; a de 05/11 entra quando a sessão fechar a camada SchemaFase.
 
