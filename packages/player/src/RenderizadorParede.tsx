@@ -65,6 +65,11 @@ function Fundo({ parede, palco, baseUrlApi }: { parede: ParedeJogo; palco: Retan
   return <ImagemKonva image={imagem} x={palco.x} y={palco.y} width={palco.largura} height={palco.altura} />;
 }
 
+/** Ícone de dica do legado (packages/player/recursos/icone-dica.png), resolvido pelo Vite. */
+const URL_ICONE_DICA = new URL('../recursos/icone-dica.png', import.meta.url).href;
+/** Lado do ícone em pixels, encostado no canto superior direito do objeto (RF-17). */
+const LADO_ICONE_DICA = 32;
+
 interface PropsObjeto {
   objeto: ObjetoJogo;
   palco: Retangulo;
@@ -91,7 +96,29 @@ function Objeto({ objeto, palco, baseUrlApi, aoClicar }: PropsObjeto) {
   );
 }
 
-export function RenderizadorParede({ parede, palco, baseUrlApi, aoClicar }: PropsRenderizadorParede) {
+/** Ícone de dica: só existe para enigma com dica (RF-17, LAC-030). */
+function IconeDica({ objeto, palco, aoVerDica }: { objeto: ObjetoJogo; palco: Retangulo; aoVerDica: (id: string) => void }) {
+  const imagem = useImagem(URL_ICONE_DICA);
+  const r = paraPixels(objeto, palco);
+  const aoAtivar = () => aoVerDica(objeto.id);
+  return (
+    <ImagemKonva
+      image={imagem}
+      x={r.x + r.largura - LADO_ICONE_DICA}
+      y={r.y}
+      width={LADO_ICONE_DICA}
+      height={LADO_ICONE_DICA}
+      onClick={aoAtivar}
+      onTap={aoAtivar}
+    />
+  );
+}
+
+function temDica(objeto: ObjetoJogo): boolean {
+  return objeto.interacao.tipo === 'enigma' && objeto.interacao.dica !== undefined;
+}
+
+export function RenderizadorParede({ parede, palco, baseUrlApi, aoClicar, aoVerDica }: PropsRenderizadorParede) {
   const largura = palco.x * 2 + palco.largura;
   const altura = palco.y * 2 + palco.altura;
   return (
@@ -102,6 +129,10 @@ export function RenderizadorParede({ parede, palco, baseUrlApi, aoClicar }: Prop
       <Layer>
         {ordemDeDesenho(parede.objetos).map((objeto) => (
           <Objeto key={objeto.id} objeto={objeto} palco={palco} baseUrlApi={baseUrlApi} aoClicar={aoClicar} />
+        ))}
+        {/* Ícones por cima de todos os objetos, para não ficarem cobertos. */}
+        {parede.objetos.filter(temDica).map((objeto) => (
+          <IconeDica key={`dica-${objeto.id}`} objeto={objeto} palco={palco} aoVerDica={aoVerDica ?? (() => {})} />
         ))}
       </Layer>
     </Stage>

@@ -34,6 +34,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 24 | RNF-09 | Api | já escritos nas rodadas 4 a 6 | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (280 de 280) | `codificacao-2026-11-05T18-56-27-971Z.json` |
 | 25 | RNF-07 | Player | rodada 8 (15 casos em `tests/player/tema.test.ts` e `escolher-fase.test.tsx`; o teste do Tab corrigido na rodada 9) | `tema` e `razaoContraste` (WCAG 2.1) em `packages/player/src/tema.ts`; `EscolherFase` com botões nativos; 1ª rodada escalou por teste defeituoso (PEND-013), 2ª rodada verde com 0 ciclos | `codificacao-2026-11-05T19-17-30-128Z.json` (escalado), `testes-2026-11-05T19-21-22-271Z.json`, `codificacao-2026-11-05T19-23-24-323Z.json` |
 | 26 | RF-16 | Player | rodada 7 (5 casos de tela em `tests/player/tela-jogo.test.tsx`, mais os 7 do motor) | `RenderizadorParede` (Konva, fundo sem escuta, decoração sem handler) em `packages/player/src/RenderizadorParede.tsx`; `TelaJogo` com 5 botões de parede, palco 16:9 e caixa de fala em `apps/player/src/telas/TelaJogo.tsx`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T23-22-40-404Z.json` |
+| 27 | RF-17 | Player | rodada 7 (4 casos de tela em `tests/player/tela-jogo.test.tsx`) | ícone de dica de 32 px no canto superior direito do enigma no palco Konva (`icone-dica.png`); botão "Ver dica" no DOM para cada enigma com dica da parede ativa; de carona, a pergunta do enigma aparece ao clicar (parte do RF-15 que o teste do RF-17 exige); verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T23-27-31-367Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -125,7 +126,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `testes` | Corrigir o teste do Tab (PEND-013) e testar o relógio do limite (PEND-010) | `sucesso` | 487.656 | 13.629 | medido |
 | 05/11 | idem, subagente `codificacao` | Concluir RNF-07 | `sucesso` com 0 ciclos | 49.914 | 1.075 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-16 (`TelaJogo` e `RenderizadorParede`) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 2.054.043 | 22.020 | medido |
-| **Total** | | | | **43.835.185** | **570.323** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-17 (ícone e controle de dica) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 1.057.786 | 10.720 | medido |
+| **Total** | | | | **44.892.971** | **581.043** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

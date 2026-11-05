@@ -37,19 +37,32 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador }: PropsTelaJog
   const estado = useSyncExternalStore(partida.assinar, partida.estado);
   const janela = useJanela();
   const [fala, definirFala] = useState<string | null>(null);
+  const [pergunta, definirPergunta] = useState<string | null>(null);
+  const [dica, definirDica] = useState<string | null>(null);
 
   const sala = calcularPalco(janela.largura, janela.altura);
   const palco = { x: 0, y: 0, largura: sala.largura, altura: sala.altura };
+  const parede = fase.paredes[estado.paredeAtiva];
+  // Só os enigmas com dica da parede ativa têm controle de dica (RF-17).
+  const enigmasComDica = parede.objetos.filter((o) => partida.dica(o.id) !== null);
 
-  function trocarParede(parede: ParedeId) {
-    partida.trocarParede(parede);
+  function trocarParede(nova: ParedeId) {
+    partida.trocarParede(nova);
     definirFala(null);
+    definirPergunta(null);
+    definirDica(null);
   }
 
   function aoClicar(objetoId: string) {
     const evento = partida.clicar(objetoId);
     if (evento.tipo === 'fala') definirFala(evento.texto);
+    else if (evento.tipo === 'pedirResposta') definirPergunta(evento.pergunta);
+    else if (evento.tipo === 'pedirSenha') definirPergunta(null);
     // 'nenhum' (decoração): nada muda (RF-16).
+  }
+
+  function verDica(objetoId: string) {
+    definirDica(partida.dica(objetoId));
   }
 
   return (
@@ -68,12 +81,29 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador }: PropsTelaJog
         ))}
       </nav>
       <RenderizadorParede
-        parede={fase.paredes[estado.paredeAtiva]}
+        parede={parede}
         palco={palco}
         baseUrlApi={baseUrlApi}
         aoClicar={aoClicar}
+        aoVerDica={verDica}
       />
+      {enigmasComDica.length > 0 && (
+        <div>
+          {enigmasComDica.map((objeto, indice) => (
+            <button
+              key={objeto.id}
+              type="button"
+              aria-label={textos.verDica(indice + 1, enigmasComDica.length)}
+              onClick={() => verDica(objeto.id)}
+            >
+              {textos.verDica(indice + 1, enigmasComDica.length)}
+            </button>
+          ))}
+        </div>
+      )}
       {fala !== null && <p aria-live="polite">{fala}</p>}
+      {pergunta !== null && <p aria-live="polite">{pergunta}</p>}
+      {dica !== null && <p aria-live="polite">{dica}</p>}
     </main>
   );
 }
