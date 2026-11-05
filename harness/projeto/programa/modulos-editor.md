@@ -57,3 +57,10 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-00
 - **Modo testar**: `salvarAgora`, `GET /fases/:id/jogo-teste`, e o motor do `packages/player` com `criarVerificadorHttp({ modo: 'teste' })`. Ao sair, nada no documento mudou (RF-11).
 - **Exportar/importar**: baixa o envelope; importa por `POST /fases/importar` e mostra a recusa (RF-14).
 - **Conta**: excluir com confirmação; cancelar não muda nada (RF-19).
+
+**Contrato das telas** (`apps/editor/contrato/telas.ts`; decisão da IA com a delegação do Eric, 05/11/2026). O contrato da fase 3 tipava os 5 componentes, mas não as telas. Sem ele, o agente 3 teria de inventar a interface de login, Minhas fases, Conta e Edição:
+- `TelaEntrar` (`PropsTelaEntrar`), `MinhasFases` (`PropsMinhasFases`), `TelaConta` (`PropsTelaConta`) e `TelaEdicao` (`PropsTelaEdicao`) recebem o cliente HTTP por propriedade. A Edição recebe também o `Relogio` do salvamento, `gerarId` para os ids dos objetos novos e `verificadorTeste` para o modo testar.
+- Nomes acessíveis e textos fixos em `ROTULOS_EDITOR`: os testes e a implementação usam a mesma constante, como `MENSAGENS` no Player.
+- Confirmações (excluir fase publicada, excluir conta) são um diálogo no DOM com `role="alertdialog"` e os botões "Confirmar" e "Cancelar", nunca `window.confirm`. Recusas da Api aparecem num elemento com `role="alert"`.
+- O aviso de resolução da Edição contém "1280x720" e não bloqueia a edição (RNF-01, PEND-015).
+- O `CanvasParede` é testado no jsdom com o pacote `canvas` (ADR-016), como o `RenderizadorParede` (PEND-011): clique e arraste reais no palco, sem teste por pixel. O fim do arraste chega ao store como um passo de histórico (ADR-007).

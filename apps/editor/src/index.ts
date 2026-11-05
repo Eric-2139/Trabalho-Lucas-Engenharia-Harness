@@ -12,7 +12,11 @@ import type {
   PropsBarraFerramentas,
   PropsBibliotecaObjetos,
   PropsCanvasParede,
+  PropsMinhasFases,
   PropsPainelPropriedades,
+  PropsTelaConta,
+  PropsTelaEdicao,
+  PropsTelaEntrar,
 } from '../contrato/index.ts';
 
 export * from '../contrato/index.ts';
@@ -40,4 +44,16 @@ export function BarraFerramentas(_props: PropsBarraFerramentas): never {
 }
 export function CanvasParede(_props: PropsCanvasParede): never {
   return naoImplementado('CanvasParede');
+}
+export function TelaEntrar(_props: PropsTelaEntrar): never {
+  return naoImplementado('TelaEntrar');
+}
+export function MinhasFases(_props: PropsMinhasFases): never {
+  return naoImplementado('MinhasFases');
+}
+export function TelaConta(_props: PropsTelaConta): never {
+  return naoImplementado('TelaConta');
+}
+export function TelaEdicao(_props: PropsTelaEdicao): never {
+  return naoImplementado('TelaEdicao');
 }
