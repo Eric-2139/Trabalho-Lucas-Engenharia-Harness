@@ -21,7 +21,8 @@ import {
 import { validarJogabilidade as validarJogabilidadeImpl } from './jogabilidade.ts';
 import { naoImplementado } from './nao-implementado.ts';
 import { faseInicial as faseInicialImpl } from './padroes.ts';
-import { validarFase as validarFaseImpl } from './validar.ts';
+import { referenciasDeAsset as referenciasDeAssetImpl } from './imagens.ts';
+import { validarEnvelope as validarEnvelopeImpl, validarFase as validarFaseImpl } from './validar.ts';
 
 export * from '../contrato/index.ts';
 
@@ -33,5 +34,5 @@ export const objetoPadrao: ObjetoPadrao = () => naoImplementado('objetoPadrao');
 export const respostaConfere: RespostaConfere = respostaConfereImpl;
 export const senhaConfere: SenhaConfere = senhaConfereImpl;
 export const resolverImagem: ResolverImagem = () => naoImplementado('resolverImagem');
-export const referenciasDeAsset: ReferenciasDeAsset = () => naoImplementado('referenciasDeAsset');
-export const validarEnvelope: ValidarEnvelope = () => naoImplementado('validarEnvelope');
+export const referenciasDeAsset: ReferenciasDeAsset = referenciasDeAssetImpl;
+export const validarEnvelope: ValidarEnvelope = validarEnvelopeImpl;

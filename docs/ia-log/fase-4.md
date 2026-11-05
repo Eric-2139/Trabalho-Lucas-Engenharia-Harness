@@ -12,12 +12,13 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 2 | RF-12 | SchemaFase | já escritos na rodada 1 (8 casos em `tests/schema/jogabilidade.test.ts`) | `validarJogabilidade` em `packages/schema/src/jogabilidade.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T17-22-58-494Z.json` |
 | 3 | RF-15 | SchemaFase | já escritos na rodada 1 (16 casos em `tests/schema/comparacao.test.ts`) | `respostaConfere` e `senhaConfere` em `packages/schema/src/comparacao.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T17-24-24-855Z.json` |
 | 4 | RF-08 | SchemaFase | já escritos na rodada 1 (19 casos em `tests/schema/fase.test.ts` e `padroes.test.ts`) | `faseInicial` em `packages/schema/src/padroes.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T17-25-51-805Z.json` |
+| 5 | RNF-09 | SchemaFase | já escritos na rodada 1 (15 casos em `tests/schema/envelope.test.ts` e `fase.test.ts`) | `validarEnvelope` em `packages/schema/src/validar.ts` e `referenciasDeAsset` em `imagens.ts`; verde no 1º de 5 ciclos (67 de 67 testes da suíte), análise limpa, sem reversão | `codificacao-2026-11-05T17-27-30-210Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
 Achado do agente 4 no RF-08, para o arquiteto: o projeto não diz se `x`/`y` são o canto superior esquerdo ou o centro do objeto. O agente inferiu "canto" pela D-07 (`modulos-schema.md`), que é também o padrão do Konva, e centralizou a porta com `x = (1 − largura)/2`. Nenhum teste confere a posição. O comentário no código cita a ADR-006, mas ela não fixa essa convenção. Falta escrevê-la na ADR-006 ou em `contratos/schema.md` antes do Player e do editor.
 
-De carona com o RF-07 ficaram verdes os casos de schema do RF-08 e do RNF-09 em `tests/schema/fase.test.ts`. O RF-08 e o RNF-09 só fecham quando `faseInicial` e `validarEnvelope` forem implementados.
+De carona com o RF-07 ficaram verdes os casos de schema do RF-08 e do RNF-09 em `tests/schema/fase.test.ts`. Com as entregas 2 a 5, a suíte da camada SchemaFase está toda verde (67 de 67). Ainda são stubs `projetarParaJogo`, `objetoPadrao` e `resolverImagem`, que nenhum teste da rodada 1 cobre. Elas entram com os requisitos do Player e do editor (RNF-04, RF-17, ADR-011, ADR-012). Salvar e publicar pela Api (RNF-09) ficam para a camada da Api.
 
 ## Preparo da fase (commit `3d77b02`)
 Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que derrubariam os agentes 3 e 4 na primeira rodada, e uma lacuna de processo:
@@ -36,7 +37,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-12 | `sucesso` no 1º ciclo; 2 bloqueios P1 | 252.038 | 3.340 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-15 (camada SchemaFase) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 212.835 | 3.227 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-08 (camada SchemaFase) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 386.168 | 4.610 | medido |
-| **Total** | | | | **10.649.413** | **91.774** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RNF-09 (camada SchemaFase) | `sucesso` no 1º ciclo | 283.982 | 5.194 | medido |
+| **Total** | | | | **10.933.395** | **96.968** | medido |
 
 A linha da sessão principal de 04/11 foi medida ao escrever este log; a de 05/11 entra quando a sessão fechar a camada SchemaFase.
 
