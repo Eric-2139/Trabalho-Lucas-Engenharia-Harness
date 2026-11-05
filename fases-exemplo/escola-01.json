@@ -1,0 +1,339 @@
+{
+  "versaoSchema": 1,
+  "titulo": "Escola?",
+  "senha": "92139",
+  "paredes": {
+    "frente": {
+      "fundo": "sprite:fundo-sala",
+      "objetos": [
+        {
+          "id": "frente-relogio-1",
+          "imagem": "sprite:relogio",
+          "x": 0.344,
+          "y": 0.148,
+          "largura": 0.07,
+          "altura": 0.123,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": { "tipo": "fala", "texto": "Você: Estranho, parece que esses relógios estão me observando" }
+        },
+        {
+          "id": "frente-relogio-2",
+          "imagem": "sprite:relogio",
+          "x": 0.5,
+          "y": 0.148,
+          "largura": 0.07,
+          "altura": 0.123,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": { "tipo": "fala", "texto": "Você: Estranho, parece que esses relógios estão me observando" }
+        },
+        {
+          "id": "frente-quadro-negro",
+          "imagem": "sprite:quadro-negro",
+          "x": 0.202,
+          "y": 0.306,
+          "largura": 0.4,
+          "altura": 0.441,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "enigma",
+            "pergunta": "Bem-vindo a sua primeira (ou última) aula, ao lado, está a sua “salvação”, resolva o exercício abaixo para conseguir o terceiro dígito da porta, bom, se você não conseguir resolver essa simples questão, não ache que irá conseguir lidar o que está por vir. Após escrever a resposta, clique no botão.\n\n10 + 15 x 20 =",
+            "respostas": [310],
+            "dica": "Voz desconhecida: Realize primeiro a multiplicação, depois a adição",
+            "revela": [4]
+          }
+        },
+        {
+          "id": "frente-giz",
+          "imagem": "sprite:giz",
+          "x": 0.477,
+          "y": 0.613,
+          "largura": 0.04,
+          "altura": 0.071,
+          "rotacao": 0,
+          "camada": 2,
+          "interacao": {
+            "tipo": "fala",
+            "texto": "Você: Parece que esse giz vai ser a coisa menos tecnológica que eu vou ver nessa sala cheia de telas e botões"
+          }
+        },
+        {
+          "id": "frente-porta",
+          "imagem": "sprite:porta",
+          "x": 0.596,
+          "y": 0.326,
+          "largura": 0.13,
+          "altura": 0.426,
+          "rotacao": 0,
+          "camada": 2,
+          "interacao": { "tipo": "porta" }
+        }
+      ]
+    },
+    "direita": {
+      "fundo": "sprite:fundo-sala-lateral",
+      "objetos": [
+        {
+          "id": "direita-janela-1",
+          "imagem": "sprite:janela",
+          "x": 0.214,
+          "y": 0.347,
+          "largura": 0.14,
+          "altura": 0.249,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "fala",
+            "texto": "Você: Trancada e um breu do lado de fora, será mesmo que existe uma saída?"
+          }
+        },
+        {
+          "id": "direita-janela-2",
+          "imagem": "sprite:janela",
+          "x": 0.633,
+          "y": 0.347,
+          "largura": 0.14,
+          "altura": 0.249,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "fala",
+            "texto": "Você: Trancada e um breu do lado de fora, será mesmo que existe uma saída?"
+          }
+        },
+        {
+          "id": "direita-quadro-setas",
+          "imagem": "sprite:quadro-setas",
+          "x": 0.364,
+          "y": 0.175,
+          "largura": 0.16,
+          "altura": 0.477,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "enigma",
+            "pergunta": "Respeite as regras de cálculo de equações!!\n\n→ ? =",
+            "respostas": [123],
+            "dica": "Voz desconhecida: Se você tentar fazer de cabeça, é provavel que você se perca, escreva a equação em algum lugar, seguindo a ordem das setas, resolva primeiro as multiplicações e divisões, e depois as adições e subtrações",
+            "revela": [3]
+          }
+        }
+      ]
+    },
+    "fundo": {
+      "fundo": "sprite:fundo-sala",
+      "objetos": [
+        {
+          "id": "fundo-janela-1",
+          "imagem": "sprite:janela",
+          "x": 0.214,
+          "y": 0.347,
+          "largura": 0.14,
+          "altura": 0.249,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": { "tipo": "fala", "texto": "Você: O esperado, vazio" }
+        },
+        {
+          "id": "fundo-janela-2",
+          "imagem": "sprite:janela",
+          "x": 0.633,
+          "y": 0.347,
+          "largura": 0.14,
+          "altura": 0.249,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": { "tipo": "fala", "texto": "Você: Acho que não vale muito a pena ficar olhando as janelas" }
+        },
+        {
+          "id": "fundo-arvore-seca",
+          "imagem": "sprite:arvore-seca",
+          "x": 0.29,
+          "y": 0.111,
+          "largura": 0.18,
+          "altura": 0.373,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": { "tipo": "decoracao" }
+        },
+        {
+          "id": "fundo-selo-magico",
+          "imagem": "sprite:selo-magico",
+          "x": 0.346,
+          "y": 0.206,
+          "largura": 0.26,
+          "altura": 0.463,
+          "rotacao": 0,
+          "camada": 2,
+          "interacao": {
+            "tipo": "enigma",
+            "pergunta": "4, 23, 42, 61",
+            "respostas": [-15, 80],
+            "dica": "Voz desconhecida: Os números no selo são uma sequência numérica, basta você descobrir o padrão",
+            "revela": [5]
+          }
+        }
+      ]
+    },
+    "esquerda": {
+      "fundo": "sprite:fundo-sala-lateral",
+      "objetos": [
+        {
+          "id": "esquerda-relogio-antigo",
+          "imagem": "sprite:relogio-antigo",
+          "x": 0.413,
+          "y": 0.148,
+          "largura": 0.06,
+          "altura": 0.386,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "fala",
+            "texto": "Você: Esse relógio nem funciona, acho que quem criou a sala tava sem ideia quando chegou nessa parte"
+          }
+        },
+        {
+          "id": "esquerda-giz-vermelho",
+          "imagem": "sprite:giz-vermelho",
+          "x": 0.144,
+          "y": 0.764,
+          "largura": 0.04,
+          "altura": 0.071,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "fala",
+            "texto": "Você: Então isso que foi utilizado para fazer alguns dos desafios dessa sala, acho que criador gosta de ficar escrevendo em paredes, parece criança"
+          }
+        },
+        {
+          "id": "esquerda-pergunta-horas",
+          "imagem": "sprite:inscricao",
+          "x": 0.15,
+          "y": 0.138,
+          "largura": 0.208,
+          "altura": 0.4,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "enigma",
+            "pergunta": "Você que conta as horas para sair daqui, pare, pois essas horas podem virar dias. Se não quiseres que dias virem semanas, descubra as horas do relógio.\n\n(40 - 15 - 20) x 10 - 35 =",
+            "respostas": [15],
+            "dica": "Voz desconhecida: Resolva primeiro o que está entre parênteses",
+            "revela": []
+          }
+        },
+        {
+          "id": "esquerda-pergunta-minutos",
+          "imagem": "sprite:inscricao",
+          "x": 0.53,
+          "y": 0.138,
+          "largura": 0.208,
+          "altura": 0.4,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": {
+            "tipo": "enigma",
+            "pergunta": "Dependendo de sua percepção, minutos passam como segundos ou horas, mas tenho certeza que você não quer que pareçam que os minutos aqui são dias , para evitar isso, descubra os minutos do relógio.\n(60 - 20 + 10) ÷ 2 + 15 =",
+            "respostas": [40],
+            "dica": "Voz desconhecida: Resolva primeiro o que está entre parênteses",
+            "revela": []
+          }
+        }
+      ]
+    },
+    "teto": {
+      "fundo": "sprite:fundo-teto",
+      "objetos": [
+        {
+          "id": "teto-lampada-1",
+          "imagem": "sprite:lampada",
+          "x": 0.299,
+          "y": 0.06,
+          "largura": 0.18,
+          "altura": 0.048,
+          "rotacao": 0,
+          "camada": 0,
+          "interacao": { "tipo": "decoracao" }
+        },
+        {
+          "id": "teto-lampada-2",
+          "imagem": "sprite:lampada",
+          "x": 0.299,
+          "y": 0.014,
+          "largura": 0.18,
+          "altura": 0.048,
+          "rotacao": 0,
+          "camada": 0,
+          "interacao": { "tipo": "decoracao" }
+        },
+        {
+          "id": "teto-lampada-3",
+          "imagem": "sprite:lampada",
+          "x": 0.299,
+          "y": 0.745,
+          "largura": 0.18,
+          "altura": 0.048,
+          "rotacao": 0,
+          "camada": 0,
+          "interacao": { "tipo": "decoracao" }
+        },
+        {
+          "id": "teto-lampada-4",
+          "imagem": "sprite:lampada",
+          "x": 0.299,
+          "y": 0.792,
+          "largura": 0.18,
+          "altura": 0.048,
+          "rotacao": 0,
+          "camada": 0,
+          "interacao": { "tipo": "decoracao" }
+        },
+        {
+          "id": "teto-relogio",
+          "imagem": "sprite:relogio-teto",
+          "x": 0.221,
+          "y": 0.145,
+          "largura": 0.328,
+          "altura": 0.583,
+          "rotacao": 0,
+          "camada": 1,
+          "interacao": { "tipo": "decoracao" }
+        },
+        {
+          "id": "teto-olho",
+          "imagem": "sprite:olho",
+          "x": 0.228,
+          "y": 0.158,
+          "largura": 0.298,
+          "altura": 0.53,
+          "rotacao": 0,
+          "camada": 2,
+          "interacao": {
+            "tipo": "fala",
+            "texto": "Você: Agora entendo de onde vem a voz misteriosa, seria isso uma espécie de deus ou ser superior?\nTet: kkkkkkkkkkkkkkk, muito bem, corretíssimo, me chamo Tet, o deus dos jogos, continue a brincar nesse mini mundo que eu criei"
+          }
+        },
+        {
+          "id": "teto-pergunta",
+          "imagem": "sprite:inscricao",
+          "x": 0.107,
+          "y": 0.13,
+          "largura": 0.208,
+          "altura": 0.6,
+          "rotacao": 0,
+          "camada": 3,
+          "interacao": {
+            "tipo": "enigma",
+            "pergunta": "Antes que pergunte, sim, eu sempre estive aqui observando o seu progresso, você está indo bem, e não se incomode com o relógio, a eternidade poderia chegar e ele iria continuar funcionando. Agora, responda a pergunta abaixo:\n\nHoras + Minutos =",
+            "respostas": [55],
+            "dica": "Voz desconhecida: Não use as horas e minutos do relógio que você está vendo no momento, use os dados que você conseguiu nas contas perto do relógio antigo",
+            "revela": [1, 2]
+          }
+        }
+      ]
+    }
+  }
+}

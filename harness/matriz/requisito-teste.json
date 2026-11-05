@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-04T20:28:39.213Z",
+  "gerado_em": "2026-11-05T17:29:58.470Z",
   "requisitos": {
     "RF-15": {
       "feliz": 3,
@@ -16,6 +16,14 @@
       "arquivos": [
         "tests/schema/envelope.test.ts",
         "tests/schema/fase.test.ts"
+      ]
+    },
+    "RF-18": {
+      "feliz": 9,
+      "borda": 3,
+      "negativo": 3,
+      "arquivos": [
+        "tests/schema/fase-exemplo.test.ts"
       ]
     },
     "RF-07": {
