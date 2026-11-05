@@ -14,6 +14,10 @@ import type {
   ValidarFase,
   ValidarJogabilidade,
 } from '../contrato/index.ts';
+import {
+  respostaConfere as respostaConfereImpl,
+  senhaConfere as senhaConfereImpl,
+} from './comparacao.ts';
 import { validarJogabilidade as validarJogabilidadeImpl } from './jogabilidade.ts';
 import { naoImplementado } from './nao-implementado.ts';
 import { validarFase as validarFaseImpl } from './validar.ts';
@@ -25,8 +29,8 @@ export const validarJogabilidade: ValidarJogabilidade = validarJogabilidadeImpl;
 export const projetarParaJogo: ProjetarParaJogo = () => naoImplementado('projetarParaJogo');
 export const faseInicial: FaseInicial = () => naoImplementado('faseInicial');
 export const objetoPadrao: ObjetoPadrao = () => naoImplementado('objetoPadrao');
-export const respostaConfere: RespostaConfere = () => naoImplementado('respostaConfere');
-export const senhaConfere: SenhaConfere = () => naoImplementado('senhaConfere');
+export const respostaConfere: RespostaConfere = respostaConfereImpl;
+export const senhaConfere: SenhaConfere = senhaConfereImpl;
 export const resolverImagem: ResolverImagem = () => naoImplementado('resolverImagem');
 export const referenciasDeAsset: ReferenciasDeAsset = () => naoImplementado('referenciasDeAsset');
 export const validarEnvelope: ValidarEnvelope = () => naoImplementado('validarEnvelope');
