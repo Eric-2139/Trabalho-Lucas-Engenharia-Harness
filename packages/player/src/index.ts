@@ -3,7 +3,6 @@
  * implementação (fase 4, agente 4).
  */
 import type {
-  CriarPartida,
   CriarVerificadorHttp,
   PropsRenderizadorParede,
   RazaoContraste,
@@ -11,13 +10,13 @@ import type {
 } from '../contrato/index.ts';
 
 export * from '../contrato/index.ts';
+export { criarPartida } from './motor.ts';
 export { calcularPalco, paraPixels, precisaAvisoResolucao } from './palco.ts';
 
 function naoImplementado(nome: string): never {
   throw new Error(`${nome}: não implementado (fase 4)`);
 }
 
-export const criarPartida: CriarPartida = () => naoImplementado('criarPartida');
 export const criarVerificadorHttp: CriarVerificadorHttp = () => naoImplementado('criarVerificadorHttp');
 export const razaoContraste: RazaoContraste = () => naoImplementado('razaoContraste');
 /** Fica em src/tema.ts na implementação (ADR-014). */
