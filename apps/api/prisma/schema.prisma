@@ -1,0 +1,73 @@
+// Componente Banco (contratos/banco.md, modulos-banco.md §2; ADR-002, ADR-004, ADR-010).
+// Nomes em camelCase no Prisma e @map/@@map para os nomes do contrato.
+// O CHECK de assets.bytes e o índice parcial de fases.publicada_em estão na migration SQL.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/gerado/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Só nome, e-mail e hash (RNF-06). O e-mail é gravado em minúsculas pela Api.
+model Usuario {
+  id        String   @id @default(uuid()) @db.Uuid
+  nome      String
+  email     String   @unique
+  senhaHash String   @map("senha_hash")
+  criadoEm  DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  sessoes Sessao[]
+  fases   Fase[]
+  assets  Asset[]
+
+  @@map("usuarios")
+}
+
+/// Sessão opaca (ADR-004): só o SHA-256 do token fica no banco.
+model Sessao {
+  idHash    String   @id @map("id_hash")
+  usuarioId String   @map("usuario_id") @db.Uuid
+  criadaEm  DateTime @default(now()) @map("criada_em") @db.Timestamptz(3)
+  expiraEm  DateTime @map("expira_em") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("sessoes")
+}
+
+/// Rascunho em `documento`, versão publicada em `documento_publicado` (ADR-002).
+model Fase {
+  id                 String    @id @default(uuid()) @db.Uuid
+  donoId             String    @map("dono_id") @db.Uuid
+  titulo             String
+  documento          Json
+  documentoPublicado Json?     @map("documento_publicado")
+  publicadaEm        DateTime? @map("publicada_em") @db.Timestamptz(3)
+  revisao            Int       @default(0)
+  criadaEm           DateTime  @default(now()) @map("criada_em") @db.Timestamptz(3)
+  atualizadaEm       DateTime  @default(now()) @updatedAt @map("atualizada_em") @db.Timestamptz(3)
+
+  dono Usuario @relation(fields: [donoId], references: [id], onDelete: Cascade)
+
+  @@index([donoId])
+  @@map("fases")
+}
+
+/// Registro da imagem enviada; o arquivo fica no Armazenamento (ADR-010).
+model Asset {
+  id       String   @id @default(uuid()) @db.Uuid
+  donoId   String   @map("dono_id") @db.Uuid
+  arquivo  String
+  mime     String
+  bytes    Int
+  criadoEm DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  dono Usuario @relation(fields: [donoId], references: [id], onDelete: Cascade)
+
+  @@index([donoId])
+  @@map("assets")
+}

@@ -1,0 +1,32 @@
+{
+  "agente": "codificacao",
+  "execucao": "a9824e7d2b3f96458",
+  "inicio": "2026-11-05T18:00:46.200Z",
+  "fim": "2026-11-05T18:05:21.075Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-01",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/api/prisma/schema.prisma",
+      "apps/api/prisma/migrations/migration_lock.toml",
+      "apps/api/prisma/migrations/20261105180000_inicial/migration.sql",
+      "apps/api/src/banco.ts",
+      "apps/api/src/erros.ts",
+      "apps/api/src/plugins/sessao.ts",
+      "apps/api/src/plugins/exigir-login.ts",
+      "apps/api/src/contexto.ts",
+      "apps/api/src/rotas/auth.ts",
+      "apps/api/src/rotas/fases.ts",
+      "apps/api/src/rotas/publicas.ts",
+      "apps/api/src/app.ts",
+      "apps/api/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 1
+  }
+}

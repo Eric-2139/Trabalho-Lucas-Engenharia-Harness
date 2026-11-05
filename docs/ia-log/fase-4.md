@@ -18,6 +18,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 8 | RF-16 | Player | rodada 3 (7 casos em `tests/player/motor.test.ts`) | motor `criarPartida` em `packages/player/src/motor.ts` e `estado-partida.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão; de carona, os casos de motor do RF-17 (5) e do RF-15 (18) | `codificacao-2026-11-05T17-41-45-139Z.json` |
 | 9 | RF-15 | Player | rodada 3 (10 casos em `tests/player/verificador-http.test.ts`, mais os de motor) | `criarVerificadorHttp` em `packages/player/src/verificador-http.ts`; verde no 1º de 5 ciclos (136 de 136), análise limpa, sem reversão | `codificacao-2026-11-05T17-43-17-924Z.json` |
 | 10 | RF-17 | Player | rodada 3 (5 casos em `tests/player/motor.test.ts`) | nenhuma edição: `dica` do motor (entrega 8) já atendia; o harness confirmou verde com 0 ciclos e análise limpa | `codificacao-2026-11-05T17-44-13-740Z.json` |
+| 11 | RF-01 | Api + Banco | rodada 4: 28 casos em `tests/api/auth.test.ts` para RF-01, RF-19, RNF-05, RNF-06 (`sucesso`, 4 de 4) | esquema Prisma e migration SQL escrita à mão; `construirApp`, sessão, cadastro, login, logout, excluir conta e o mínimo de `/fases` e `/publicadas`; verde no 1º de 5 ciclos (163 de 164), sem reversão; de carona RNF-05 e RNF-06 inteiros e 5 de 6 do RF-19 (o 6º precisa do upload, RF-06) | `testes-2026-11-05T18-00-04-985Z.json`, `codificacao-2026-11-05T18-05-21-075Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -30,6 +31,14 @@ Inferências do agente 4 no RF-18, que nenhum teste confere e que ficam para a e
 - **Teto.** A inscrição (camada 3) cobre a borda esquerda do olho, como no legado. Falta conferir no Player se isso atrapalha o clique.
 
 Camada Player (rodada 3): o RF-16 e o RF-17 são testados pelo motor (`clicar`, `dica`), não pelo desenho. O jsdom não tem canvas e o pacote `canvas` não é dependência do projeto. Por isso o ícone de dica desenhado e a falta de handler na decoração (RenderizadorParede, Konva) ficam sem teste automático: é risco para a aceitação, a cobrir no E2E da fase 6 ou com uma decisão de arquitetura.
+
+Decisões do Eric em 05/11 (depois da entrega 10): pacote `canvas` na suíte (ADR-016) e convenção `x`/`y` = canto superior esquerdo, rotação em torno desse canto (ADR-006). Commit `a0a174b`.
+
+Pontos da Api (RF-01) para o arquiteto:
+- **Sessão sem `fastify-plugin`.** O pacote não é dependência, então a sessão é registrada por função na instância raiz, não como plugin encapsulado.
+- **Login com e-mail desconhecido.** Roda o argon2 contra um hash aleatório, para o tempo de resposta não revelar se a conta existe. Escolha do agente.
+- **Chave da imagem.** `assets.arquivo` é a chave no `Armazenamento`: o upload (RF-06) tem de gravar com ela.
+- **Índices a mais.** `sessoes(usuario_id)` e `assets(dono_id)`, além dos do contrato.
 
 Pontos do motor (RF-16) para o arquiteto:
 - **`dica` só na parede ativa.** O agente 4 fez `dica(objetoId)` procurar o enigma só na parede ativa, como `clicar` e `responder`. O projeto não fixa isso e nenhum teste distingue os dois casos.
@@ -64,7 +73,9 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-15 (verificador HTTP) | `sucesso` no 1º ciclo | 228.341 | 3.942 | medido |
 | 05/11 | idem, subagente `codificacao` | Confirmar RF-17 | `sucesso` com 0 ciclos | 47.628 | 1.087 | medido |
 | 05/11 | Claude Code / Opus 5.5 | Ler o projeto, orquestrar os agentes 3 e 4, revisar cada entrega, commitar (sessão principal) | entregas 2 a 10 | 8.920.590 | 43.941 | medido |
-| **Total** | | | | **23.245.225** | **213.341** | medido |
+| 05/11 | idem, subagente `testes` | Testes da Api: contas (RF-01, RF-19, RNF-05, RNF-06) | `sucesso` | 735.289 | 24.225 | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-01 (Banco + Api) | `sucesso` no 1º ciclo | 2.040.271 | 28.367 | medido |
+| **Total** | | | | **26.020.785** | **265.933** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

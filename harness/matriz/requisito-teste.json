@@ -1,6 +1,38 @@
 {
-  "gerado_em": "2026-11-05T17:37:40.419Z",
+  "gerado_em": "2026-11-05T17:59:32.752Z",
   "requisitos": {
+    "RF-01": {
+      "feliz": 3,
+      "borda": 4,
+      "negativo": 4,
+      "arquivos": [
+        "tests/api/auth.test.ts"
+      ]
+    },
+    "RNF-05": {
+      "feliz": 2,
+      "borda": 3,
+      "negativo": 2,
+      "arquivos": [
+        "tests/api/auth.test.ts"
+      ]
+    },
+    "RNF-06": {
+      "feliz": 1,
+      "borda": 2,
+      "negativo": 1,
+      "arquivos": [
+        "tests/api/auth.test.ts"
+      ]
+    },
+    "RF-19": {
+      "feliz": 2,
+      "borda": 2,
+      "negativo": 2,
+      "arquivos": [
+        "tests/api/auth.test.ts"
+      ]
+    },
     "RF-16": {
       "feliz": 2,
       "borda": 3,
