@@ -58,6 +58,8 @@ Pontos da Api (RF-01) para o arquiteto:
 - **`verificar?modo=teste` sem sessão** responde 401, como as outras rotas do criador; o contrato só lista 404. Vale atualizar `contratos/api.md`.
 - **Limite atrás do proxy.** O limite usa `request.ip` e o Fastify está sem `trustProxy`. Atrás do proxy da ADR-017, todos os jogadores podem dividir o IP do proxy. Decidir na implantação. O estado fica em memória, por instância.
 - **URL da imagem enviada** usa o prefixo `/api` (`PREFIXO_PUBLICO`, ADR-017). Se a Api sair do mesmo site dos apps, rever.
+- **PEND-010, 011 e 012 respondidas pelo Eric em 05/11.** Relógio injetável em `OpcoesApp` (010); `RenderizadorParede` coberto pela `TelaJogo`, sem teste por pixel do ícone (011); convenções de texto e controle da `TelaJogo` confirmadas e registradas em `modulos-player.md` §2 (012).
+- **PEND-013 (aberta).** O teste `test_RNF07_tab_percorre_as_fases_na_ordem_da_lista` aperta Tab mais vezes que o número de fases, e o foco volta ao início da página: cada fase aparece duas vezes. O agente 4 escalou em vez de pôr controles falsos na tela. O teste volta ao agente 3.
 - **Índices a mais.** `sessoes(usuario_id)` e `assets(dono_id)`, além dos do contrato.
 
 Pontos do motor (RF-16) para o arquiteto:
@@ -110,7 +112,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Confirmar RNF-05 | `sucesso` com 0 ciclos | 49.943 | 710 | medido |
 | 05/11 | idem, subagente `codificacao` | Confirmar RNF-06 | `sucesso` com 0 ciclos | 49.858 | 679 | medido |
 | 05/11 | idem, subagente `codificacao` | Confirmar RNF-09 | `sucesso` com 0 ciclos | 50.512 | 840 | medido |
-| **Total** | | | | **35.926.703** | **433.601** | medido |
+| 05/11 | idem, subagente `testes` | Testes da interface do Player (RNF-07, RF-13, RF-16, RF-17, RF-18, RNF-01, RF-15) | `sucesso`; PEND-011 e PEND-012 | 4.550.505 | 86.519 | medido |
+| **Total** | | | | **40.477.208** | **520.120** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

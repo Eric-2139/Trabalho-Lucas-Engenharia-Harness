@@ -20,6 +20,8 @@ export interface OpcoesApp {
   armazenamento: Armazenamento;
   /** true em produção: cookie com Secure (ADR-004). */
   producao?: boolean;
+  /** Relógio em milissegundos (padrão Date.now), usado pelo limite de tentativas; os testes o avançam (PEND-010). */
+  relogio?: () => number;
 }
 
 /** Sobe o app com todas as rotas do contrato api.md. `app.close()` fecha também a conexão com o banco. */

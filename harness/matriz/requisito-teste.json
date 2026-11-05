@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-05T18:27:58.768Z",
+  "gerado_em": "2026-11-05T19:10:54.063Z",
   "requisitos": {
     "RF-06": {
       "feliz": 4,
@@ -105,38 +105,52 @@
       ]
     },
     "RF-13": {
-      "feliz": 2,
-      "borda": 3,
-      "negativo": 3,
+      "feliz": 6,
+      "borda": 9,
+      "negativo": 8,
       "arquivos": [
-        "tests/api/publicadas.test.ts"
+        "tests/api/publicadas.test.ts",
+        "tests/player/cliente-api.test.ts",
+        "tests/player/escolher-fase.test.tsx"
       ]
     },
     "RF-15": {
-      "feliz": 13,
-      "borda": 25,
-      "negativo": 20,
+      "feliz": 15,
+      "borda": 27,
+      "negativo": 22,
       "arquivos": [
         "tests/api/verificar.test.ts",
         "tests/player/motor.test.ts",
+        "tests/player/tela-jogo.test.tsx",
         "tests/player/verificador-http.test.ts",
         "tests/schema/comparacao.test.ts"
       ]
     },
-    "RF-16": {
-      "feliz": 2,
-      "borda": 3,
-      "negativo": 2,
+    "RNF-07": {
+      "feliz": 5,
+      "borda": 6,
+      "negativo": 4,
       "arquivos": [
-        "tests/player/motor.test.ts"
+        "tests/player/escolher-fase.test.tsx",
+        "tests/player/tema.test.ts"
+      ]
+    },
+    "RF-16": {
+      "feliz": 4,
+      "borda": 5,
+      "negativo": 3,
+      "arquivos": [
+        "tests/player/motor.test.ts",
+        "tests/player/tela-jogo.test.tsx"
       ]
     },
     "RF-17": {
-      "feliz": 1,
-      "borda": 2,
-      "negativo": 2,
+      "feliz": 2,
+      "borda": 4,
+      "negativo": 3,
       "arquivos": [
-        "tests/player/motor.test.ts"
+        "tests/player/motor.test.ts",
+        "tests/player/tela-jogo.test.tsx"
       ]
     },
     "RNF-02": {
@@ -147,11 +161,21 @@
         "tests/player/palco.test.ts"
       ]
     },
-    "RF-18": {
-      "feliz": 9,
-      "borda": 3,
-      "negativo": 3,
+    "RNF-01": {
+      "feliz": 3,
+      "borda": 5,
+      "negativo": 2,
       "arquivos": [
+        "tests/player/palco.test.ts",
+        "tests/player/tela-jogo.test.tsx"
+      ]
+    },
+    "RF-18": {
+      "feliz": 10,
+      "borda": 4,
+      "negativo": 5,
+      "arquivos": [
+        "tests/player/tela-jogo.test.tsx",
         "tests/schema/fase-exemplo.test.ts"
       ]
     },

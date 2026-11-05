@@ -3,7 +3,7 @@
  * Requisito: RNF-02 — em 1280x720, 1920x1080 e 2560x1440 a sala fica em 16:9 e os objetos
  * mantêm posição e tamanho relativos (coordenadas 0..1 do documento, ADR-006).
  */
-import { calcularPalco, paraPixels } from '@math-scape/player';
+import { calcularPalco, paraPixels, precisaAvisoResolucao } from '@math-scape/player';
 import type { Retangulo } from '@math-scape/player/contrato';
 import { describe, expect, test } from 'vitest';
 
@@ -95,5 +95,43 @@ describe('RNF-02 · paraPixels', () => {
     const pixels = paraPixels(OBJETO, palco);
     expect(pixels.altura).not.toBe(OBJETO.altura * 1600);
     expect(pixels).toEqual({ x: 800, y: 350 + 225, largura: 200, altura: 450 });
+  });
+});
+
+/** RNF-01: abaixo de 1280x720 aparece um aviso; a 1280x720 ou mais, não (precisaAvisoResolucao, ADR-006). */
+describe('RNF-01 · precisaAvisoResolucao', () => {
+  // @req RNF-01 @tipo feliz
+  test('test_RNF01_janela_1024x768_pede_aviso', () => {
+    expect(precisaAvisoResolucao(1024, 768)).toBe(true);
+  });
+
+  // @req RNF-01 @tipo borda
+  test('test_RNF01_janela_exatamente_1280x720_nao_pede_aviso', () => {
+    expect(precisaAvisoResolucao(1280, 720)).toBe(false);
+  });
+
+  // @req RNF-01 @tipo borda
+  test.each([
+    [1279, 720],
+    [1280, 719],
+  ])('test_RNF01_janela_%ix%i_um_pixel_abaixo_pede_aviso', (largura, altura) => {
+    expect(precisaAvisoResolucao(largura, altura)).toBe(true);
+  });
+
+  // @req RNF-01 @tipo borda
+  test.each([
+    [2000, 700],
+    [1200, 1080],
+  ])('test_RNF01_janela_%ix%i_menor_em_uma_so_dimensao_pede_aviso', (largura, altura) => {
+    expect(precisaAvisoResolucao(largura, altura)).toBe(true);
+  });
+
+  // @req RNF-01 @tipo negativo
+  test.each([
+    [1920, 1080],
+    [2560, 1440],
+    [1281, 721],
+  ])('test_RNF01_janela_%ix%i_acima_do_minimo_nao_pede_aviso', (largura, altura) => {
+    expect(precisaAvisoResolucao(largura, altura)).toBe(false);
   });
 });

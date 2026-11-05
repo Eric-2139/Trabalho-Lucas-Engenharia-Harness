@@ -14,7 +14,7 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-010, ADR-011, ADR-01
 | Sessão | `src/plugins/sessao.ts` | cookie `sid` (HttpOnly, SameSite=Lax, Secure em produção, Path=/); token de 32 bytes; banco guarda o SHA-256; decora `request.usuario` | RF-01, RNF-05, ADR-004 |
 | Exigir login | `src/plugins/exigir-login.ts` | pré-handler: sem sessão → 401 | RF-01 |
 | Exigir dono | `src/plugins/exigir-dono.ts` | pré-handler: carrega a fase; outro dono ou inexistente → 404; põe `request.fase` | RF-02, RF-14, ADR-005 |
-| Limite de tentativas | `src/plugins/limite-verificar.ts` | janelas por IP + fase + tipo (`LIMITES_VERIFICAR`); excedeu → 429 `{ tentarEmSegundos }`; `modo=teste` sem limite | RF-15, RNF-04, ADR-003 |
+| Limite de tentativas | `src/plugins/limite-verificar.ts` | janelas por IP + fase + tipo (`LIMITES_VERIFICAR`); excedeu → 429 `{ tentarEmSegundos }`; `modo=teste` sem limite; o tempo vem de `OpcoesApp.relogio` (PEND-010) | RF-15, RNF-04, ADR-003 |
 | Rotas de conta | `src/rotas/auth.ts` | cadastro, login, logout, excluir conta | RF-01, RF-19, RNF-05, RNF-06 |
 | Rotas do criador | `src/rotas/fases.ts` | listar, criar, abrir, salvar (`revisao`), renomear, excluir, duplicar, publicar, jogo-teste, exportar, importar | RF-02, RF-10 a RF-14, RNF-09 |
 | Rotas públicas | `src/rotas/publicas.ts` | `/publicadas`, `/publicadas/:id/jogo` | RF-13, RNF-04 |

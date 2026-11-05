@@ -60,4 +60,13 @@ Decisões: ADR-003, ADR-006, ADR-009, ADR-012, ADR-014, ADR-017. Processo: ADR-0
 | `src/main.tsx` | rotas: `/`, `/fases`, `/jogar/:id` | — |
 | `src/mensagens.ts` | textos em português | RNF-07 |
 
+**Convenções da TelaJogo** (PEND-012, Eric em 05/11/2026), fixadas pelos testes de `tests/player/tela-jogo.test.tsx`:
+- aviso de resolução com "1280x720" (ou "1280×720") ou "resolução" no texto, sem bloquear o jogo (RNF-01);
+- botões de parede com o nome da parede (frente, direita, fundo, esquerda, teto);
+- controle de dica: `<button>` com "dica" no nome acessível, só para os enigmas com dica da parede ativa; ativado, mostra o texto (RF-17);
+- um único campo de resposta ou senha (`input`), enviado com Enter num `<form>` ou por botão "Responder"/"Enviar"/"Confirmar"; no modo senha, a pergunta do enigma anterior deixa de aparecer;
+- o palco tem tamanho diferente de zero no jsdom com a janela em 1280×720 (medido por `innerWidth`/`innerHeight`; o jsdom não tem `ResizeObserver`), e o nó `Image` do Konva existe com largura e altura mesmo sem a imagem carregada, para o clique acertar o objeto.
+
+O `RenderizadorParede` é testado através da `TelaJogo` (PEND-011): clique real no canvas para fala e decoração e controle de dica no DOM; o ícone desenhado não tem teste por pixel.
+
 O app só recebe `FaseJogo` da Api. Nada no bundle do player contém resposta ou senha (RNF-04).

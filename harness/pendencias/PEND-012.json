@@ -1,0 +1,26 @@
+{
+  "id": "PEND-012",
+  "tipo": "arquitetura",
+  "agente_origem": "testes",
+  "req_ids": [
+    "RNF-01",
+    "RF-15",
+    "RF-16",
+    "RF-17",
+    "RF-18"
+  ],
+  "chamado_id": null,
+  "pergunta": "Os testes da TelaJogo assumiram os textos e controles abaixo, que o contrato não fixa. Confirma (e registra em modulos-player.md §2 / apps/player/src/mensagens.ts) ou define outros?",
+  "opcoes": [
+    "(a) confirmar o que os testes assumem: aviso de resolução com '1280x720' (ou '1280×720') ou 'resolução' no texto; botões de parede com o nome da parede (frente, direita, fundo, esquerda, teto); controle de dica = <button> com 'dica' no nome acessível, só para os enigmas com dica da parede ativa, exibindo o texto ao ser ativado; um único campo de resposta ou senha (input), enviado com Enter num <form> ou por botão 'Responder'/'Enviar'/'Confirmar'; no modo senha a pergunta do enigma anterior deixa de aparecer",
+    "(b) fixar textos exatos (ex.: aviso 'Sua tela é menor que 1280x720: o jogo pode ficar apertado.', botão 'Ver dica', botão 'Responder') e o agente 3 deixa os testes mais estritos numa próxima rodada",
+    "outro"
+  ],
+  "contexto": "PropsTelaJogo (apps/player/contrato/index.ts) lista 'botões das 5 paredes, palco, caixa de fala, campo de resposta ou senha, dígitos revelados, aviso abaixo de 1280×720', mas não os textos nem os nomes acessíveis. RNF-01 diz só 'aparece um aviso'; RF-17 diz que o ícone é 'clicável e acessível pelo teclado na tela de jogo' (modulos-player.md §1). Os testes em tests/player/tela-jogo.test.tsx localizam esses elementos pelas regras da opção (a); MENSAGENS (respostaCorreta, respostaErrada, senhaIncorreta) já está no contrato e é usado literalmente.",
+  "impacto": "Se a implementação escolher outro texto para o aviso, outro nome para o controle de dica ou outro meio de envio, os testes ficam vermelhos sem defeito real, e o agente 4 não pode alterá-los. Não bloqueia a rodada; pede só a confirmação antes do agente 4 implementar a TelaJogo.",
+  "status": "respondida",
+  "resposta": "Opção (a): confirmados os textos e controles que os testes assumem; registrados em modulos-player.md §2.",
+  "respondida_por": "Eric",
+  "registrada_por": "Claude (sessão principal), pela resposta do Eric",
+  "respondida_em": "2026-11-05T19:10:00.000Z"
+}

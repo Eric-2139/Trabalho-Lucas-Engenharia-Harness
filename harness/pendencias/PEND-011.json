@@ -1,0 +1,23 @@
+{
+  "id": "PEND-011",
+  "tipo": "arquitetura",
+  "agente_origem": "testes",
+  "req_ids": [
+    "RF-16",
+    "RF-17"
+  ],
+  "chamado_id": null,
+  "pergunta": "O RenderizadorParede monta o próprio Stage Konva, e qual é a geometria do ícone de dica (tamanho e posição exata em relação ao canto superior direito do enigma)?",
+  "opcoes": [
+    "(a) RenderizadorParede monta o Stage do tamanho do contêiner (props.palco dá a origem e o tamanho da sala) e o ícone tem tamanho fixo em pixels (ex.: 32×32) com o centro no canto superior direito do objeto; registrar em modulos-player.md §1",
+    "(b) RenderizadorParede devolve só as camadas (Layer) e quem monta o Stage é a TelaJogo / o modo testar; então os testes do componente isolado exigem konva/react-konva como devDependency da raiz para montar o Stage em volta",
+    "(c) manter como está: RenderizadorParede só é testado através da TelaJogo (decoração sem clique, fala com texto, controle de dica no DOM), sem teste por pixel do ícone"
+  ],
+  "contexto": "PropsRenderizadorParede (packages/player/contrato/palco.ts) recebe palco: Retangulo, mas nem o contrato nem modulos-player.md §1 ('Duas camadas Konva...') dizem se o componente monta o Stage. Montado sozinho com Testing Library, um componente que devolve só Layer não desenha nada, e os testes não podem importar konva para montar o Stage. O ícone de dica fica 'no canto superior direito do objeto', sem tamanho: não dá para escolher um pixel que caia no ícone e não no enigma, nem conferir o desenho por pixel como a ADR-016 prevê. Nesta rodada (agente 3), RF-16 e RF-17 foram cobertos na TelaJogo (tests/player/tela-jogo.test.tsx): clique real no canvas para fala e decoração e o controle de dica acessível pelo teclado no DOM. O auxiliar tests/support/palco-tela.ts evita clicar num raio de 64 px em volta do canto superior direito de enigma com dica.",
+  "impacto": "Sem a decisão, não há tests/player/renderizador-parede.test.tsx: o desenho do ícone de dica no canvas (posição, só junto de enigma com dica) e o clique nele (aoVerDica) ficam sem teste automático direto; um ícone desenhado no lugar errado só apareceria no E2E. Se o ícone tiver mais de 64 px, o auxiliar de clique precisa do valor.",
+  "status": "respondida",
+  "resposta": "Opção (c): RenderizadorParede é coberto pela TelaJogo (clique real no canvas para fala e decoração; controle de dica acessível no DOM). Sem teste por pixel do ícone e sem konva na raiz.",
+  "respondida_por": "Eric",
+  "registrada_por": "Claude (sessão principal), pela resposta do Eric",
+  "respondida_em": "2026-11-05T19:10:00.000Z"
+}
