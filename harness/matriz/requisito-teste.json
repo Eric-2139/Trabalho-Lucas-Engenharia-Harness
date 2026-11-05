@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-05T19:10:54.063Z",
+  "gerado_em": "2026-11-05T19:19:52.239Z",
   "requisitos": {
     "RF-06": {
       "feliz": 4,
@@ -115,9 +115,9 @@
       ]
     },
     "RF-15": {
-      "feliz": 15,
-      "borda": 27,
-      "negativo": 22,
+      "feliz": 17,
+      "borda": 30,
+      "negativo": 24,
       "arquivos": [
         "tests/api/verificar.test.ts",
         "tests/player/motor.test.ts",

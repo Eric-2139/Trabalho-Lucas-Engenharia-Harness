@@ -330,6 +330,197 @@ describe('RF-15 · limite de tentativas de verificar', () => {
 });
 
 // =====================================================================
+// RF-15 · a janela do limite termina e libera novas tentativas (PEND-010: OpcoesApp.relogio)
+// =====================================================================
+describe('RF-15 · liberação do limite depois da janela (relógio controlado)', () => {
+  /**
+   * Instante sintético fixo, múltiplo das duas janelas (60 s e 600 s): vale igual para janela que
+   * começa na primeira tentativa e para janela alinhada ao relógio. Todas as tentativas que esgotam
+   * o limite acontecem nesse instante; o teste só avança `agora`.
+   */
+  const T0 = 1_800_000_000_000;
+  const PORTA_MS = LIMITES_VERIFICAR.porta.janelaSegundos * 1000;
+  const ENIGMA_MS = LIMITES_VERIFICAR.enigma.janelaSegundos * 1000;
+  let agora = T0;
+
+  beforeEach(async () => {
+    agora = T0;
+    await app.close();
+    app = await construirApp({
+      urlBanco: urlBancoDeTeste(),
+      armazenamento: criarArmazenamentoMemoria(),
+      relogio: () => agora,
+    });
+  });
+
+  async function esgotarPorta(id: string): Promise<void> {
+    for (let tentativa = 1; tentativa <= LIMITES_VERIFICAR.porta.maximo; tentativa++) {
+      const res = await verificar(app, id, { objetoId: 'porta-1', resposta: '00000' });
+      expect(res.statusCode, `tentativa ${tentativa}`).toBe(200);
+    }
+  }
+
+  async function esgotarEnigma(id: string): Promise<void> {
+    for (let tentativa = 1; tentativa <= LIMITES_VERIFICAR.enigma.maximo; tentativa++) {
+      const res = await verificar(app, id, { objetoId: 'enigma-frente', resposta: '1' });
+      expect(res.statusCode, `tentativa ${tentativa}`).toBe(200);
+    }
+  }
+
+  function tentarEm(res: Resposta): number {
+    const corpo = res.json() as { tentarEmSegundos: unknown };
+    expect(typeof corpo.tentarEmSegundos).toBe('number');
+    return corpo.tentarEmSegundos as number;
+  }
+
+  // @req RF-15 @tipo feliz
+  test(
+    'test_RF15_porta_volta_a_conferir_a_senha_quando_o_relogio_chega_ao_fim_da_janela',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarPorta(id);
+      expect((await verificar(app, id, { objetoId: 'porta-1', resposta: '92139' })).statusCode).toBe(429);
+
+      agora = T0 + PORTA_MS;
+      const liberada = await verificar(app, id, { objetoId: 'porta-1', resposta: '92139' });
+      expect(liberada.statusCode).toBe(200);
+      expect(liberada.json()).toEqual({ aberta: true });
+    },
+    TEMPO_LIMITE_MS,
+  );
+
+  // @req RF-15 @tipo feliz
+  test(
+    'test_RF15_enigma_volta_a_revelar_digitos_quando_o_relogio_chega_ao_fim_da_janela',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarEnigma(id);
+      expect((await verificar(app, id, { objetoId: 'enigma-frente', resposta: '80' })).statusCode).toBe(429);
+
+      agora = T0 + ENIGMA_MS;
+      const liberado = await verificar(app, id, { objetoId: 'enigma-frente', resposta: '80' });
+      expect(liberado.statusCode).toBe(200);
+      expect(liberado.json()).toEqual({
+        correto: true,
+        digitos: [
+          { posicao: 1, valor: '9' },
+          { posicao: 2, valor: '2' },
+        ],
+      });
+    },
+    TEMPO_LIMITE_MS,
+  );
+
+  // @req RF-15 @tipo borda
+  test(
+    'test_RF15_porta_um_milissegundo_antes_do_fim_da_janela_ainda_responde_429',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarPorta(id);
+
+      agora = T0 + PORTA_MS - 1;
+      const antes = await verificar(app, id, { objetoId: 'porta-1', resposta: '92139' });
+      expect(antes.statusCode).toBe(429);
+      expect(antes.body).not.toContain('aberta');
+      const espera = tentarEm(antes);
+      expect(espera).toBeGreaterThan(0);
+      expect(espera).toBeLessThanOrEqual(1);
+
+      agora = T0 + PORTA_MS;
+      expect((await verificar(app, id, { objetoId: 'porta-1', resposta: '92139' })).statusCode).toBe(200);
+    },
+    TEMPO_LIMITE_MS,
+  );
+
+  // @req RF-15 @tipo borda
+  test(
+    'test_RF15_enigma_um_milissegundo_antes_do_fim_da_janela_ainda_responde_429',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarEnigma(id);
+
+      agora = T0 + ENIGMA_MS - 1;
+      const antes = await verificar(app, id, { objetoId: 'enigma-frente', resposta: '80' });
+      expect(antes.statusCode).toBe(429);
+      expect(antes.body).not.toContain('digitos');
+      const espera = tentarEm(antes);
+      expect(espera).toBeGreaterThan(0);
+      expect(espera).toBeLessThanOrEqual(1);
+
+      agora = T0 + ENIGMA_MS;
+      expect((await verificar(app, id, { objetoId: 'enigma-frente', resposta: '80' })).statusCode).toBe(200);
+    },
+    TEMPO_LIMITE_MS,
+  );
+
+  // @req RF-15 @tipo borda
+  test(
+    'test_RF15_tentar_em_segundos_diminui_conforme_o_relogio_avanca_dentro_da_janela',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarPorta(id);
+
+      const noInicio = tentarEm(await verificar(app, id, { objetoId: 'porta-1', resposta: '00000' }));
+      expect(noInicio).toBeGreaterThan(0);
+      expect(noInicio).toBeLessThanOrEqual(LIMITES_VERIFICAR.porta.janelaSegundos);
+
+      agora = T0 + 200_000;
+      const depoisDe200s = await verificar(app, id, { objetoId: 'porta-1', resposta: '00000' });
+      expect(depoisDe200s.statusCode).toBe(429);
+      const meio = tentarEm(depoisDe200s);
+      expect(meio).toBeLessThan(noInicio);
+      expect(meio).toBeGreaterThan(0);
+      expect(meio).toBeLessThanOrEqual(LIMITES_VERIFICAR.porta.janelaSegundos - 200);
+
+      agora = T0 + PORTA_MS - 1000;
+      const quaseNoFim = await verificar(app, id, { objetoId: 'porta-1', resposta: '00000' });
+      expect(quaseNoFim.statusCode).toBe(429);
+      const fim = tentarEm(quaseNoFim);
+      expect(fim).toBeLessThan(meio);
+      expect(fim).toBeGreaterThan(0);
+      expect(fim).toBeLessThanOrEqual(1);
+    },
+    TEMPO_LIMITE_MS,
+  );
+
+  // @req RF-15 @tipo negativo
+  test(
+    'test_RF15_depois_da_liberacao_o_limite_vale_de_novo_e_a_tentativa_acima_do_maximo_responde_429',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarPorta(id);
+
+      agora = T0 + PORTA_MS;
+      await esgotarPorta(id);
+      const excedeu = await verificar(app, id, { objetoId: 'porta-1', resposta: '92139' });
+      expect(excedeu.statusCode).toBe(429);
+      expect(excedeu.body).not.toContain('aberta');
+      const espera = tentarEm(excedeu);
+      expect(espera).toBeGreaterThan(0);
+      expect(espera).toBeLessThanOrEqual(LIMITES_VERIFICAR.porta.janelaSegundos);
+    },
+    TEMPO_LIMITE_MS,
+  );
+
+  // @req RF-15 @tipo negativo
+  test(
+    'test_RF15_avancar_o_relogio_dentro_da_janela_nao_libera_a_porta',
+    async () => {
+      const { id } = await faseJogavelPublicada();
+      await esgotarPorta(id);
+
+      for (const passoMs of [1, 60_000, 300_000, PORTA_MS / 2 + 1, PORTA_MS - 1000]) {
+        agora = T0 + passoMs;
+        const res = await verificar(app, id, { objetoId: 'porta-1', resposta: '92139' });
+        expect(res.statusCode, `após ${passoMs} ms`).toBe(429);
+        expect(res.body, `após ${passoMs} ms`).not.toContain('aberta');
+      }
+    },
+    TEMPO_LIMITE_MS,
+  );
+});
+
+// =====================================================================
 // RF-11 · modo testar: confere no servidor contra o rascunho, só para o dono, sem limite
 // =====================================================================
 describe('RF-11 · verificar no modo testar', () => {

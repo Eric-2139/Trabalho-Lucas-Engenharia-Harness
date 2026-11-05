@@ -32,6 +32,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 22 | RNF-05 | Api | já escritos nas rodadas 4 a 6 | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (280 de 280) | `codificacao-2026-11-05T18-52-58-049Z.json` |
 | 23 | RNF-06 | Api | já escritos nas rodadas 4 a 6 | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (280 de 280) | `codificacao-2026-11-05T18-54-43-968Z.json` |
 | 24 | RNF-09 | Api | já escritos nas rodadas 4 a 6 | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (280 de 280) | `codificacao-2026-11-05T18-56-27-971Z.json` |
+| 25 | RNF-07 | Player | rodada 8 (15 casos em `tests/player/tema.test.ts` e `escolher-fase.test.tsx`; o teste do Tab corrigido na rodada 9) | `tema` e `razaoContraste` (WCAG 2.1) em `packages/player/src/tema.ts`; `EscolherFase` com botões nativos; 1ª rodada escalou por teste defeituoso (PEND-013), 2ª rodada verde com 0 ciclos | `codificacao-2026-11-05T19-17-30-128Z.json` (escalado), `testes-2026-11-05T19-21-22-271Z.json`, `codificacao-2026-11-05T19-23-24-323Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -113,7 +114,10 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Confirmar RNF-06 | `sucesso` com 0 ciclos | 49.858 | 679 | medido |
 | 05/11 | idem, subagente `codificacao` | Confirmar RNF-09 | `sucesso` com 0 ciclos | 50.512 | 840 | medido |
 | 05/11 | idem, subagente `testes` | Testes da interface do Player (RNF-07, RF-13, RF-16, RF-17, RF-18, RNF-01, RF-15) | `sucesso`; PEND-011 e PEND-012 | 4.550.505 | 86.519 | medido |
-| **Total** | | | | **40.477.208** | **520.120** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RNF-07 (1ª rodada) | `escalado`: PEND-013, teste defeituoso | 766.364 | 13.479 | medido |
+| 05/11 | idem, subagente `testes` | Corrigir o teste do Tab (PEND-013) e testar o relógio do limite (PEND-010) | `sucesso` | 487.656 | 13.629 | medido |
+| 05/11 | idem, subagente `codificacao` | Concluir RNF-07 | `sucesso` com 0 ciclos | 49.914 | 1.075 | medido |
+| **Total** | | | | **41.781.142** | **548.303** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

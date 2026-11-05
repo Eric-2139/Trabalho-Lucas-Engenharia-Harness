@@ -1,0 +1,24 @@
+{
+  "agente": "codificacao",
+  "execucao": "aefe300272e85d690",
+  "inicio": "2026-11-05T19:13:29.322Z",
+  "fim": "2026-11-05T19:17:30.128Z",
+  "resultado": "escalado",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RNF-07",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "packages/player/src/tema.ts",
+      "packages/player/src/index.ts",
+      "apps/player/src/mensagens.ts",
+      "apps/player/src/telas/EscolherFase.tsx",
+      "apps/player/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 1
+  }
+}

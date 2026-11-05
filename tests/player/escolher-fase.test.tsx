@@ -40,6 +40,23 @@ async function percorrerComTab(user: ReturnType<typeof userEvent.setup>, vezes: 
   return focados;
 }
 
+/**
+ * Pressiona Tab até o foco dar uma volta completa na página e devolve os elementos focados na
+ * primeira passagem, em ordem (PEND-013). O user-event volta ao início depois do último focável
+ * (passando por document.body); a coleta para quando um elemento já focado recebe foco de novo.
+ */
+async function primeiraVoltaComTab(user: ReturnType<typeof userEvent.setup>, maximo = 20): Promise<Element[]> {
+  const focados: Element[] = [];
+  for (let i = 0; i < maximo; i++) {
+    await user.tab();
+    const atual = document.activeElement;
+    if (!atual || atual === document.body) continue;
+    if (focados.includes(atual)) break;
+    focados.push(atual);
+  }
+  return focados;
+}
+
 describe('RF-13 · EscolherFase lista as publicadas', () => {
   // @req RF-13 @tipo feliz
   test('test_RF13_mostra_uma_entrada_por_fase_na_ordem_recebida', () => {
@@ -94,7 +111,7 @@ describe('RNF-07 · EscolherFase pelo teclado', () => {
     const user = userEvent.setup();
     montar(FASES);
     const lista = entradas();
-    const focados = await percorrerComTab(user, lista.length + 4);
+    const focados = await primeiraVoltaComTab(user);
     const fasesFocadas = focados.filter((el) => lista.includes(el as HTMLElement));
     expect(fasesFocadas).toEqual(lista);
   });
