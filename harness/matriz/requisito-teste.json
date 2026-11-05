@@ -1,12 +1,38 @@
 {
-  "gerado_em": "2026-11-05T17:29:58.470Z",
+  "gerado_em": "2026-11-05T17:37:40.419Z",
   "requisitos": {
-    "RF-15": {
-      "feliz": 3,
-      "borda": 7,
-      "negativo": 6,
+    "RF-16": {
+      "feliz": 2,
+      "borda": 3,
+      "negativo": 2,
       "arquivos": [
+        "tests/player/motor.test.ts"
+      ]
+    },
+    "RF-17": {
+      "feliz": 1,
+      "borda": 2,
+      "negativo": 2,
+      "arquivos": [
+        "tests/player/motor.test.ts"
+      ]
+    },
+    "RF-15": {
+      "feliz": 10,
+      "borda": 18,
+      "negativo": 15,
+      "arquivos": [
+        "tests/player/motor.test.ts",
+        "tests/player/verificador-http.test.ts",
         "tests/schema/comparacao.test.ts"
+      ]
+    },
+    "RNF-02": {
+      "feliz": 3,
+      "borda": 4,
+      "negativo": 2,
+      "arquivos": [
+        "tests/player/palco.test.ts"
       ]
     },
     "RNF-09": {
