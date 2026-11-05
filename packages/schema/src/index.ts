@@ -14,13 +14,14 @@ import type {
   ValidarFase,
   ValidarJogabilidade,
 } from '../contrato/index.ts';
+import { validarJogabilidade as validarJogabilidadeImpl } from './jogabilidade.ts';
 import { naoImplementado } from './nao-implementado.ts';
 import { validarFase as validarFaseImpl } from './validar.ts';
 
 export * from '../contrato/index.ts';
 
 export const validarFase: ValidarFase = validarFaseImpl;
-export const validarJogabilidade: ValidarJogabilidade = () => naoImplementado('validarJogabilidade');
+export const validarJogabilidade: ValidarJogabilidade = validarJogabilidadeImpl;
 export const projetarParaJogo: ProjetarParaJogo = () => naoImplementado('projetarParaJogo');
 export const faseInicial: FaseInicial = () => naoImplementado('faseInicial');
 export const objetoPadrao: ObjetoPadrao = () => naoImplementado('objetoPadrao');

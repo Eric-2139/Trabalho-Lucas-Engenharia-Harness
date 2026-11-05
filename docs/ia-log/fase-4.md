@@ -9,6 +9,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | # | Requisito | Camada | Testes (agente 3) | Implementação (agente 4) | Relatórios do harness |
 |---|---|---|---|---|---|
 | 1 | RF-07 | SchemaFase | rodada 1: 68 casos em `tests/schema/` para RF-07, RF-08, RF-12, RF-15, RNF-09 (`sucesso`, 5 de 5 com feliz, borda e negativo) | `validarFase` em `packages/schema/src/validar.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `testes-2026-11-04T20-29-29-582Z.json`, `codificacao-2026-11-04T20-35-11-516Z.json` |
+| 2 | RF-12 | SchemaFase | já escritos na rodada 1 (8 casos em `tests/schema/jogabilidade.test.ts`) | `validarJogabilidade` em `packages/schema/src/jogabilidade.ts`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T17-22-58-494Z.json` |
 
 De carona com o RF-07 ficaram verdes os casos de schema do RF-08 e do RNF-09 em `tests/schema/fase.test.ts`. O RF-08 e o RNF-09 só fecham quando `faseInicial` e `validarEnvelope` forem implementados.
 
@@ -26,9 +27,10 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 04/11 | idem, subagente `web-fetch` | Confirmar na documentação quando o hook PostToolUseFailure dispara | Bash com saída ≠ 0 dispara PostToolUseFailure | 63.699 | 3.667 | medido |
 | 04/11 | idem, subagente `testes` | Testes da camada SchemaFase para RF-07, RF-08, RF-12, RF-15, RNF-09 | `sucesso`; 1 bloqueio P1 (`cd` antes do comando) | 1.284.923 | 29.360 | medido |
 | 04/11 | idem, subagente `codificacao` | Implementar RF-07 | `sucesso` no 1º ciclo; 2 bloqueios P1 (`cd` antes do comando) | 268.004 | 4.183 | medido |
-| **Total** | | | | **9.798.372** | **80.597** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-12 | `sucesso` no 1º ciclo; 2 bloqueios P1 | 252.038 | 3.340 | medido |
+| **Total** | | | | **10.050.410** | **83.937** | medido |
 
-A linha da sessão principal foi medida ao escrever este log; o commit e o push vêm depois.
+A linha da sessão principal de 04/11 foi medida ao escrever este log; a de 05/11 entra quando a sessão fechar a camada SchemaFase.
 
 ## Onde a IA acertou
 - **Achou, antes de rodar, o defeito que pararia a fase.** O disjuntor e o JUnit velho só apareceriam na primeira rodada real, como falha controlada sem causa aparente.
