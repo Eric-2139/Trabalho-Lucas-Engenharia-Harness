@@ -1,0 +1,23 @@
+{
+  "id": "PEND-015",
+  "tipo": "escalada",
+  "agente_origem": "codificacao",
+  "req_ids": [
+    "RNF-01"
+  ],
+  "chamado_id": null,
+  "pergunta": "O aviso de resolução do Editor (modulos-editor.md §1: 'src/telas/Edicao.tsx usa precisaAvisoResolucao e mostra o aviso, sem bloquear') não tem teste e a tela Edicao ainda não existe. Implemento agora ou espero?",
+  "opcoes": [
+    "(a) o agente 3 escreve antes os testes do aviso no Editor (tests/editor/, @req RNF-01, os mesmos limites de tests/player/tela-jogo.test.tsx) e o agente 4 implementa o aviso junto com a tela Edicao (RF-03)",
+    "(b) o agente 4 cria agora um Edicao.tsx mínimo só com o aviso, sem teste, e a tela completa vem depois com o RF-03",
+    "(c) o aviso fica num componente comum do packages/player (ex.: AvisoResolucao) usado pelas duas apps, e o projeto (modulos-editor.md e modulos-player.md) é atualizado",
+    "outro"
+  ],
+  "contexto": "apps/editor/src tem só index.ts e main.tsx (placeholder 'em construção'). tests/editor/ tem só .gitkeep. Os 15 testes do RNF-01 cobrem precisaAvisoResolucao (packages/player/src/palco.ts) e a TelaJogo do Player (apps/player/src/telas/TelaJogo.tsx, texto em apps/player/src/mensagens.ts). O contrato editor.md (linha 34) pede o aviso também no Editor.",
+  "impacto": "O RNF-01 aparece verde no harness, mas o critério ('abaixo disso aparece um aviso') não está garantido no Editor. Pela opção (b), o código entraria sem rede de segurança. Não bloqueia os outros requisitos.",
+  "status": "respondida",
+  "resposta": "Opção (a): o agente 3 escreve os testes do aviso de resolução no Editor (tests/editor/, @req RNF-01, os mesmos limites da TelaJogo) na rodada do Editor, e o agente 4 implementa o aviso junto com a tela de edição. Nada de código sem teste.",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-05T23:45:00.000Z"
+}

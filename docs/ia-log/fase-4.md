@@ -36,12 +36,17 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 26 | RF-16 | Player | rodada 7 (5 casos de tela em `tests/player/tela-jogo.test.tsx`, mais os 7 do motor) | `RenderizadorParede` (Konva, fundo sem escuta, decoração sem handler) em `packages/player/src/RenderizadorParede.tsx`; `TelaJogo` com 5 botões de parede, palco 16:9 e caixa de fala em `apps/player/src/telas/TelaJogo.tsx`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T23-22-40-404Z.json` |
 | 27 | RF-17 | Player | rodada 7 (4 casos de tela em `tests/player/tela-jogo.test.tsx`) | ícone de dica de 32 px no canto superior direito do enigma no palco Konva (`icone-dica.png`); botão "Ver dica" no DOM para cada enigma com dica da parede ativa; de carona, a pergunta do enigma aparece ao clicar (parte do RF-15 que o teste do RF-17 exige); verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-05T23-27-31-367Z.json` |
 | 28 | RF-15 | Api + Player | rodada 7 (6 casos de tela) e rodada 9 (6 casos do relógio do limite, PEND-010) | `OpcoesApp.relogio` repassado ao limite de tentativas (`rotas/verificar.ts`); `TelaJogo` com um campo de resposta ou senha num `<form>`, mensagens de acerto e erro, linha "Senha da porta" com os dígitos revelados e fim de jogo com `aoConcluir`; verde no 1º de 5 ciclos, suíte 351 de 351, sem reversão; de carona os casos de tela do RF-18 e do RNF-01 | `codificacao-2026-11-05T23-32-24-321Z.json` |
+| 29 | RF-18 | Player | rodada 7 (4 casos de tela, mais os 15 do schema) | nenhuma edição: as entregas 26 a 28 já atendiam; o harness confirmou verde com 0 ciclos (351 de 351) | `codificacao-2026-11-05T23-34-18-535Z.json` |
+| 30 | RNF-01 | Player | rodada 7 (6 casos de tela, mais os de `palco`) | nenhuma edição; verde com 0 ciclos. O aviso no Player está pronto; o do Editor (PEND-015) e a matriz de navegadores com E2E (PEND-014) ficam para depois | `codificacao-2026-11-05T23-36-45-355Z.json` |
+| 31 | RF-13 | Player | rodada 7 (`cliente-api.test.ts`, `escolher-fase.test.tsx`) | nenhuma edição: o `cliente-api.ts` e o `http.ts` do commit `f7a1d6e` já atendiam; verde com 0 ciclos (351 de 351). A parte do Editor (publicar de novo) fica para a rodada do Editor (PEND-016) | `codificacao-2026-11-05T23-38-55-913Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
 - **Imagem de testes ausente nesta máquina.** A IA abriu o Docker Desktop e construiu `math-scape-testes` (`pnpm testes:imagem`) antes da primeira rodada. Ponto de partida: 320 de 351 testes verdes.
 - **PEND-013 fechada no registro.** A opção (a) já tinha sido executada (teste do Tab corrigido na rodada 9); só faltava mudar o status.
 - **Achados do agente 4 no RF-16.** `@math-scape/player` passa a carregar konva e react-konva em todo teste que importa o pacote. O palco ocupa o maior 16:9 da janela sem descontar a barra de botões e pode transbordar na vertical no navegador real (fica para o E2E).
+- **Achado do agente 4 no RF-15.** O `Contexto` da Api não carrega o relógio, então ele chega a `registrarRotaVerificar` como terceiro parâmetro. Se outras rotas precisarem do relógio, cabe ao arquiteto pô-lo no `Contexto`.
+- **Decisões da IA, delegadas pelo Eric.** PEND-014 → (c): browserslist e E2E Playwright do RNF-01 ficam para as fases 5-6, como a ADR-016 já prevê. PEND-015 e PEND-016 → (a): o aviso de resolução e a barra de publicação do Editor ganham testes do agente 3 antes da implementação.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -129,7 +134,10 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-16 (`TelaJogo` e `RenderizadorParede`) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 2.054.043 | 22.020 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-17 (ícone e controle de dica) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 1.057.786 | 10.720 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-15 (relógio do limite e respostas na `TelaJogo`) | `sucesso` no 1º ciclo; 3 bloqueios P1 | 1.194.269 | 11.388 | medido |
-| **Total** | | | | **46.087.240** | **592.431** | medido |
+| 05/11 | idem, subagente `codificacao` | Confirmar RF-18 | `sucesso` com 0 ciclos | 72.232 | 1.430 | medido |
+| 05/11 | idem, subagente `codificacao` | Confirmar RNF-01 | `sucesso` com 0 ciclos; PEND-014 e PEND-015 | 252.087 | 6.748 | medido |
+| 05/11 | idem, subagente `codificacao` | Confirmar RF-13 (Player) | `sucesso` com 0 ciclos; PEND-016 | 195.067 | 3.699 | medido |
+| **Total** | | | | **46.606.626** | **604.308** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

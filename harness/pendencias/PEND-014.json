@@ -1,0 +1,23 @@
+{
+  "id": "PEND-014",
+  "tipo": "arquitetura",
+  "agente_origem": "codificacao",
+  "req_ids": [
+    "RNF-01"
+  ],
+  "chamado_id": null,
+  "pergunta": "A parte 1 do RNF-01 (ADR-006: browserslist das duas últimas versões de Chrome, Edge e Firefox e E2E Playwright chromium/msedge/firefox do fluxo criar, publicar e jogar) exige arquivos fora dos arquivos_previstos do Editor e do Player. Quem implementa e onde?",
+  "opcoes": [
+    "(a) o humano ou o arquiteto grava o campo browserslist no package.json da raiz (manifesto, bloqueado para o agente 4 pela P1) e o playwright.config.ts; o agente 3 escreve o E2E em tests/e2e/ com @req RNF-01",
+    "(b) ampliar os arquivos_previstos de um componente (ex.: incluir .browserslistrc e playwright.config.ts) para o agente 4 gravar a configuração, e o agente 3 escreve o E2E",
+    "(c) adiar a parte 1 até que as telas do Editor (RF-01 a RF-14) existam, já que o fluxo criar, publicar e jogar ainda não pode rodar ponta a ponta",
+    "outro"
+  ],
+  "contexto": "iniciar-tarefa RNF-01: 15 testes do requisito, todos verdes, todos da parte 2 (aviso abaixo de 1280x720) em tests/player/palco.test.ts e tests/player/tela-jogo.test.tsx. ADR-006, linha 16: 'alvo de build browserslist = last 2 Chrome/Edge/Firefox versions. O E2E roda o fluxo criar → publicar → jogar em três projetos Playwright'. Não há .browserslistrc, playwright.config.* nem tests/e2e/ no repositório. Escopo do agente 4: apps/editor/src/**, apps/editor/index.html, apps/editor/public/**, packages/player/src/**, apps/player/src/**, apps/player/index.html, apps/player/public/**. Origem: LAC-010 (resolvida pela ADR-006, mas sem dono para a configuração).",
+  "impacto": "Sem isso, a parte 1 do critério de aceitação do RNF-01 ('nas duas últimas versões de Chrome, Edge e Firefox o fluxo é concluído') não tem teste nem alvo de build. O requisito fica verde no harness só pela parte 2.",
+  "status": "respondida",
+  "resposta": "Opção (c): a parte 1 do RNF-01 (browserslist e E2E Playwright em chromium, msedge e firefox) fica para as fases 5-6, como a ADR-016 já prevê para a suíte Playwright. O fluxo criar, publicar e jogar só roda de ponta a ponta depois das telas do Editor. Na fase 4, o RNF-01 cobre o aviso de resolução no Player e no Editor.",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-05T23:45:00.000Z"
+}

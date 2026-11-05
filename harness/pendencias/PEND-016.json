@@ -1,0 +1,22 @@
+{
+  "id": "PEND-016",
+  "tipo": "escalada",
+  "agente_origem": "codificacao",
+  "req_ids": [
+    "RF-13"
+  ],
+  "chamado_id": null,
+  "pergunta": "A parte do Editor do RF-13 (botão Publicar, aviso 'alterações não publicadas' e 'publicar de novo', contrato editor.md linha 23) não tem teste e a tela de edição ainda não existe. Segue a mesma regra da PEND-015 (testes do agente 3 antes, implementação junto com a tela de edição)?",
+  "opcoes": [
+    "(a) sim: o agente 3 escreve os testes do Publicar no Editor (tests/editor/, @req RF-13 e RF-12) na rodada do Editor, e o agente 4 implementa junto com a tela de edição",
+    "(b) o agente 4 implementa agora só o cliente de publicação do Editor, sem teste",
+    "outro"
+  ],
+  "contexto": "iniciar-tarefa RF-13: 23 testes do requisito, 0 vermelhos antes de qualquer edição; a suíte rodou 351/351 verde com análise limpa no ciclo 0. Os testes cobrem a Api (tests/api/publicadas.test.ts, 8 testes) e o Player (tests/player/escolher-fase.test.tsx e tests/player/cliente-api.test.ts). tests/editor/ tem só .gitkeep; apps/editor/src tem só index.ts e main.tsx (placeholder). Precedente: PEND-015, opção (a), 'nada de código sem teste'.",
+  "impacto": "RF-13 aparece verde no harness pela Api e pelo Player, mas o critério 'publicar de novo substitui a versão publicada' só é exercido pela Api; o fluxo do criador no Editor fica sem garantia até a rodada do Editor. Não bloqueia outros requisitos.",
+  "status": "respondida",
+  "resposta": "Sim, mesma decisão da PEND-015 (a): o agente 3 escreve os testes da barra do Editor (publicar, aviso de alterações não publicadas, publicar de novo) e o agente 4 implementa junto com a tela de edição.",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-05T23:50:00.000Z"
+}
