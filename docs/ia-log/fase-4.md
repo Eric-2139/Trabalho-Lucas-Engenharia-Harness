@@ -21,6 +21,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 11 | RF-01 | Api + Banco | rodada 4: 28 casos em `tests/api/auth.test.ts` para RF-01, RF-19, RNF-05, RNF-06 (`sucesso`, 4 de 4) | esquema Prisma e migration SQL escrita à mão; `construirApp`, sessão, cadastro, login, logout, excluir conta e o mínimo de `/fases` e `/publicadas`; verde no 1º de 5 ciclos (163 de 164), sem reversão; de carona RNF-05 e RNF-06 inteiros e 5 de 6 do RF-19 (o 6º precisa do upload, RF-06) | `testes-2026-11-05T18-00-04-985Z.json`, `codificacao-2026-11-05T18-05-21-075Z.json` |
 | 12 | RF-02 | Api | rodada 5: 56 casos em `tests/api/fases.test.ts` e `publicadas.test.ts` para RF-02, RF-10, RF-12, RF-13, RF-14, RNF-09 (`sucesso`, 6 de 6) | `exigir-dono`, abrir, salvar com revisão (UPDATE condicional), renomear, excluir, duplicar e publicar; verde no 1º de 5 ciclos, sem reversão; de carona 7 de 8 do RF-10, 4 de 6 do RNF-09, 4 de 5 do RF-12 | `testes-2026-11-05T18-13-29-379Z.json`, `codificacao-2026-11-05T18-16-54-235Z.json` |
 | 13 | RF-14 | Api | rodada 5 (9 casos de RF-14 e 2 de RNF-09 sobre importar) | exportar (envelope com data URL) e importar (`bodyLimit` de 50 MB, tipo pelos bytes, transação que desfaz banco e arquivos); `detectarTipoImagem` e `criarArmazenamentoEmDisco`; verde no 1º de 5 ciclos (214 de 220), sem reversão | `codificacao-2026-11-05T18-20-43-265Z.json` |
+| 14 | RNF-04 | SchemaFase + Api | rodada 6: 60 casos em `tests/schema/{projecao,imagens}.test.ts` e `tests/api/{verificar,projecoes,assets}.test.ts` para RNF-04, RF-15, RF-11, RF-06 (`sucesso`, 4 de 4; PEND-010 aberta) | `projetarParaJogo` (lista de campos permitidos), `/publicadas/:id/jogo`, `jogo-teste` e `verificar` sem o limite; verde no 1º de 5 ciclos, sem reversão; de carona todo o RF-11 e o RF-15 da Api menos os 3 casos de 429 | `testes-2026-11-05T18-29-55-702Z.json`, `codificacao-2026-11-05T18-34-29-867Z.json` |
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -43,6 +44,8 @@ Pontos da Api (RF-01) para o arquiteto:
 - **Escopo do RF-13.** Um caso do RF-13 compara o jogo publicado com `projetarParaJogo`, stub do schema que pertence ao RNF-04. O RF-13 não inclui o SchemaFase, então o RNF-04 vem antes.
 - **Excluir fase não apaga imagens.** As imagens são do usuário (ADR-010), não da fase; nenhum requisito trata imagem órfã.
 - **Importação longa.** Os arquivos são gravados dentro da transação interativa do Prisma (limite padrão de 5 s). Um envelope perto de 50 MB em disco lento pode estourar o tempo; a importação falha sem gravar nada.
+- **PEND-010 (aberta, para o Eric).** `OpcoesApp` não tem relógio injetável, então a suíte não confere que o limite de tentativas libera depois da janela. Opções: acrescentar `relogio` ao contrato ou aceitar o risco.
+- **`verificar?modo=teste` sem sessão** responde 401, como as outras rotas do criador; o contrato só lista 404. Vale atualizar `contratos/api.md`.
 - **Índices a mais.** `sessoes(usuario_id)` e `assets(dono_id)`, além dos do contrato.
 
 Pontos do motor (RF-16) para o arquiteto:
@@ -83,7 +86,9 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `testes` | Testes da Api: fases do criador e publicadas | `sucesso` | 1.782.278 | 48.563 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-02 (rotas de fase) | `sucesso` no 1º ciclo | 906.684 | 12.549 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-14 (exportar/importar) | `sucesso` no 1º ciclo | 876.554 | 14.616 | medido |
-| **Total** | | | | **29.586.301** | **341.661** | medido |
+| 05/11 | idem, subagente `testes` | Testes: projeção, verificar, assets (RNF-04, RF-15, RF-11, RF-06) | `sucesso`; PEND-010 | 3.045.160 | 53.204 | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RNF-04 (projeções) | `sucesso` no 1º ciclo | 1.550.916 | 15.334 | medido |
+| **Total** | | | | **34.182.377** | **410.199** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

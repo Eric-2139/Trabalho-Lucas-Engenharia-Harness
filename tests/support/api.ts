@@ -97,6 +97,30 @@ export function jogoPublicado(app: App, id: string): Promise<Resposta> {
   return app.inject({ method: 'GET', url: `/publicadas/${id}/jogo` });
 }
 
+/** Modo testar (RF-11): projeção de jogo do rascunho, só para o dono. */
+export function jogoTeste(app: App, sid: string | undefined, id: string): Promise<Resposta> {
+  return app.inject({ method: 'GET', url: `/fases/${id}/jogo-teste`, ...sessao(sid) });
+}
+
+export interface OpcoesVerificar {
+  /** `teste` envia `?modo=teste` (RF-11). */
+  modo?: 'teste';
+  sid?: string;
+  /** Endereço de origem simulado (o limite de tentativas é por IP e fase, ADR-003). */
+  ip?: string;
+}
+
+/** `POST /fases/:id/verificar` com `{ objetoId, resposta }` (contrato api.md §Jogo). */
+export function verificar(app: App, id: string, corpo: unknown, opcoes: OpcoesVerificar = {}): Promise<Resposta> {
+  return app.inject({
+    method: 'POST',
+    url: `/fases/${id}/verificar${opcoes.modo === 'teste' ? '?modo=teste' : ''}`,
+    ...sessao(opcoes.sid),
+    ...(opcoes.ip === undefined ? {} : { remoteAddress: opcoes.ip }),
+    payload: corpo as Record<string, unknown>,
+  });
+}
+
 // ----- preparo composto -----
 
 /** Cria a fase e grava o documento dado; devolve id e revisão atual. Lança se alguma etapa falhar. */

@@ -1,0 +1,26 @@
+{
+  "agente": "codificacao",
+  "execucao": "aa9651e2b86f85512",
+  "inicio": "2026-11-05T18:30:26.486Z",
+  "fim": "2026-11-05T18:34:29.867Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RNF-04",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "packages/schema/src/projecao.ts",
+      "packages/schema/src/index.ts",
+      "apps/api/src/projecao.ts",
+      "apps/api/src/rotas/publicas.ts",
+      "apps/api/src/rotas/fases.ts",
+      "apps/api/src/rotas/verificar.ts",
+      "apps/api/src/app.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 1
+  }
+}

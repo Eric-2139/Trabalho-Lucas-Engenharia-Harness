@@ -13,6 +13,7 @@ import { registrarSessao } from './plugins/sessao.ts';
 import { registrarRotasAuth } from './rotas/auth.ts';
 import { registrarRotasFases } from './rotas/fases.ts';
 import { registrarRotasPublicas } from './rotas/publicas.ts';
+import { registrarRotaVerificar } from './rotas/verificar.ts';
 
 export const construirApp: ConstruirApp = async (opcoes) => {
   const app = Fastify();
@@ -31,6 +32,7 @@ export const construirApp: ConstruirApp = async (opcoes) => {
   registrarRotasAuth(app, ctx);
   registrarRotasFases(app, ctx);
   registrarRotasPublicas(app, ctx);
+  registrarRotaVerificar(app, ctx);
 
   await app.ready();
   return app;

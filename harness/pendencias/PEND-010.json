@@ -1,0 +1,16 @@
+{
+  "id": "PEND-010",
+  "tipo": "arquitetura",
+  "agente_origem": "testes",
+  "req_ids": ["RF-15"],
+  "chamado_id": null,
+  "pergunta": "Como os testes devem conferir que o limite de tentativas de POST /fases/:id/verificar libera de novo depois da janela (60 s enigma, 600 s porta), se OpcoesApp não recebe relógio?",
+  "opcoes": [
+    "Acrescentar um relógio injetável em OpcoesApp (ex.: `relogio?: () => number`, padrão Date.now) e testar a liberação avançando o relógio",
+    "Aceitar o risco: os testes cobrem só que a tentativa N+1 dentro da janela dá 429; a liberação fica sem teste automatizado",
+    "outro"
+  ],
+  "contexto": "ADR-003 e LIMITES_VERIFICAR (apps/api/contrato/index.ts) definem janelas de 60 s e 600 s. tests/api/verificar.test.ts cobre o 429 na tentativa seguinte ao máximo, a separação por tipo, por fase e por IP e o tentarEmSegundos dentro da janela. A rule de testes proíbe Date.now/setTimeout; vi.useFakeTimers no processo da Api (Fastify + Prisma + pg) não é previsto pelo contrato e pode travar o acesso ao banco.",
+  "impacto": "Um limite que nunca libera (bloqueio permanente do IP de um laboratório) passaria pela suíte. Não bloqueia o agente 4 no RF-15, só deixa esse comportamento sem verificação.",
+  "status": "aberta"
+}

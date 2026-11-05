@@ -2,7 +2,7 @@
  * Rotas do criador (contratos/api.md §Fases do criador; modulos-api.md §2): exigem sessão (RF-01)
  * e, nas rotas `/fases/:id`, que a fase seja do usuário (ADR-005: outro dono → 404).
  * Implementadas: listar, criar, abrir, salvar, renomear, excluir, duplicar, publicar,
- * exportar e importar (RF-14, ADR-013). Falta (entra com o seu requisito): jogo-teste.
+ * jogo-teste (RF-11, RNF-04: projeção do rascunho), exportar e importar (RF-14, ADR-013).
  */
 import { randomUUID } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
@@ -29,6 +29,7 @@ import { responderCorpoInvalido, responderErro } from '../erros.ts';
 import { bytesDaDataUrl, dataUrlDe, detectarTipoImagem } from '../imagens.ts';
 import { criarExigirDono, faseDoPedido } from '../plugins/exigir-dono.ts';
 import { exigirLogin, idDoUsuario } from '../plugins/exigir-login.ts';
+import { projecaoDeJogo } from '../projecao.ts';
 
 const MENSAGEM_FORA_DO_SCHEMA = 'O documento da fase não segue o schema.';
 const MENSAGEM_ASSET_INVALIDO = 'A fase usa imagem inexistente ou de outro criador.';
@@ -194,6 +195,12 @@ export function registrarRotasFases(app: FastifyInstance, ctx: Contexto): void {
       select: { publicadaEm: true },
     });
     return { publicadaEm: publicada.publicadaEm?.toISOString() };
+  });
+
+  app.get('/fases/:id/jogo-teste', doDono, async (request) => {
+    const fase = faseDoPedido(request);
+    // Modo testar (RF-11): projeção do rascunho, nunca o documento com segredos (RNF-04).
+    return projecaoDeJogo(fase.documento);
   });
 
   app.get('/fases/:id/exportar', doDono, async (request, reply) => {

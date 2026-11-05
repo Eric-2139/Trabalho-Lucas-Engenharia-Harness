@@ -42,6 +42,51 @@ export function documentoComImagemPropria(titulo: string): Fase {
   return documento;
 }
 
+/**
+ * RNF-04: fase jogável com valores secretos fáceis de procurar no JSON serializado.
+ * Senha 86420; enigma-segredo (respostas 271828 ou 161803, com dica, revela [1, 2, 3]);
+ * enigma-segredo-dois (resposta 314159, sem dica, revela [4, 5]); porta; fala; decoração.
+ * Nenhum outro campo contém esses números.
+ */
+export const SEGREDOS = { senha: '86420', respostas: ['271828', '161803', '314159'] } as const;
+export const DICA_SEGREDO = 'Pense numa constante famosa.';
+
+export function documentoComSegredos(titulo: string): Fase {
+  return {
+    ...fase('86420', {
+      frente: [
+        porta('porta-1'),
+        objeto('enigma-segredo', {
+          tipo: 'enigma',
+          pergunta: 'Qual constante sintética abre o cofre?',
+          respostas: [271828, 161803],
+          dica: DICA_SEGREDO,
+          revela: [1, 2, 3],
+        }),
+      ],
+      direita: [fala('fala-segredo', 'Você: a sala parece vazia.')],
+      teto: [
+        objeto('enigma-segredo-dois', {
+          tipo: 'enigma',
+          pergunta: 'Qual a outra constante sintética?',
+          respostas: [314159],
+          revela: [4, 5],
+        }),
+        objeto('lampada-segredo', { tipo: 'decoracao' }, 'sprite:lampada'),
+      ],
+    }),
+    titulo,
+  };
+}
+
+/** Fase jogável que usa as imagens próprias dadas: uma como fundo da parede direita e outra num objeto. */
+export function documentoComImagens(titulo: string, uuidFundo: string, uuidObjeto: string): Fase {
+  const documento = documentoJogavel(titulo);
+  documento.paredes.direita.fundo = `asset:${uuidFundo}`;
+  documento.paredes.direita.objetos.push(objeto('quadro-proprio', { tipo: 'decoracao' }, `asset:${uuidObjeto}`));
+  return documento;
+}
+
 /** Envelope de exportação (ADR-013) para a fase e as imagens dadas. */
 export function envelope(faseDoc: unknown, imagens: Record<string, string> = {}): Record<string, unknown> {
   return { formato: 'math-scape-fase', versao: 1, fase: faseDoc, imagens };
