@@ -40,6 +40,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 30 | RNF-01 | Player | rodada 7 (6 casos de tela, mais os de `palco`) | nenhuma edição; verde com 0 ciclos. O aviso no Player está pronto; o do Editor (PEND-015) e a matriz de navegadores com E2E (PEND-014) ficam para depois | `codificacao-2026-11-05T23-36-45-355Z.json` |
 | 31 | RF-13 | Player | rodada 7 (`cliente-api.test.ts`, `escolher-fase.test.tsx`) | nenhuma edição: o `cliente-api.ts` e o `http.ts` do commit `f7a1d6e` já atendiam; verde com 0 ciclos (351 de 351). A parte do Editor (publicar de novo) fica para a rodada do Editor (PEND-016) | `codificacao-2026-11-05T23-38-55-913Z.json` |
 | 32 | RF-05 | Editor | rodada A (22 casos em `tests/editor/store.test.ts`) | store do editor em `apps/editor/src/store/index.ts` (Zustand + zundo, histórico só do documento, `validarFase` antes de aplicar, `mudarCamada` por ordem visual, duplicar com +0,02); o agente implementou o store inteiro, porque os testes do RF-05 usam ações de outros requisitos; verde no 2º de 5 ciclos (o 1º teve erro de tipo), sem reversão | `codificacao-2026-11-05T23-53-52-682Z.json` |
+| 33 | RF-04 | SchemaFase + Editor | rodada A (7 casos de `adicionarObjeto` em `tests/editor/store.test.ts`, mais os 3 de `resolverImagem`) | `objetoPadrao` em `packages/schema/src/padroes.ts` (tamanho do catálogo ou 0,2 para `asset:`, centralizado, camada 0); verde no 1º de 5 ciclos, análise limpa, sem reversão. A biblioteca na interface (arrastar até a parede) vem com a rodada B | `codificacao-2026-11-05T23-57-19-320Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -143,7 +144,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Confirmar RF-13 (Player) | `sucesso` com 0 ciclos; PEND-016 | 195.067 | 3.699 | medido |
 | 05/11 | idem, subagente `testes` | Testes do Editor, rodada A: store, atalhos, salvamento e cliente HTTP (RF-01, RF-04, RF-05, RF-07, RF-08, RF-09, RF-10) | `sucesso`; 89 casos, todos vermelhos só pelos stubs; 1 bloqueio P1 | 1.555.263 | 52.666 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-05 (store do editor) | `sucesso` no 2º ciclo; 3 bloqueios P1 | 2.207.100 | 20.478 | medido |
-| **Total** | | | | **50.368.989** | **677.452** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-04 (`objetoPadrao`) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 595.111 | 6.151 | medido |
+| **Total** | | | | **50.964.100** | **683.603** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

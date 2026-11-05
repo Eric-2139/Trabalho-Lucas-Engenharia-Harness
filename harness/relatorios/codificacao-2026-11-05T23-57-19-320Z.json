@@ -1,0 +1,21 @@
+{
+  "agente": "codificacao",
+  "execucao": "aff300e3c541dccc9",
+  "inicio": "2026-11-05T23:54:52.665Z",
+  "fim": "2026-11-05T23:57:19.320Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-04",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "packages/schema/src/padroes.ts",
+      "packages/schema/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}
