@@ -7,7 +7,6 @@ import type {
   AtalhoTeclado,
   CriarClienteApiEditor,
   CriarSalvamento,
-  CriarStoreEditor,
   PropsAbasParedes,
   PropsBarraFerramentas,
   PropsBibliotecaObjetos,
@@ -25,7 +24,7 @@ function naoImplementado(nome: string): never {
   throw new Error(`${nome}: não implementado (fase 4)`);
 }
 
-export const criarStoreEditor: CriarStoreEditor = () => naoImplementado('criarStoreEditor');
+export { criarStoreEditor } from './store/index.ts';
 export const atalhoTeclado: AtalhoTeclado = () => naoImplementado('atalhoTeclado');
 export const criarSalvamento: CriarSalvamento = () => naoImplementado('criarSalvamento');
 export const criarClienteApiEditor: CriarClienteApiEditor = () => naoImplementado('criarClienteApiEditor');
