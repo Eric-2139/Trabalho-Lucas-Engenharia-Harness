@@ -5,6 +5,7 @@ packages:
 # pnpm 10 não roda scripts de instalação sem permissão explícita.
 onlyBuiltDependencies:
   - argon2
+  - canvas
   - esbuild
   - prisma
   - "@prisma/engines"
