@@ -1,0 +1,20 @@
+{
+  "agente": "codificacao",
+  "execucao": "ab2ec208a5e959977",
+  "inicio": "2026-11-06T04:23:11.935Z",
+  "fim": "2026-11-06T04:25:36.358Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RNF-01",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/editor/src/telas/TelaEdicao.tsx"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

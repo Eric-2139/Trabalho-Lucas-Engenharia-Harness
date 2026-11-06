@@ -13,10 +13,12 @@
  * `verificadorTeste`); a recusa aparece em role="alert" e a tela fica na edição. Sair volta à edição sem mudar o store.
  * Exportar (RF-14): grava a alteração pendente, pede `exportarFase` e baixa o Blob sem alteração; a recusa aparece em
  * role="alert" e nada é baixado.
+ * Resolução (RNF-01, ADR-006): abaixo de 1280x720 de janela (`precisaAvisoResolucao`), mostra
+ * ROTULOS_EDITOR.avisoResolucao sem bloquear a edição.
  * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
  */
 import { referenciasDeAsset, validarFase } from '@math-scape/schema';
-import { criarVerificadorHttp } from '@math-scape/player';
+import { criarVerificadorHttp, precisaAvisoResolucao } from '@math-scape/player';
 import type { Verificador } from '@math-scape/player/contrato';
 import { CATALOGO, type Fase, type FaseJogo, type RefImagem } from '@math-scape/schema/contrato';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -233,6 +235,8 @@ function Edicao({
 
   return (
     <main>
+      {/* RNF-01 (ADR-006): abaixo de 1280x720 de janela, aviso que não bloqueia a edição. */}
+      {precisaAvisoResolucao(janela.largura, janela.altura) ? <p>{ROTULOS_EDITOR.avisoResolucao}</p> : null}
       <AbasParedes
         paredeAtiva={paredeAtiva}
         aoTrocar={(parede) => {
