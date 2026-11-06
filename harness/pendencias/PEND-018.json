@@ -1,0 +1,27 @@
+{
+  "id": "PEND-018",
+  "tipo": "arquitetura",
+  "agente_origem": "testes",
+  "req_ids": [
+    "RF-01",
+    "RF-02",
+    "RF-14",
+    "RF-19",
+    "RNF-06",
+    "RNF-07"
+  ],
+  "chamado_id": null,
+  "pergunta": "Os testes das telas TelaEntrar, MinhasFases e TelaConta (rodada B2a) assumiram a estrutura acessível abaixo, que apps/editor/contrato/telas.ts e modulos-editor.md §5 não fixam. Você confirma e registra em modulos-editor.md §5 (Contrato das telas), ou define outra?",
+  "opcoes": [
+    "(a) confirmar o que os testes assumem. TelaEntrar: cada formulário é um <form> nativo; os campos ficam dentro dele, rotulados por <label> ROTULOS_EDITOR.nome / email / senha; o botão de envio ROTULOS_EDITOR.entrar ou ROTULOS_EDITOR.cadastrar fica dentro do form. Valem as duas apresentações: os dois formulários juntos, ou um botão de mesmo nome que mostra o outro formulário. O cadastro tem só esses 3 campos de dado; Enter no campo envia. MinhasFases: cada fase mostra o título num elemento próprio (texto exato, sem outro texto junto) e, no mesmo item, os botões ROTULOS_EDITOR.abrir / renomear / duplicar / excluir; fase publicada mostra o texto ROTULOS_EDITOR.publicada dentro do item. ROTULOS_EDITOR.novaFase e ROTULOS_EDITOR.renomear abrem (ou focam) um único campo rotulado ROTULOS_EDITOR.titulo, confirmado com Enter (envio do formulário). Importar é um <input type=\"file\"> com nome acessível ROTULOS_EDITOR.importar, e o arquivo vai a importarFase sem alteração. Excluir fase não publicada pode ou não pedir confirmação; os testes aceitam os dois casos. TelaConta: botão ROTULOS_EDITOR.excluirConta abre o alertdialog. Em todas, a recusa da Api aparece num elemento com role=\"alert\" cujo texto contém o `erro` do ResultadoHttp",
+    "(b) fixar outra estrutura (ex.: título confirmado por um botão próprio em vez de Enter, importar por botão que abre o seletor, item com role=\"listitem\" obrigatório) e o agente 3 ajusta os localizadores numa próxima rodada, antes de o agente 4 implementar as telas",
+    "outro"
+  ],
+  "contexto": "PropsTelaEntrar, PropsMinhasFases e PropsTelaConta tipam as propriedades, e ROTULOS_EDITOR fixa os textos. O contrato fixa também o diálogo (role=\"alertdialog\" com Confirmar e Cancelar) e o alerta (role=\"alert\"). Ele não fixa como os campos de entrar e cadastrar se distinguem, já que os dois formulários têm 'E-mail' e 'Senha'. Também não diz como o título é confirmado ao criar ou renomear ('Campo do novo título ao renomear ou criar', telas.ts), nem qual elemento recebe o arquivo de importação. Os testes em tests/editor/tela-entrar.test.tsx, minhas-fases.test.tsx e tela-conta.test.tsx seguem a opção (a), e o cabeçalho de cada arquivo lista as leituras usadas. Onde o critério admite as duas formas, os testes aceitam as duas: formulários juntos ou alternados, e excluir rascunho com ou sem confirmação. O cliente HTTP falso fica em tests/support/cliente-editor-falso.ts.",
+  "impacto": "Se a implementação escolher outra estrutura, os testes ficam vermelhos sem defeito real, e o agente 4 não pode alterá-los. A pendência não bloqueia a rodada. Ela pede só a confirmação antes de o agente 4 implementar TelaEntrar, MinhasFases e TelaConta.",
+  "status": "respondida",
+  "resposta": "Opção (a): confirmada a estrutura acessível que os testes assumem; registrada em modulos-editor.md §5 (Convenções das telas).",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T00:50:00.000Z"
+}

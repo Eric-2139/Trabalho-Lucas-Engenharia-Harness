@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-06T00:14:18.700Z",
+  "gerado_em": "2026-11-06T00:40:58.710Z",
   "requisitos": {
     "RF-06": {
       "feliz": 6,
@@ -12,12 +12,13 @@
       ]
     },
     "RF-01": {
-      "feliz": 7,
-      "borda": 9,
-      "negativo": 7,
+      "feliz": 9,
+      "borda": 12,
+      "negativo": 9,
       "arquivos": [
         "tests/api/auth.test.ts",
-        "tests/editor/cliente-api.test.ts"
+        "tests/editor/cliente-api.test.ts",
+        "tests/editor/tela-entrar.test.tsx"
       ]
     },
     "RNF-05": {
@@ -29,27 +30,30 @@
       ]
     },
     "RNF-06": {
-      "feliz": 1,
-      "borda": 2,
-      "negativo": 1,
+      "feliz": 2,
+      "borda": 3,
+      "negativo": 2,
       "arquivos": [
-        "tests/api/auth.test.ts"
+        "tests/api/auth.test.ts",
+        "tests/editor/tela-entrar.test.tsx"
       ]
     },
     "RF-19": {
-      "feliz": 2,
-      "borda": 2,
-      "negativo": 2,
+      "feliz": 3,
+      "borda": 5,
+      "negativo": 5,
       "arquivos": [
-        "tests/api/auth.test.ts"
+        "tests/api/auth.test.ts",
+        "tests/editor/tela-conta.test.tsx"
       ]
     },
     "RF-02": {
-      "feliz": 4,
-      "borda": 6,
-      "negativo": 10,
+      "feliz": 10,
+      "borda": 11,
+      "negativo": 16,
       "arquivos": [
-        "tests/api/fases.test.ts"
+        "tests/api/fases.test.ts",
+        "tests/editor/minhas-fases.test.tsx"
       ]
     },
     "RF-10": {
@@ -83,11 +87,12 @@
       ]
     },
     "RF-14": {
-      "feliz": 2,
-      "borda": 4,
-      "negativo": 3,
+      "feliz": 3,
+      "borda": 6,
+      "negativo": 4,
       "arquivos": [
-        "tests/api/fases.test.ts"
+        "tests/api/fases.test.ts",
+        "tests/editor/minhas-fases.test.tsx"
       ]
     },
     "RNF-04": {
@@ -141,12 +146,13 @@
       ]
     },
     "RNF-07": {
-      "feliz": 7,
-      "borda": 8,
-      "negativo": 6,
+      "feliz": 8,
+      "borda": 10,
+      "negativo": 7,
       "arquivos": [
         "tests/editor/abas-paredes.test.tsx",
         "tests/editor/barra-ferramentas.test.tsx",
+        "tests/editor/tela-entrar.test.tsx",
         "tests/player/escolher-fase.test.tsx",
         "tests/player/tema.test.ts"
       ]

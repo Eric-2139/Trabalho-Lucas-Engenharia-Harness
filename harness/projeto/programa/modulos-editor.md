@@ -65,6 +65,12 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-00
 - **Exportar/importar**: baixa o envelope; importa por `POST /fases/importar` e mostra a recusa (RF-14).
 - **Conta**: excluir com confirmação; cancelar não muda nada (RF-19).
 
+**Convenções das telas** (PEND-018, decisão da IA com a delegação do Eric, 06/11/2026), fixadas pelos testes de `tests/editor/`:
+- **TelaEntrar**: cada formulário é um `<form>` nativo, com os campos rotulados por `<label>` (`nome`, `email`, `senha`) e o botão de envio (`entrar` ou `cadastrar`) dentro dele. Valem os dois formulários juntos ou um botão de mesmo nome que mostra o outro. O cadastro tem só os 3 campos; Enter no campo envia.
+- **MinhasFases**: cada fase mostra o título num elemento próprio (texto exato) e, no mesmo item, os botões `abrir` / `renomear` / `duplicar` / `excluir`; fase publicada mostra o texto `publicada` dentro do item. `novaFase` e `renomear` abrem (ou focam) um único campo `titulo`, confirmado com Enter. Importar é um `<input type="file">` com nome acessível `importar`, e o arquivo vai a `importarFase` sem alteração. Excluir fase não publicada pode ou não pedir confirmação.
+- **TelaConta**: o botão `excluirConta` abre o `alertdialog`.
+- Em todas, a recusa da Api aparece num elemento `role="alert"` cujo texto contém o `erro` do `ResultadoHttp`.
+
 **Contrato das telas** (`apps/editor/contrato/telas.ts`; decisão da IA com a delegação do Eric, 05/11/2026). O contrato da fase 3 tipava os 5 componentes, mas não as telas. Sem ele, o agente 3 teria de inventar a interface de login, Minhas fases, Conta e Edição:
 - `TelaEntrar` (`PropsTelaEntrar`), `MinhasFases` (`PropsMinhasFases`), `TelaConta` (`PropsTelaConta`) e `TelaEdicao` (`PropsTelaEdicao`) recebem o cliente HTTP por propriedade. A Edição recebe também o `Relogio` do salvamento, `gerarId` para os ids dos objetos novos e `verificadorTeste` para o modo testar.
 - Nomes acessíveis e textos fixos em `ROTULOS_EDITOR`: os testes e a implementação usam a mesma constante, como `MENSAGENS` no Player.

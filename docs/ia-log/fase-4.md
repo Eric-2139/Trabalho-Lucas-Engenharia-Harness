@@ -61,6 +61,7 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Análise de tipos muda.** O agente 4 do RF-05 viu a análise falhar sem saber onde: `pnpm run --silent typecheck` escondia a saída do `tsc` dos pacotes. A IA tirou o `--silent` do typecheck em `infra/testes/entrada.sh` e reconstruiu a imagem.
 - **Achados do agente 4 no RF-10.** Depois de um `conflito` (409), o salvamento automático não tenta de novo sozinho, para não repetir o 409 a cada 30 s. O §3 não diz como sair do conflito, e falta decidir isso antes do indicador na barra. O cliente envia a imagem no campo multipart `arquivo` e o envelope como `application/json`. A sessão principal conferiu que a Api lê o primeiro arquivo do multipart, qualquer que seja o nome do campo.
 - **Rodada B1 do Editor (agente 3).** 61 casos para os 5 componentes em `tests/editor/{abas-paredes,canvas-parede,biblioteca-objetos,painel-propriedades,barra-ferramentas}.test.tsx` e o apoio de arraste no palco Konva em `tests/support/palco-editor.ts`. Tipos conferidos com `tsc -p tests`. A PEND-017 pediu para confirmar a estrutura acessível que os testes assumem. A IA respondeu (a) e registrou em `modulos-editor.md` §4. Risco apontado pelo agente: a simulação de arraste ainda não rodou contra nós `draggable` reais.
+- **Rodada B2a do Editor (agente 3).** 42 casos em `tests/editor/{tela-entrar,minhas-fases,tela-conta}.test.tsx` com o cliente falso em `tests/support/cliente-editor-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-018 (estrutura acessível das telas) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -162,7 +163,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RF-06 (biblioteca e envio de imagem) | `sucesso` no 1º ciclo | 882.990 | 7.378 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-08 (painel de propriedades) | `sucesso` no 1º ciclo | 597.485 | 12.537 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RNF-07 (barra de ferramentas) | `sucesso` no 1º ciclo | 273.462 | 4.255 | medido |
-| **Total** | | | | **58.381.576** | **819.441** | medido |
+| 06/11 | idem, subagente `testes` | Testes do Editor, rodada B2a: TelaEntrar, MinhasFases e TelaConta (RF-01, RF-02, RF-14, RF-19, RNF-06, RNF-07) | `sucesso`; 42 casos, vermelhos só pelos stubs; PEND-018 | 1.962.719 | 51.462 | medido |
+| **Total** | | | | **60.344.295** | **870.903** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
