@@ -1,0 +1,21 @@
+{
+  "agente": "codificacao",
+  "execucao": "a1d4f5a1bac451747",
+  "inicio": "2026-11-06T00:43:09.168Z",
+  "fim": "2026-11-06T00:46:25.982Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-01",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/editor/src/telas/TelaEntrar.tsx",
+      "apps/editor/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 3
+  }
+}

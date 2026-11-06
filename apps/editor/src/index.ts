@@ -7,7 +7,6 @@ import type {
   PropsMinhasFases,
   PropsTelaConta,
   PropsTelaEdicao,
-  PropsTelaEntrar,
 } from '../contrato/index.ts';
 
 export * from '../contrato/index.ts';
@@ -25,10 +24,8 @@ export { CanvasParede } from './componentes/CanvasParede.tsx';
 export { BibliotecaObjetos } from './componentes/BibliotecaObjetos.tsx';
 export { PainelPropriedades } from './componentes/PainelPropriedades.tsx';
 export { BarraFerramentas } from './componentes/BarraFerramentas.tsx';
+export { TelaEntrar } from './telas/TelaEntrar.tsx';
 
-export function TelaEntrar(_props: PropsTelaEntrar): never {
-  return naoImplementado('TelaEntrar');
-}
 export function MinhasFases(_props: PropsMinhasFases): never {
   return naoImplementado('MinhasFases');
 }
