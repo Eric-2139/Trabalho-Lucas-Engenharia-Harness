@@ -217,8 +217,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Ligar o `main.tsx` do app do criador (RF-01) | `sucesso` | 888.402 | 17.722 | medido |
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada C: gravar ao sair da Edição e depois do novo login (RF-10, RF-01; PEND-020 e PEND-021) | `sucesso`; 10 casos, 6 vermelhos | 501.545 | 12.393 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar PEND-021 e PEND-020 (gravar ao sair e depois do novo login) | `sucesso` | 385.665 | 8.051 | medido |
-| 05-06/11 | Claude Code / Opus 5.5 | git pull, ler o projeto, orquestrar os agentes 3 e 4 na interface do Player e em todo o Editor, decidir as pendências delegadas, revisar cada entrega e commitar (sessão principal, Eric fora) | entregas 26 a 59; PEND-013 a 021 respondidas; suíte 607 de 607 | 37.536.853 | 103.532 | medido |
-| **Total** | | | | **75.615.448** | **1.116.427** | medido |
+| 06/11 | Claude Code / Opus 5.5 | (05 e 06/11) git pull, ler o projeto, orquestrar os agentes 3 e 4 na interface do Player e em todo o Editor, decidir as pendências delegadas, revisar cada entrega e commitar (sessão principal, Eric fora) | entregas 26 a 59; PEND-013 a 021 respondidas; suíte 607 de 607 | 37.536.853 | 103.532 | medido |
+| **Total** | | | | **113.152.301** | **1.219.959** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
