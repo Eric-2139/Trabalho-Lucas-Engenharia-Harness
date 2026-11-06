@@ -1,6 +1,6 @@
 # Relatório de teste do sistema — Math Scape (fase 6)
 
-Responsável: Sarah Mota · Destino: Yuri, depois das correções · Commit testado: `e9fa8da` · Data: 06/11/2026 · Situação: **aguardando a assinatura da responsável**
+Responsável: Sarah Mota · Destino: Yuri, depois das correções · Commit testado: `e9fa8da` · Data: 06/11/2026 · Situação: **assinado por Sarah Mota em 06/11/2026; a entrega ao Yuri aguarda a correção dos defeitos altos**
 
 ## Conclusão
 
@@ -117,4 +117,4 @@ Máquina (PEND-006): Intel Core i7-1165G7 de 2,8 GHz, 8 núcleos, 15 GB de memó
 3. **Sarah:** rodar a suíte de novo e, sem defeito alto aberto, entregar este relatório ao Yuri.
 
 ---
-Assinatura da responsável (fase 6): ______________________ Data: ___/___/_____
+Assinatura da responsável (fase 6): Sarah Mota · Data: 06/11/2026

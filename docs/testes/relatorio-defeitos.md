@@ -1,6 +1,6 @@
 # Relatório de defeitos — Math Scape (fases 5 e 6)
 
-Responsável: Sarah Mota · Destino: Eric (correções) · Commit testado: `e9fa8da` · Data: 06/11/2026 · Situação: **aguardando a assinatura da responsável**
+Responsável: Sarah Mota · Destino: Eric (correções) · Commit testado: `e9fa8da` · Data: 06/11/2026 · Situação: **assinado por Sarah Mota em 06/11/2026**
 
 Os 607 testes de unidade e integração estão verdes. Todos os defeitos abaixo apareceram no sistema real ou na leitura do código: os testes verdes não os detectam, porque cobrem as peças separadas, e a composição das telas (`main.tsx`) não tem teste unitário.
 
@@ -17,7 +17,7 @@ Os 607 testes de unidade e integração estão verdes. Todos os defeitos abaixo 
 | DEF-07 | Baixa | RF-11 | Modo testar usa rótulos diferentes dos do jogo | `test_RF11_modo_testar_usa_os_mesmos_rotulos_do_jogo` |
 | DEF-08 | Baixa | RNF-01 | `browserslist` da ADR-006 não existe | leitura do código |
 
-A prioridade é a do requisito no baseline, ajustada pelo efeito para quem usa. É uma proposta da IA para a Sarah confirmar.
+A prioridade é a do requisito no baseline, ajustada pelo efeito para quem usa. A IA propôs, e a Sarah confirmou em 06/11/2026.
 
 Para reproduzir um caso, use o nome dele (ou trecho): `docker run --rm --network none -v .:/src math-scape-e2e --project=chromium -g test_RF05`. Enquanto a marca `test.fail` estiver no caso, a falha aparece como esperada.
 
@@ -78,7 +78,7 @@ Mudar isso é mudança de requisito, e passa pela Roberta. Opções: (a) aceitar
 
 ## Issues no GitHub
 
-O plano pede os defeitos como issues. O `gh` não está instalado nesta máquina, então **as issues não foram abertas**. Cada seção acima já traz passos, esperado, obtido e requisito para virar uma issue.
+O plano pede os defeitos como issues. Elas foram abertas em 06/11/2026, com o número igual ao do defeito: [DEF-01 (#1)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/1), [DEF-02 (#2)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/2), [DEF-03 (#3)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/3), [DEF-04 (#4)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/4), [DEF-05 (#5)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/5), [DEF-06 (#6)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/6), [DEF-07 (#7)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/7) e [DEF-08 (#8)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/8).
 
 ---
-Assinatura da responsável (fase 5): ______________________ Data: ___/___/_____
+Assinatura da responsável (fase 5): Sarah Mota · Data: 06/11/2026

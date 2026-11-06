@@ -1,6 +1,6 @@
 # Plano de testes — Math Scape (fases 5 e 6)
 
-Responsável: Sarah Mota · Baseline: `2026-11-03.1` · Commit testado: `e9fa8da` (fim da fase 4) · Situação: **aguardando a assinatura da responsável**
+Responsável: Sarah Mota · Baseline: `2026-11-03.1` · Commit testado: `e9fa8da` (fim da fase 4) · Situação: **assinado por Sarah Mota em 06/11/2026**
 
 A coluna "Resultado" da matriz traz o que foi medido em 06/11/2026. Detalhes dos achados: [relatório de defeitos](relatorio-defeitos.md). Conclusão do sistema: [relatório de teste do sistema](relatorio-teste-sistema.md).
 

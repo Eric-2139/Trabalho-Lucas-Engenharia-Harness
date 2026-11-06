@@ -24,7 +24,7 @@ Os 607 testes de unidade e integração vêm da fase 4 (agente 3). Nesta fase el
 Cruzar critério, contrato e código, para achar o que o teste verde esconde: o store testado sem botão na tela.
 
 ## Onde não substitui a pessoa
-A prioridade dos defeitos e a assinatura do plano são da Sarah. As prioridades do relatório são proposta da IA.
+A prioridade dos defeitos e a assinatura do plano são da Sarah. A IA propôs as prioridades do relatório, e a Sarah as confirmou ao assinar em 06/11/2026.
 
 ## Sessões
 
