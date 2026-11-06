@@ -2,7 +2,9 @@
   "id": "PEND-025",
   "tipo": "defeito_codigo",
   "agente_origem": "testes",
-  "req_ids": ["RF-03"],
+  "req_ids": [
+    "RF-03"
+  ],
   "chamado_id": null,
   "pergunta": "DEF-04: o palco da Edição usa a janela inteira mesmo quando há medida do contêiner. Os testes novos do contrato da LAC-046 estão vermelhos; o agente 4 mede o contêiner com ResizeObserver e deixa a janela só como reserva?",
   "opcoes": [
@@ -11,5 +13,9 @@
   ],
   "contexto": "Critério do RF-03: 'a área mantém a proporção ao redimensionar a janela'. Contrato LAC-046 (Eric, 06/11/2026): 'o palco mede o elemento que o contém (ResizeObserver); a janela nunca é usada quando há medida do contêiner'. Vermelhos na rodada D, em tests/editor/tela-edicao.test.tsx, com um ResizeObserver falso que mede 900×500: test_RF03_tela_com_resize_observer_o_palco_tem_o_tamanho_do_conteiner_e_nao_o_da_janela, test_RF03_tela_conteiner_redimensionado_muda_o_palco_e_mantem_16_9 e test_RF03_tela_com_resize_observer_mudar_a_janela_nao_muda_o_palco (o Stage fica em 1280×720, o tamanho da janela). O caso sem ResizeObserver (reserva pela janela) passa. Relatório: docs/testes/relatorio-defeitos.md (DEF-04).",
   "impacto": "Sem a correção, em 1280x720 o palco ocupa a janela inteira e empurra biblioteca e painel para fora da tela. Bloqueia o fechamento do DEF-04.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Opção (a), decorrente das decisões do Eric nas LAC-043 a LAC-046 (06/11/2026, nesta sessão): implementar conforme o contrato. Implementado pelo agente 4 no commit ae7b527 (RF-03), suíte verde; confirmado no Playwright em 3 execuções seguidas.",
+  "respondida_por": "Eric (arquiteto), pelas decisões de contrato das LAC-043 a LAC-046",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T20:09:22.737Z"
 }

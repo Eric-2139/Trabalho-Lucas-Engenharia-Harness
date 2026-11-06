@@ -67,6 +67,11 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 57 | RF-13 | Player | sem teste unitário (composição; o fluxo ponta a ponta fica para o E2E, PEND-014) | `main.tsx` do app do jogador com as rotas `/`, `/fases` e `/jogar/:id` (`history.pushState`, sem dependência nova), `TelaInicial`, Api em `/api`, carregando e falha em `role="status"`/`role="alert"`, estilo global com o `tema` comum; ao concluir, link de volta em vez de navegação automática, para o jogador ver o fim; suíte verde, análise limpa, 1 ciclo | `codificacao-2026-11-06T04-40-41-680Z.json` |
 | 58 | RF-01 | Editor | sem teste unitário (composição; o fluxo ponta a ponta fica para o E2E, PEND-014) | `main.tsx` do app do criador com as rotas `/`, `/fases/:id` e `/conta`, um único cliente com `aoNaoAutenticado`, login inicial em 401 e login por cima (modal, tela atual `inert` e montada) durante o uso, "Sair", relógio real na Edição e `src/mensagens.ts`; suíte verde, análise limpa, 1 ciclo; abriu PEND-020 e PEND-021 | `codificacao-2026-11-06T04-45-30-214Z.json` |
 | 59 | RF-10 | Editor | rodada C (6 casos de desmontagem e `pagehide`; de carona 4 de `sessaoRenovada` do RF-01) | `TelaEdicao` grava a alteração pendente ao desmontar e no `pagehide`, e chama `salvarAgora` quando `sessaoRenovada` muda; `main.tsx` incrementa o contador a cada login depois de um 401; verde no 1º de 5 ciclos, suíte 607 de 607, sem reversão | `codificacao-2026-11-06T04-52-44-165Z.json` |
+| 60 | RF-05 | Editor | rodada D (DEF-01): 18 casos em `atalhos`, `painel-propriedades` e `tela-edicao`, 12 vermelhos | Botões Trazer para a frente, Enviar para trás, Duplicar objeto e Excluir objeto no `PainelPropriedades`; Delete/Backspace exclui o selecionado; verde no 1º ciclo | `testes-2026-11-06T19-35-25-967Z.json`, `codificacao-2026-11-06T19-45-36-938Z.json` |
+| 61 | RF-04 | Editor | rodada D (DEF-02): 22 casos em `store`, `biblioteca-objetos`, `canvas-parede` e `tela-edicao`, 14 vermelhos | Arraste nativo da biblioteca à região "Palco da parede"; `adicionarObjeto` com `posicao` (centro no ponto solto); verde no 1º ciclo | `codificacao-2026-11-06T19-49-57-467Z.json` |
+| 62 | RF-06 | Editor | rodada D (DEF-03): 3 casos em `tela-edicao`, 3 vermelhos | Minhas imagens com `asset:<uuid>` (LAC-043 a) e recusa do store em `role="alert"`; verde no 1º ciclo | `codificacao-2026-11-06T19-53-17-284Z.json` |
+| 63 | RF-03 | Editor | rodada D (DEF-04): 4 casos com `ResizeObserver` falso, 3 vermelhos | Palco medido no contêiner; Edição em colunas (biblioteca, palco, painel) sem rolar a página; verde no 1º ciclo | `codificacao-2026-11-06T19-57-45-872Z.json` |
+| 64 | RNF-02 | Player e Editor | rodada E (DEF-05): 18 casos em `tela-jogo` e `tela-edicao` para RNF-02 e RF-16, 15 vermelhos | `TelaJogo` e `ModoTestar` com palco medido no contêiner e coluna à direita (paredes, fala, campo, dígitos); verde no 1º ciclo, suíte 667 de 667 | `testes-2026-11-06T19-41-47-430Z.json`, `codificacao-2026-11-06T20-03-12-137Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -120,6 +125,14 @@ Pontos do motor (RF-16) para o arquiteto:
 - **Verificador HTTP (RF-15).** Duas escolhas fora do contrato: o `faseId` passa por `encodeURIComponent`, e um 429 sem `tentarEmSegundos` numérico rejeita a promessa, em vez de virar `Limitado`.
 
 De carona com o RF-07 ficaram verdes os casos de schema do RF-08 e do RNF-09 em `tests/schema/fase.test.ts`. Com as entregas 2 a 5, a suíte da camada SchemaFase está toda verde (67 de 67). Ainda são stubs `projetarParaJogo`, `objetoPadrao` e `resolverImagem`, que nenhum teste da rodada 1 cobre. Elas entram com os requisitos do Player e do editor (RNF-04, RF-17, ADR-011, ADR-012). Salvar e publicar pela Api (RNF-09) ficam para a camada da Api.
+
+## Correção dos defeitos das fases 5 e 6 (06/11, depois da fase 6)
+Pedido do Eric: continuar a tarefa entre as fases 6 e 7, para o Yuri começar a aceitação. A Sarah só entrega ao Yuri sem defeito alto aberto (DEF-01, DEF-02, DEF-05).
+- **Decisões do Eric**, tomadas por ele nesta sessão (não delegadas): escopo = os 3 altos mais DEF-03 e DEF-04; controles de RF-05 no painel com Delete (LAC-044); objeto nasce no ponto solto (LAC-045); palco medido no contêiner com coluna lateral (LAC-046); DEF-03 pela opção (a) da LAC-043. Registradas nas lacunas e no contrato (commit `793a368`).
+- **Agentes:** 2 rodadas do agente 3 (D e E) e 5 do agente 4 (entregas 60 a 64), todas `sucesso` no 1º ciclo, sem reversão.
+- **Playwright** (imagem `math-scape-e2e` construída nesta máquina): tirados os `test.fail` de DEF-01 a DEF-05. Dois casos supunham o palco do tamanho da janela e foram ajustados: o do RF-03 passou a exigir que o palco caiba na janela, e o do RF-05 arrasta 0,1 da parede em vez de 128 px. Resultado: 96 passam, 0 falhas inesperadas, em 3 execuções seguidas. Os casos ainda marcados são o DEF-07 e as 4 falas do DIF-01.
+- **Ficam abertos:** DEF-06, DEF-07 e DEF-08; DIF-01 (Roberta); LAC-047 a LAC-053, inclusive a ratificação das decisões delegadas (LAC-049) e o status das ADRs (LAC-052).
+- **Achados:** o hook que mede o contêiner existe em 3 lugares (`TelaEdicao`, `ModoTestar`, `TelaJogo`); o layout depende de `:has()` no CSS global dos apps; a sala fica no canto superior esquerdo do contêiner, não centralizada.
 
 ## Estado ao fim da sessão de 05-06/11
 - **Suíte:** 607 de 607 verdes em 34 arquivos, análise limpa (Biome e `tsc` nos 5 pacotes), harness 60 de 60. Nenhuma pendência aberta (PEND-001 a 021 respondidas).
@@ -218,7 +231,15 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada C: gravar ao sair da Edição e depois do novo login (RF-10, RF-01; PEND-020 e PEND-021) | `sucesso`; 10 casos, 6 vermelhos | 501.545 | 12.393 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar PEND-021 e PEND-020 (gravar ao sair e depois do novo login) | `sucesso` | 385.665 | 8.051 | medido |
 | 06/11 | Claude Code / Opus 5.5 | (05 e 06/11) git pull, ler o projeto, orquestrar os agentes 3 e 4 na interface do Player e em todo o Editor, decidir as pendências delegadas, revisar cada entrega e commitar (sessão principal, Eric fora) | entregas 26 a 59; PEND-013 a 021 respondidas; suíte 607 de 607 | 37.536.853 | 103.532 | medido |
-| **Total** | | | | **113.152.301** | **1.219.959** | medido |
+| 06/11 | Claude Code (CLI) / subagente `testes` | Testes do Editor, rodada D: DEF-01 a DEF-04 (RF-03, RF-04, RF-05, RF-06) | `sucesso`; 54 casos, 32 vermelhos; PEND-022 a 025 | 4.224.846 | 51.978 | medido |
+| 06/11 | idem, subagente `testes` | Testes do jogo e do modo testar, rodada E: DEF-05 (RNF-02, RF-16) | `sucesso`; 18 casos, 15 vermelhos | 1.837.302 | 31.706 | medido |
+| 06/11 | idem, subagente `codificacao` | Corrigir RF-05 (DEF-01) | `sucesso` no 1º ciclo | 491.657 | 7.200 | medido |
+| 06/11 | idem, subagente `codificacao` | Corrigir RF-04 (DEF-02) | `sucesso` no 1º ciclo | 856.029 | 11.104 | medido |
+| 06/11 | idem, subagente `codificacao` | Corrigir RF-06 (DEF-03) | `sucesso` no 1º ciclo | 425.926 | 4.542 | medido |
+| 06/11 | idem, subagente `codificacao` | Corrigir RF-03 (DEF-04) | `sucesso` no 1º ciclo | 707.913 | 12.762 | medido |
+| 06/11 | idem, subagente `codificacao` | Corrigir RNF-02 (DEF-05) | `sucesso` no 1º ciclo | 1.687.850 | 19.385 | medido |
+| 06/11 | Claude Code (CLI) / Opus 5.5 | git pull, análise do repositório, decisões do Eric no contrato (LAC-043 a 046), orquestração dos agentes 3 e 4, revisão de cada entrega, Playwright 3 vezes e commits (sessão principal, com o Eric) | DEF-01 a DEF-05 corrigidos; E2E 96 de 96 | 17.432.110 | 69.008 | medido |
+| **Total** | | | | **140.815.934** | **1.427.644** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

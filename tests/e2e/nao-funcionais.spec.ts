@@ -121,7 +121,6 @@ for (const [largura, altura] of [[1280, 720], [1920, 1080], [2560, 1440]] as con
 
   // @req RNF-02 @tipo borda
   test(`test_RNF02_fala_e_campo_de_resposta_aparecem_sem_rolar_em_${largura}x${altura}`, async ({ page }) => {
-    test.fail(true, 'DEF-05: o palco ocupa a janela inteira; fala, pergunta e campo de resposta ficam abaixo dele');
     await page.setViewportSize({ width: largura, height: altura });
     const { id, fase } = await publicarEscola();
     await page.goto(`${PLAYER}/jogar/${id}`);

@@ -2,7 +2,9 @@
   "id": "PEND-023",
   "tipo": "defeito_codigo",
   "agente_origem": "testes",
-  "req_ids": ["RF-04"],
+  "req_ids": [
+    "RF-04"
+  ],
   "chamado_id": null,
   "pergunta": "DEF-02: não é possível arrastar um objeto da biblioteca até a parede ativa. Os testes novos do contrato da LAC-045 estão vermelhos; o agente 4 implementa o arraste (biblioteca draggable, região do palco com drop, aoSoltar e adicionarObjeto com posicao)?",
   "opcoes": [
@@ -11,5 +13,9 @@
   ],
   "contexto": "Critério do RF-04: 'arrastar qualquer um até a parede ativa o coloca nela'. Contrato LAC-045 (Eric, 06/11/2026). Vermelhos na rodada D: tests/editor/store.test.ts (4 casos test_RF04_*posicao*/ponto*: adicionarObjeto ignora posicao, o objeto nasce em x=0,43, centro da parede); tests/editor/biblioteca-objetos.test.tsx (3 casos: botões sem draggable, dragstart não grava sprite:<id> com TIPO_ARRASTE_BIBLIOTECA); tests/editor/canvas-parede.test.tsx (5 casos: não há role=region 'Palco da parede', dragover não é cancelado, drop não chama aoSoltar); tests/editor/tela-edicao.test.tsx (2 casos test_RF04_tela_soltar_*: nenhum objeto criado). Relatório: docs/testes/relatorio-defeitos.md (DEF-02).",
   "impacto": "Sem a correção, o critério do RF-04 (arrastar) não é atendido; só clique e Enter funcionam. Bloqueia o fechamento do DEF-02.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Opção (a), decorrente das decisões do Eric nas LAC-043 a LAC-046 (06/11/2026, nesta sessão): implementar conforme o contrato. Implementado pelo agente 4 no commit c75575e (RF-04), suíte verde; confirmado no Playwright em 3 execuções seguidas.",
+  "respondida_por": "Eric (arquiteto), pelas decisões de contrato das LAC-043 a LAC-046",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T20:09:22.735Z"
 }

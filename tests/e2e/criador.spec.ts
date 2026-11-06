@@ -117,7 +117,11 @@ test('test_RF03_area_16_9_mantem_a_proporcao_ao_redimensionar_a_janela', async (
   await abrirNaEdicao(page, fase);
   for (const [largura, altura] of [[1280, 720], [1600, 700], [1300, 1000]] as const) {
     await page.setViewportSize({ width: largura, height: altura });
-    await expect.poll(async () => (await page.locator('.konvajs-content').first().boundingBox())?.width).toBe(largura);
+    // LAC-046: o palco mede o contêiner entre a biblioteca e o painel, não a janela. Espera ele caber na janela nova.
+    await expect.poll(async () => {
+      const caixa = await page.locator('.konvajs-content').first().boundingBox();
+      return !!caixa && caixa.width > 0 && caixa.x + caixa.width <= largura && caixa.y + caixa.height <= altura;
+    }).toBe(true);
     await clicarObjeto(page, fase.paredes.frente.objetos[0]!);
     await expect(page.getByRole('combobox', { name: 'Tipo' })).toBeVisible();
     await clicarObjeto(page, { x: 0.9, y: 0.9, largura: 0.01, altura: 0.01 });
@@ -127,7 +131,6 @@ test('test_RF03_area_16_9_mantem_a_proporcao_ao_redimensionar_a_janela', async (
 
 // @req RF-03 @tipo borda
 test('test_RF03_palco_area_de_trabalho_cabe_na_janela_com_a_biblioteca_e_o_painel_a_vista', async ({ page }) => {
-  test.fail(true, 'DEF-04: o palco ocupa a janela inteira; biblioteca e painel ficam abaixo dele');
   await abrirNaEdicao(page, faseComUmObjeto());
   await expect(page.getByRole('button', { name: 'Porta', exact: true })).toBeInViewport();
   await expect(page.getByRole('form', { name: 'Propriedades da fase' })).toBeInViewport();
@@ -135,7 +138,6 @@ test('test_RF03_palco_area_de_trabalho_cabe_na_janela_com_a_biblioteca_e_o_paine
 
 // @req RF-04 @tipo feliz
 test('test_RF04_arrastar_da_biblioteca_ate_a_parede_coloca_o_objeto', async ({ page }) => {
-  test.fail(true, 'DEF-02: a biblioteca só aceita clique ou Enter, não arrastar');
   const { id } = await abrirNaEdicao(page, faseVazia(`Biblioteca ${marca()}`));
   await page.getByRole('button', { name: 'Janela', exact: true }).dragTo(page.locator('.konvajs-content').first(), { targetPosition: { x: 300, y: 200 } });
   await barra(page).getByRole('button', { name: 'Salvar' }).click();
@@ -159,8 +161,9 @@ test('test_RF05_mover_redimensionar_e_rotacionar_sao_mantidos_depois_de_recarreg
   const objeto = fase.paredes.frente.objetos[0]!;
   const { id } = await abrirNaEdicao(page, fase);
 
+  // Desloca 0,1 da parede em cada eixo; o tamanho do palco em pixels depende do layout (LAC-046).
   const centro = await pontoDoObjeto(page, objeto);
-  await arrastarNoPalco(page, centro, { x: centro.x + 128, y: centro.y + 72 });
+  await arrastarNoPalco(page, centro, await pontoDoObjeto(page, { ...objeto, x: objeto.x + 0.1, y: objeto.y + 0.1 }));
   await salvar(page);
   let lido = (await lerDocumento(page, id)).documento.paredes.frente.objetos[0]!;
   expect(lido.x).toBeCloseTo(0.5, 1);
@@ -188,7 +191,6 @@ test('test_RF05_mover_redimensionar_e_rotacionar_sao_mantidos_depois_de_recarreg
 
 // @req RF-05 @tipo feliz
 test('test_RF05_objeto_selecionado_tem_controles_de_excluir_duplicar_e_camada', async ({ page }) => {
-  test.fail(true, 'DEF-01: o store tem as ações, mas nenhum componente as chama');
   const fase = faseComUmObjeto();
   await abrirNaEdicao(page, fase);
   await clicarObjeto(page, fase.paredes.frente.objetos[0]!);
@@ -204,7 +206,6 @@ test('test_RF06_png_enviado_vira_objeto_e_fundo', async ({ page }) => {
   const { id } = await abrirNaEdicao(page, faseVazia(`Imagem ${marca()}`));
   await page.getByLabel('Enviar imagem').setInputFiles({ name: 'sintetica.png', mimeType: 'image/png', buffer: PNG_1X1 });
   await page.getByRole('button', { name: 'Usar como objeto' }).first().click();
-  // .last(): com o DEF-03, o primeiro item da lista pode ser a cópia inválida da mesma imagem.
   await page.getByRole('button', { name: 'Usar como fundo' }).last().click();
   await salvar(page);
   const { documento } = await lerDocumento(page, id);
@@ -214,7 +215,6 @@ test('test_RF06_png_enviado_vira_objeto_e_fundo', async ({ page }) => {
 
 // @req RF-06 @tipo borda
 test('test_RF06_imagem_usada_nao_duplica_na_lista_e_continua_utilizavel_depois_de_recarregar', async ({ page }) => {
-  test.fail(true, 'DEF-03: referenciasDeAsset devolve o UUID e a tela o trata como asset:<uuid>');
   const { id } = await abrirNaEdicao(page, faseVazia(`Imagem ${marca()}`));
   await page.getByLabel('Enviar imagem').setInputFiles({ name: 'sintetica.png', mimeType: 'image/png', buffer: PNG_1X1 });
   const usar = page.getByRole('button', { name: 'Usar como objeto' });
