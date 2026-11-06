@@ -20,6 +20,7 @@ import { BarraFerramentas } from '../componentes/BarraFerramentas.tsx';
 import { BibliotecaObjetos } from '../componentes/BibliotecaObjetos.tsx';
 import { CanvasParede } from '../componentes/CanvasParede.tsx';
 import { PainelPropriedades } from '../componentes/PainelPropriedades.tsx';
+import { atalhoTeclado } from '../atalhos.ts';
 import { criarSalvamento } from '../salvamento.ts';
 import { criarStoreEditor } from '../store/index.ts';
 
@@ -48,6 +49,15 @@ function gerarIdPadrao(): string {
   return crypto.randomUUID();
 }
 
+/** Campo de texto com foco: input de texto, textarea, select ou conteúdo editável (RF-09). */
+function emCampoDeTexto(alvo: EventTarget | null): boolean {
+  if (!(alvo instanceof HTMLElement)) return false;
+  if (alvo.isContentEditable) return true;
+  if (alvo instanceof HTMLTextAreaElement || alvo instanceof HTMLSelectElement) return true;
+  if (!(alvo instanceof HTMLInputElement)) return false;
+  return !['button', 'checkbox', 'radio', 'submit', 'reset', 'file', 'image', 'range', 'color'].includes(alvo.type);
+}
+
 function semRepeticao(refs: readonly RefImagem[]): RefImagem[] {
   return [...new Set(refs)];
 }
@@ -74,6 +84,20 @@ function Edicao({ store, salvamento, cliente, baseUrlApi, gerarId, alteracoesNao
       ? null
       : (estado.documento.paredes[estado.paredeAtiva].objetos.find((o) => o.id === estado.selecionado) ?? null),
   );
+
+  // RF-09: Ctrl/Cmd+Z desfaz e Ctrl/Cmd+Y refaz, escutando no documento; com o foco num campo de texto não agem.
+  useEffect(() => {
+    const aoTeclar = (evento: KeyboardEvent) => {
+      if (emCampoDeTexto(evento.target)) return;
+      const acao = atalhoTeclado(evento);
+      if (acao === null) return;
+      evento.preventDefault();
+      if (acao === 'desfazer') store.getState().desfazer();
+      else store.getState().refazer();
+    };
+    document.addEventListener('keydown', aoTeclar);
+    return () => document.removeEventListener('keydown', aoTeclar);
+  }, [store]);
 
   // RF-10: toda mudança do documento marca o salvamento como pendente.
   useEffect(

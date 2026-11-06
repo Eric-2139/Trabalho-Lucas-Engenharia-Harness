@@ -53,6 +53,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 43 | RF-19 | Editor | rodada B2a (7 casos em `tela-conta.test.tsx`) | `TelaConta` em `apps/editor/src/telas/TelaConta.tsx`: "Excluir conta" abre o `alertdialog`, Confirmar chama a Api e só então `aoExcluirConta`, Cancelar não chama nada, erro em `role="alert"`; verde no 1º de 5 ciclos, suíte 543 de 543, sem reversão | `codificacao-2026-11-06T00-52-52-078Z.json` |
 | 44 | RF-03 | Editor | rodada B2b (4 casos de RF-03 em `tela-edicao.test.tsx`) | `TelaEdicao` em `apps/editor/src/telas/TelaEdicao.tsx`: abre a fase, valida o documento, cria o store e monta abas, palco (tamanho da janela, PEND-019) e painel; verde no 1º de 5 ciclos, sem reversão | `codificacao-2026-11-06T01-09-41-553Z.json` |
 | 45 | RF-10 | Editor | rodada B2b (9 casos de RF-10 em `tela-edicao.test.tsx`) | `TelaEdicao` com o salvamento (revisão lida ao abrir, gravação ao trocar de aba e no botão, "Recarregar a fase" em conflito), a barra e a biblioteca ligadas, `gerarId` nos objetos novos; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-04 e RF-06 da tela | `codificacao-2026-11-06T01-14-42-515Z.json` |
+| 46 | RF-09 | Editor | rodada B2b (5 casos de RF-09 em `tela-edicao.test.tsx`) | atalhos na `TelaEdicao`: `keydown` no `document` com `atalhoTeclado`, desligados com o foco em campo de texto; verde no 1º de 5 ciclos, sem reversão (execução interrompida pelo limite de uso e retomada) | `codificacao-2026-11-06T04-04-03-595Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -68,6 +69,7 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Rodada B1 do Editor (agente 3).** 61 casos para os 5 componentes em `tests/editor/{abas-paredes,canvas-parede,biblioteca-objetos,painel-propriedades,barra-ferramentas}.test.tsx` e o apoio de arraste no palco Konva em `tests/support/palco-editor.ts`. Tipos conferidos com `tsc -p tests`. A PEND-017 pediu para confirmar a estrutura acessível que os testes assumem. A IA respondeu (a) e registrou em `modulos-editor.md` §4. Risco apontado pelo agente: a simulação de arraste ainda não rodou contra nós `draggable` reais.
 - **Rodada B2a do Editor (agente 3).** 42 casos em `tests/editor/{tela-entrar,minhas-fases,tela-conta}.test.tsx` com o cliente falso em `tests/support/cliente-editor-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-018 (estrutura acessível das telas) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
 - **Rodada B2b do Editor (agente 3).** 54 casos em `tests/editor/tela-edicao.test.tsx` com um cliente falso que imita a Api (409, `alteracoesNaoPublicadas`, publicar, exportar) em `tests/support/cliente-edicao-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-019 (palco no jsdom, modo testar, lista do 422, exportar, seleção e atalhos) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
+- **Limite de uso no meio do RF-09 (madrugada de 06/11).** O agente 4 parou por limite de gasto da conta. Quando o limite voltou, a IA retomou o mesmo agente. O `SubagentStart` (`ciclo.js`) zerou o estado da execução na retomada, e o gate recusou a primeira edição ("inicie a tarefa antes de editar"). O agente rodou `iniciar-tarefa` de novo antes de qualquer edição, então o `baseline_verde` ficou igual. Achado para o dono do harness: decidir se a retomada mantém a tarefa ou documentar que é preciso reiniciá-la.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -176,7 +178,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada B2b: TelaEdicao (RF-03, RF-04, RF-06, RF-09 a RF-14, RNF-01) | `sucesso`; 54 casos, vermelhos só pelo stub; PEND-019 | 2.940.441 | 83.548 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-03 na `TelaEdicao` (base da tela) | `sucesso` | 843.111 | 8.049 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-10 na `TelaEdicao` (salvamento) | `sucesso` | 1.163.582 | 12.342 | medido |
-| **Total** | | | | **66.703.526** | **995.182** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar RF-09 na `TelaEdicao` (atalhos; interrompido e retomado) | `sucesso` | 809.702 | 7.349 | medido |
+| **Total** | | | | **67.513.228** | **1.002.531** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
