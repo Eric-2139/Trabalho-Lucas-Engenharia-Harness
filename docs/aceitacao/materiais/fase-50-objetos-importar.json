@@ -1,0 +1,683 @@
+{
+  "formato": "math-scape-fase",
+  "versao": 1,
+  "fase": {
+    "versaoSchema": 1,
+    "titulo": "Aceitação RNF-03 (50 objetos)",
+    "senha": "12345",
+    "paredes": {
+      "frente": {
+        "fundo": "sprite:fundo-sala",
+        "objetos": [
+          {
+            "id": "obj-01",
+            "imagem": "sprite:relogio",
+            "x": 0.02,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 0,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-02",
+            "imagem": "sprite:janela",
+            "x": 0.117,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 1,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-03",
+            "imagem": "sprite:quadro",
+            "x": 0.214,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 2,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-04",
+            "imagem": "sprite:giz",
+            "x": 0.311,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 3,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-05",
+            "imagem": "sprite:arvore",
+            "x": 0.408,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 4,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-06",
+            "imagem": "sprite:lampada",
+            "x": 0.505,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 5,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-07",
+            "imagem": "sprite:olho",
+            "x": 0.602,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 6,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-08",
+            "imagem": "sprite:porta",
+            "x": 0.699,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 7,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-09",
+            "imagem": "sprite:relogio",
+            "x": 0.796,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 8,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-10",
+            "imagem": "sprite:janela",
+            "x": 0.893,
+            "y": 0.04,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 9,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-11",
+            "imagem": "sprite:quadro",
+            "x": 0.02,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 10,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-12",
+            "imagem": "sprite:giz",
+            "x": 0.117,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 11,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-13",
+            "imagem": "sprite:arvore",
+            "x": 0.214,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 12,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-14",
+            "imagem": "sprite:lampada",
+            "x": 0.311,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 13,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-15",
+            "imagem": "sprite:olho",
+            "x": 0.408,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 14,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-16",
+            "imagem": "sprite:porta",
+            "x": 0.505,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 15,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-17",
+            "imagem": "sprite:relogio",
+            "x": 0.602,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 16,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-18",
+            "imagem": "sprite:janela",
+            "x": 0.699,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 17,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-19",
+            "imagem": "sprite:quadro",
+            "x": 0.796,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 18,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-20",
+            "imagem": "sprite:giz",
+            "x": 0.893,
+            "y": 0.23,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 19,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-21",
+            "imagem": "sprite:arvore",
+            "x": 0.02,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 20,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-22",
+            "imagem": "sprite:lampada",
+            "x": 0.117,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 21,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-23",
+            "imagem": "sprite:olho",
+            "x": 0.214,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 22,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-24",
+            "imagem": "sprite:porta",
+            "x": 0.311,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 23,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-25",
+            "imagem": "sprite:relogio",
+            "x": 0.408,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 24,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-26",
+            "imagem": "sprite:janela",
+            "x": 0.505,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 25,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-27",
+            "imagem": "sprite:quadro",
+            "x": 0.602,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 26,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-28",
+            "imagem": "sprite:giz",
+            "x": 0.699,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 27,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-29",
+            "imagem": "sprite:arvore",
+            "x": 0.796,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 28,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-30",
+            "imagem": "sprite:lampada",
+            "x": 0.893,
+            "y": 0.42,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 29,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-31",
+            "imagem": "sprite:olho",
+            "x": 0.02,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 30,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-32",
+            "imagem": "sprite:porta",
+            "x": 0.117,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 31,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-33",
+            "imagem": "sprite:relogio",
+            "x": 0.214,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 32,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-34",
+            "imagem": "sprite:janela",
+            "x": 0.311,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 33,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-35",
+            "imagem": "sprite:quadro",
+            "x": 0.408,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 34,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-36",
+            "imagem": "sprite:giz",
+            "x": 0.505,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 35,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-37",
+            "imagem": "sprite:arvore",
+            "x": 0.602,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 36,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-38",
+            "imagem": "sprite:lampada",
+            "x": 0.699,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 37,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-39",
+            "imagem": "sprite:olho",
+            "x": 0.796,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 38,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-40",
+            "imagem": "sprite:porta",
+            "x": 0.893,
+            "y": 0.61,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 39,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-41",
+            "imagem": "sprite:relogio",
+            "x": 0.02,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 40,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-42",
+            "imagem": "sprite:janela",
+            "x": 0.117,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 41,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-43",
+            "imagem": "sprite:quadro",
+            "x": 0.214,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 42,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-44",
+            "imagem": "sprite:giz",
+            "x": 0.311,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 43,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-45",
+            "imagem": "sprite:arvore",
+            "x": 0.408,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 44,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-46",
+            "imagem": "sprite:lampada",
+            "x": 0.505,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 45,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-47",
+            "imagem": "sprite:olho",
+            "x": 0.602,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 46,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-48",
+            "imagem": "sprite:porta",
+            "x": 0.699,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 47,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-49",
+            "imagem": "sprite:relogio",
+            "x": 0.796,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 48,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          },
+          {
+            "id": "obj-50",
+            "imagem": "sprite:janela",
+            "x": 0.893,
+            "y": 0.8,
+            "largura": 0.07,
+            "altura": 0.14,
+            "rotacao": 0,
+            "camada": 49,
+            "interacao": {
+              "tipo": "decoracao"
+            }
+          }
+        ]
+      },
+      "direita": {
+        "fundo": "sprite:fundo-sala",
+        "objetos": []
+      },
+      "fundo": {
+        "fundo": "sprite:fundo-sala",
+        "objetos": []
+      },
+      "esquerda": {
+        "fundo": "sprite:fundo-sala",
+        "objetos": []
+      },
+      "teto": {
+        "fundo": "sprite:fundo-teto",
+        "objetos": []
+      }
+    }
+  },
+  "imagens": {}
+}
