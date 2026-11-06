@@ -1,17 +1,26 @@
 /**
- * Edição (modulos-editor.md §5, contrato telas.ts · PropsTelaEdicao; RF-03).
- * Abre a fase (`abrirFase`), valida o documento e cria o store; mostra AbasParedes, CanvasParede (só a parede
- * ativa, palco 16:9) e PainelPropriedades (objeto selecionado ou Propriedades da fase).
+ * Edição (modulos-editor.md §3 e §5, contrato telas.ts · PropsTelaEdicao; RF-03, RF-04, RF-10).
+ * Abre a fase (`abrirFase`), valida o documento e cria o store e o salvamento; mostra AbasParedes, BarraFerramentas,
+ * CanvasParede (só a parede ativa, palco 16:9), BibliotecaObjetos e PainelPropriedades.
+ * Salvamento (RF-10, ADR-002): toda mudança do documento chama `marcarAlterado`; trocar de aba e o botão salvar chamam
+ * `salvarAgora`. Em `conflito`, "Recarregar a fase" lê a fase de novo, `store.carregar` e cria um salvamento novo com a
+ * revisão lida; a alteração local é descartada.
  * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
  */
-import { validarFase } from '@math-scape/schema';
-import { useEffect, useState } from 'react';
+import { referenciasDeAsset, validarFase } from '@math-scape/schema';
+import { CATALOGO, type Fase, type RefImagem } from '@math-scape/schema/contrato';
+import { useCallback, useEffect, useState } from 'react';
 import { useStore } from 'zustand';
+import type { ClienteApiEditor, EstadoSalvamento, Relogio, Salvamento } from '../../contrato/salvamento.ts';
 import type { StoreEditor } from '../../contrato/store.ts';
 import type { PropsTelaEdicao } from '../../contrato/telas.ts';
+import { ROTULOS_EDITOR } from '../../contrato/telas.ts';
 import { AbasParedes } from '../componentes/AbasParedes.tsx';
+import { BarraFerramentas } from '../componentes/BarraFerramentas.tsx';
+import { BibliotecaObjetos } from '../componentes/BibliotecaObjetos.tsx';
 import { CanvasParede } from '../componentes/CanvasParede.tsx';
 import { PainelPropriedades } from '../componentes/PainelPropriedades.tsx';
+import { criarSalvamento } from '../salvamento.ts';
 import { criarStoreEditor } from '../store/index.ts';
 
 /** Tamanho da janela, atualizado no `resize`. */
@@ -25,58 +34,228 @@ function useJanela() {
   return janela;
 }
 
-function Edicao({ store, baseUrlApi }: { store: StoreEditor; baseUrlApi: string }) {
+/** Estado atual do salvamento, atualizado por `assinar`. */
+function useEstadoSalvamento(salvamento: Salvamento): EstadoSalvamento {
+  const [estado, definirEstado] = useState<EstadoSalvamento>(() => salvamento.estado());
+  useEffect(() => {
+    definirEstado(salvamento.estado());
+    return salvamento.assinar(definirEstado);
+  }, [salvamento]);
+  return estado;
+}
+
+function gerarIdPadrao(): string {
+  return crypto.randomUUID();
+}
+
+function semRepeticao(refs: readonly RefImagem[]): RefImagem[] {
+  return [...new Set(refs)];
+}
+
+interface PropsEdicao {
+  store: StoreEditor;
+  salvamento: Salvamento;
+  cliente: ClienteApiEditor;
+  baseUrlApi: string;
+  gerarId: () => string;
+  alteracoesNaoPublicadas: boolean;
+  aoRecarregar: () => void;
+}
+
+function Edicao({ store, salvamento, cliente, baseUrlApi, gerarId, alteracoesNaoPublicadas, aoRecarregar }: PropsEdicao) {
   const janela = useJanela();
+  const estadoSalvamento = useEstadoSalvamento(salvamento);
+  const [enviadas, definirEnviadas] = useState<RefImagem[]>([]);
+  const [erroEnvio, definirErroEnvio] = useState<string | null>(null);
+  const documento = useStore(store, (estado) => estado.documento);
   const paredeAtiva = useStore(store, (estado) => estado.paredeAtiva);
-  const titulo = useStore(store, (estado) => estado.documento.titulo);
-  const senha = useStore(store, (estado) => estado.documento.senha);
   const objeto = useStore(store, (estado) =>
     estado.selecionado === null
       ? null
       : (estado.documento.paredes[estado.paredeAtiva].objetos.find((o) => o.id === estado.selecionado) ?? null),
   );
 
+  // RF-10: toda mudança do documento marca o salvamento como pendente.
+  useEffect(
+    () =>
+      store.subscribe((novo, anterior) => {
+        if (novo.documento !== anterior.documento) salvamento.marcarAlterado();
+      }),
+    [store, salvamento],
+  );
+
+  const imagensEnviadas = semRepeticao([...(referenciasDeAsset(documento) as RefImagem[]), ...enviadas]);
+
+  function escolher(ref: RefImagem | null, destino: 'objeto' | 'fundo'): void {
+    const estado = store.getState();
+    if (destino === 'fundo') {
+      estado.definirFundo(estado.paredeAtiva, ref);
+      return;
+    }
+    if (ref !== null) estado.adicionarObjeto('decoracao', ref, gerarId());
+  }
+
+  function enviarImagem(arquivo: File): void {
+    void cliente.enviarImagem(arquivo).then((resposta) => {
+      if (!resposta.ok) {
+        definirErroEnvio(resposta.erro);
+        return;
+      }
+      definirErroEnvio(null);
+      definirEnviadas((atuais) => [...atuais, resposta.valor.ref]);
+    });
+  }
+
+  const estado = store.getState();
+  const nada = () => undefined;
+
   return (
     <main>
-      <AbasParedes paredeAtiva={paredeAtiva} aoTrocar={(parede) => store.getState().trocarParede(parede)} />
+      <AbasParedes
+        paredeAtiva={paredeAtiva}
+        aoTrocar={(parede) => {
+          store.getState().trocarParede(parede);
+          void salvamento.salvarAgora();
+        }}
+      />
+      <BarraFerramentas
+        estadoSalvamento={estadoSalvamento}
+        podeDesfazer={estado.podeDesfazer()}
+        podeRefazer={estado.podeRefazer()}
+        alteracoesNaoPublicadas={alteracoesNaoPublicadas}
+        aoDesfazer={() => store.getState().desfazer()}
+        aoRefazer={() => store.getState().refazer()}
+        aoSalvar={() => void salvamento.salvarAgora()}
+        aoTestar={nada}
+        aoPublicar={nada}
+        aoExportar={nada}
+      />
+      {estadoSalvamento === 'conflito' ? (
+        <button type="button" onClick={aoRecarregar}>
+          {ROTULOS_EDITOR.recarregarFase}
+        </button>
+      ) : null}
       <CanvasParede
         store={store}
         baseUrlApi={baseUrlApi}
         larguraConteiner={janela.largura}
         alturaConteiner={janela.altura}
       />
+      <BibliotecaObjetos
+        catalogo={CATALOGO}
+        imagensEnviadas={imagensEnviadas}
+        aoEscolher={escolher}
+        aoEnviarImagem={enviarImagem}
+      />
+      {erroEnvio !== null ? <p role="alert">{erroEnvio}</p> : null}
       <aside>
-        <PainelPropriedades objeto={objeto} fase={{ titulo, senha }} store={store} />
+        <PainelPropriedades
+          objeto={objeto}
+          fase={{ titulo: documento.titulo, senha: documento.senha }}
+          store={store}
+        />
       </aside>
     </main>
   );
 }
 
-export function TelaEdicao({ faseId, cliente, baseUrlApi }: PropsTelaEdicao) {
-  const [store, definirStore] = useState<StoreEditor | null>(null);
+interface FaseAberta {
+  documento: Fase;
+  revisao: number;
+  alteracoesNaoPublicadas: boolean;
+}
+
+function novoSalvamento(
+  faseId: string,
+  revisao: number,
+  store: StoreEditor,
+  cliente: ClienteApiEditor,
+  relogio: Relogio,
+): Salvamento {
+  return criarSalvamento({
+    faseId,
+    revisaoInicial: revisao,
+    obterDocumento: () => store.getState().documento,
+    cliente,
+    relogio,
+  });
+}
+
+export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = gerarIdPadrao }: PropsTelaEdicao) {
+  const [aberta, definirAberta] = useState<{
+    store: StoreEditor;
+    salvamento: Salvamento;
+    alteracoesNaoPublicadas: boolean;
+  } | null>(null);
   const [erro, definirErro] = useState<string | null>(null);
+
+  const ler = useCallback(async (): Promise<FaseAberta | null> => {
+    const resposta = await cliente.abrirFase(faseId);
+    if (!resposta.ok) {
+      definirErro(resposta.erro);
+      return null;
+    }
+    const validacao = validarFase(resposta.valor.documento);
+    if (!validacao.ok) {
+      definirErro(validacao.erros.map((e) => e.mensagem).join(' '));
+      return null;
+    }
+    return {
+      documento: validacao.fase,
+      revisao: resposta.valor.revisao,
+      alteracoesNaoPublicadas: resposta.valor.alteracoesNaoPublicadas,
+    };
+  }, [cliente, faseId]);
 
   useEffect(() => {
     let ativo = true;
-    void cliente.abrirFase(faseId).then((resposta) => {
-      if (!ativo) return;
-      if (!resposta.ok) {
-        definirErro(resposta.erro);
-        return;
-      }
-      const validacao = validarFase(resposta.valor.documento);
-      if (!validacao.ok) {
-        definirErro(validacao.erros.map((e) => e.mensagem).join(' '));
-        return;
-      }
-      definirStore(criarStoreEditor(validacao.fase));
+    void ler().then((fase) => {
+      if (!ativo || fase === null) return;
+      const store = criarStoreEditor(fase.documento);
+      definirAberta({
+        store,
+        salvamento: novoSalvamento(faseId, fase.revisao, store, cliente, relogio),
+        alteracoesNaoPublicadas: fase.alteracoesNaoPublicadas,
+      });
     });
     return () => {
       ativo = false;
     };
-  }, [faseId, cliente]);
+  }, [ler, faseId, cliente, relogio]);
+
+  // Fechar a fase (ou trocar de salvamento) para o agendamento.
+  useEffect(() => {
+    if (aberta === null) return;
+    const { salvamento } = aberta;
+    return () => salvamento.parar();
+  }, [aberta]);
+
+  const recarregar = useCallback(() => {
+    if (aberta === null) return;
+    const { store, salvamento } = aberta;
+    void ler().then((fase) => {
+      if (fase === null) return;
+      salvamento.parar();
+      store.getState().carregar(fase.documento);
+      definirAberta({
+        store,
+        salvamento: novoSalvamento(faseId, fase.revisao, store, cliente, relogio),
+        alteracoesNaoPublicadas: fase.alteracoesNaoPublicadas,
+      });
+    });
+  }, [aberta, ler, faseId, cliente, relogio]);
 
   if (erro !== null) return <p role="alert">{erro}</p>;
-  if (store === null) return <p>Abrindo a fase…</p>;
-  return <Edicao store={store} baseUrlApi={baseUrlApi} />;
+  if (aberta === null) return <p>Abrindo a fase…</p>;
+  return (
+    <Edicao
+      store={aberta.store}
+      salvamento={aberta.salvamento}
+      cliente={cliente}
+      baseUrlApi={baseUrlApi}
+      gerarId={gerarId}
+      alteracoesNaoPublicadas={aberta.alteracoesNaoPublicadas}
+      aoRecarregar={recarregar}
+    />
+  );
 }
