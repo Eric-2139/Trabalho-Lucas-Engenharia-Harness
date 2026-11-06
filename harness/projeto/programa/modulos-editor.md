@@ -71,6 +71,13 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-00
 - **TelaConta**: o botão `excluirConta` abre o `alertdialog`.
 - Em todas, a recusa da Api aparece num elemento `role="alert"` cujo texto contém o `erro` do `ResultadoHttp`.
 
+**Convenções da Edição** (PEND-019, decisão da IA com a delegação do Eric, 06/11/2026), fixadas por `tests/editor/tela-edicao.test.tsx`:
+- **Palco no jsdom**: o `CanvasParede` da Edição recebe largura e altura maiores que zero. O jsdom não faz layout, então o tamanho vem da janela (`innerWidth`/`innerHeight`) ou de um valor de reserva, como na `TelaJogo`.
+- **Modo testar**: o jogo aparece num palco Konva (`RenderizadorParede` do `packages/player`); clicar num enigma abre um campo de texto, enviado com Enter num formulário ou por botão, como na `TelaJogo`; os resultados usam `MENSAGENS` do player. Durante o teste, a edição pode ficar oculta ou montada.
+- **Publicação recusada (422)**: as posições aparecem como números no mesmo bloco do título `posicoesSemEnigma`, que não tem outros números.
+- **Exportar**: o arquivo sai por `URL.createObjectURL(Blob)` ou por um `<a download>` com URL `data:`, sem alteração.
+- **Seleção e atalhos**: clicar numa fala no palco mostra o campo `texto` do painel com o texto dela; clicar em área vazia mostra Propriedades da fase. Os atalhos escutam no documento (Ctrl ou Cmd + Z desfaz, Ctrl + Y refaz) e não agem com o foco num campo de texto.
+
 **Contrato das telas** (`apps/editor/contrato/telas.ts`; decisão da IA com a delegação do Eric, 05/11/2026). O contrato da fase 3 tipava os 5 componentes, mas não as telas. Sem ele, o agente 3 teria de inventar a interface de login, Minhas fases, Conta e Edição:
 - `TelaEntrar` (`PropsTelaEntrar`), `MinhasFases` (`PropsMinhasFases`), `TelaConta` (`PropsTelaConta`) e `TelaEdicao` (`PropsTelaEdicao`) recebem o cliente HTTP por propriedade. A Edição recebe também o `Relogio` do salvamento, `gerarId` para os ids dos objetos novos e `verificadorTeste` para o modo testar.
 - Nomes acessíveis e textos fixos em `ROTULOS_EDITOR`: os testes e a implementação usam a mesma constante, como `MENSAGENS` no Player.

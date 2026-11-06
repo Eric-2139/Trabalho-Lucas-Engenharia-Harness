@@ -1,13 +1,14 @@
 {
-  "gerado_em": "2026-11-06T00:40:58.710Z",
+  "gerado_em": "2026-11-06T01:04:34.040Z",
   "requisitos": {
     "RF-06": {
-      "feliz": 6,
-      "borda": 8,
-      "negativo": 8,
+      "feliz": 8,
+      "borda": 10,
+      "negativo": 10,
       "arquivos": [
         "tests/api/assets.test.ts",
         "tests/editor/biblioteca-objetos.test.tsx",
+        "tests/editor/tela-edicao.test.tsx",
         "tests/schema/imagens.test.ts"
       ]
     },
@@ -57,14 +58,15 @@
       ]
     },
     "RF-10": {
-      "feliz": 8,
-      "borda": 12,
-      "negativo": 11,
+      "feliz": 11,
+      "borda": 14,
+      "negativo": 15,
       "arquivos": [
         "tests/api/fases.test.ts",
         "tests/editor/barra-ferramentas.test.tsx",
         "tests/editor/cliente-api.test.ts",
-        "tests/editor/salvamento.test.ts"
+        "tests/editor/salvamento.test.ts",
+        "tests/editor/tela-edicao.test.tsx"
       ]
     },
     "RNF-09": {
@@ -78,21 +80,23 @@
       ]
     },
     "RF-12": {
-      "feliz": 3,
-      "borda": 7,
-      "negativo": 3,
+      "feliz": 4,
+      "borda": 9,
+      "negativo": 5,
       "arquivos": [
         "tests/api/fases.test.ts",
+        "tests/editor/tela-edicao.test.tsx",
         "tests/schema/jogabilidade.test.ts"
       ]
     },
     "RF-14": {
-      "feliz": 3,
-      "borda": 6,
-      "negativo": 4,
+      "feliz": 4,
+      "borda": 7,
+      "negativo": 5,
       "arquivos": [
         "tests/api/fases.test.ts",
-        "tests/editor/minhas-fases.test.tsx"
+        "tests/editor/minhas-fases.test.tsx",
+        "tests/editor/tela-edicao.test.tsx"
       ]
     },
     "RNF-04": {
@@ -106,20 +110,22 @@
       ]
     },
     "RF-11": {
-      "feliz": 3,
-      "borda": 4,
-      "negativo": 3,
+      "feliz": 5,
+      "borda": 6,
+      "negativo": 5,
       "arquivos": [
         "tests/api/projecoes.test.ts",
-        "tests/api/verificar.test.ts"
+        "tests/api/verificar.test.ts",
+        "tests/editor/tela-edicao.test.tsx"
       ]
     },
     "RF-13": {
-      "feliz": 6,
-      "borda": 9,
-      "negativo": 8,
+      "feliz": 8,
+      "borda": 10,
+      "negativo": 10,
       "arquivos": [
         "tests/api/publicadas.test.ts",
+        "tests/editor/tela-edicao.test.tsx",
         "tests/player/cliente-api.test.ts",
         "tests/player/escolher-fase.test.tsx"
       ]
@@ -137,12 +143,13 @@
       ]
     },
     "RF-03": {
-      "feliz": 3,
-      "borda": 2,
-      "negativo": 3,
+      "feliz": 5,
+      "borda": 3,
+      "negativo": 4,
       "arquivos": [
         "tests/editor/abas-paredes.test.tsx",
-        "tests/editor/canvas-parede.test.tsx"
+        "tests/editor/canvas-parede.test.tsx",
+        "tests/editor/tela-edicao.test.tsx"
       ]
     },
     "RNF-07": {
@@ -158,22 +165,24 @@
       ]
     },
     "RF-09": {
-      "feliz": 5,
-      "borda": 8,
-      "negativo": 6,
+      "feliz": 6,
+      "borda": 10,
+      "negativo": 8,
       "arquivos": [
         "tests/editor/atalhos.test.ts",
         "tests/editor/barra-ferramentas.test.tsx",
-        "tests/editor/store.test.ts"
+        "tests/editor/store.test.ts",
+        "tests/editor/tela-edicao.test.tsx"
       ]
     },
     "RF-04": {
-      "feliz": 5,
-      "borda": 5,
-      "negativo": 5,
+      "feliz": 7,
+      "borda": 6,
+      "negativo": 6,
       "arquivos": [
         "tests/editor/biblioteca-objetos.test.tsx",
         "tests/editor/store.test.ts",
+        "tests/editor/tela-edicao.test.tsx",
         "tests/schema/imagens.test.ts"
       ]
     },
@@ -207,6 +216,16 @@
         "tests/schema/padroes.test.ts"
       ]
     },
+    "RNF-01": {
+      "feliz": 5,
+      "borda": 8,
+      "negativo": 3,
+      "arquivos": [
+        "tests/editor/tela-edicao.test.tsx",
+        "tests/player/palco.test.ts",
+        "tests/player/tela-jogo.test.tsx"
+      ]
+    },
     "RF-16": {
       "feliz": 4,
       "borda": 5,
@@ -231,15 +250,6 @@
       "negativo": 2,
       "arquivos": [
         "tests/player/palco.test.ts"
-      ]
-    },
-    "RNF-01": {
-      "feliz": 3,
-      "borda": 5,
-      "negativo": 2,
-      "arquivos": [
-        "tests/player/palco.test.ts",
-        "tests/player/tela-jogo.test.tsx"
       ]
     },
     "RF-18": {

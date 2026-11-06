@@ -1,0 +1,27 @@
+{
+  "id": "PEND-019",
+  "tipo": "arquitetura",
+  "agente_origem": "testes",
+  "req_ids": [
+    "RF-03",
+    "RF-09",
+    "RF-11",
+    "RF-12",
+    "RF-14",
+    "RNF-01"
+  ],
+  "chamado_id": null,
+  "pergunta": "Os testes da TelaEdicao (rodada B2b, tests/editor/tela-edicao.test.tsx) assumiram cinco pontos que apps/editor/contrato/telas.ts e modulos-editor.md §5 não fixam. Você confirma e registra em modulos-editor.md §5 (Convenções das telas), ou define outra coisa?",
+  "opcoes": [
+    "(a) Confirmar o que os testes assumem. (1) Palco no jsdom: o CanvasParede da Edição recebe largura e altura maiores que zero no jsdom. O jsdom não faz layout (getBoundingClientRect devolve 0 e não há ResizeObserver), então o tamanho vem da janela (innerWidth/innerHeight) ou tem um valor de reserva. (2) Modo testar: o jogo aparece num palco Konva (RenderizadorParede do packages/player). Clicar num enigma abre um campo de texto, enviado com Enter num formulário ou por um botão de envio, como na TelaJogo. Os resultados usam as MENSAGENS do player. Durante o teste, a edição pode ficar oculta ou continuar montada; os testes acham o palco do jogo como o palco novo. (3) Publicação recusada (422): as posições aparecem como números no mesmo bloco do título ROTULOS_EDITOR.posicoesSemEnigma, que não contém outros números. (4) Exportar: o arquivo sai por URL.createObjectURL(Blob) ou por um <a download> com URL data:, sem alteração. (5) Seleção pelo palco: clicar numa fala mostra o campo ROTULOS_EDITOR.texto do painel com o texto dela, e clicar em área vazia mostra Propriedades da fase. Atalhos (RF-09): escuta no documento, Ctrl ou Cmd + Z desfaz, Ctrl + Y refaz, e nada acontece com o foco num campo de texto",
+    "(b) Fixar outra estrutura, por exemplo: o modo testar reusa um componente de tela de jogo exportado por packages/player com rótulos próprios, ou a lista de posições é role=\"list\" com um role=\"listitem\" por posição. O agente 3 ajusta os localizadores numa próxima rodada, antes de o agente 4 implementar a TelaEdicao",
+    "outro"
+  ],
+  "contexto": "PropsTelaEdicao tipa as props, e ROTULOS_EDITOR fixa os textos. O contrato não diz como o jogo do modo testar se apresenta: modulos-editor.md §5 cita só 'o motor do packages/player', e o motor não tem interface própria. Também não diz em que forma as posições do 422 aparecem nem como o arquivo exportado é entregue. Por fim, não diz de onde vem o tamanho do palco quando não há layout. Os testes seguem a opção (a), e o cabeçalho do arquivo lista as leituras usadas. Onde o critério admite mais de uma forma, os testes aceitam todas. Exportar vale por createObjectURL ou por <a download>. A imagem acima de 5 MB pode ser recusada pela Api ou antes do envio, e os testes exigem só a mensagem e que nada seja gravado. A posição do objeto novo na lista da parede não é verificada. O cliente falso completo fica em tests/support/cliente-edicao-falso.ts e imita a Api sobre uma fase em memória: 409 por revisão, alteracoesNaoPublicadas calculado e publicação.",
+  "impacto": "Se a implementação escolher outra apresentação, os testes ficam vermelhos sem defeito real, e o agente 4 não pode alterá-los. A pendência não bloqueia a rodada: pede só a confirmação antes de o agente 4 implementar a TelaEdicao (RF-03, RF-09 a RF-14, RNF-01 no Editor). O ponto (1) é o que mais pesa, porque sem tamanho no jsdom todos os testes que clicam ou arrastam no palco falham.",
+  "status": "respondida",
+  "resposta": "Opção (a): confirmado o que os testes assumem (palco pelo tamanho da janela no jsdom, modo testar com RenderizadorParede e campo de resposta como na TelaJogo, posições do 422 como números no bloco do título, exportar por createObjectURL ou <a download>, seleção pelo palco e atalhos no documento); registrado em modulos-editor.md §5 (Convenções da Edição).",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T01:15:00.000Z"
+}

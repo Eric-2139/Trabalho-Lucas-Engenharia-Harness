@@ -65,6 +65,7 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Achados do agente 4 no RF-10.** Depois de um `conflito` (409), o salvamento automático não tenta de novo sozinho, para não repetir o 409 a cada 30 s. O §3 não diz como sair do conflito, e falta decidir isso antes do indicador na barra. O cliente envia a imagem no campo multipart `arquivo` e o envelope como `application/json`. A sessão principal conferiu que a Api lê o primeiro arquivo do multipart, qualquer que seja o nome do campo.
 - **Rodada B1 do Editor (agente 3).** 61 casos para os 5 componentes em `tests/editor/{abas-paredes,canvas-parede,biblioteca-objetos,painel-propriedades,barra-ferramentas}.test.tsx` e o apoio de arraste no palco Konva em `tests/support/palco-editor.ts`. Tipos conferidos com `tsc -p tests`. A PEND-017 pediu para confirmar a estrutura acessível que os testes assumem. A IA respondeu (a) e registrou em `modulos-editor.md` §4. Risco apontado pelo agente: a simulação de arraste ainda não rodou contra nós `draggable` reais.
 - **Rodada B2a do Editor (agente 3).** 42 casos em `tests/editor/{tela-entrar,minhas-fases,tela-conta}.test.tsx` com o cliente falso em `tests/support/cliente-editor-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-018 (estrutura acessível das telas) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
+- **Rodada B2b do Editor (agente 3).** 54 casos em `tests/editor/tela-edicao.test.tsx` com um cliente falso que imita a Api (409, `alteracoesNaoPublicadas`, publicar, exportar) em `tests/support/cliente-edicao-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-019 (palco no jsdom, modo testar, lista do 422, exportar, seleção e atalhos) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -170,7 +171,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RF-01 (tela de login e cadastro) | `sucesso` no 1º ciclo | 499.783 | 6.784 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-02 (Minhas fases) | `sucesso` no 1º ciclo | 565.371 | 8.917 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-19 (tela de Conta) | `sucesso` no 1º ciclo | 346.943 | 4.639 | medido |
-| **Total** | | | | **61.756.392** | **891.243** | medido |
+| 06/11 | idem, subagente `testes` | Testes do Editor, rodada B2b: TelaEdicao (RF-03, RF-04, RF-06, RF-09 a RF-14, RNF-01) | `sucesso`; 54 casos, vermelhos só pelo stub; PEND-019 | 2.940.441 | 83.548 | medido |
+| **Total** | | | | **64.696.833** | **974.791** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
