@@ -1,0 +1,11 @@
+{
+  "name": "math-scape-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Suíte Playwright das fases 5-6 (ADR-006, ADR-007, ADR-016). Fora do workspace pnpm: não entra no lockfile do produto nem na imagem da suíte.",
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
