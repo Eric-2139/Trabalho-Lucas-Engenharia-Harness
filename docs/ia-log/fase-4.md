@@ -203,7 +203,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Confirmar RNF-07 | `sucesso` com 0 ciclos | 75.438 | 1.382 | medido |
 | 06/11 | idem, subagente `codificacao` | Ligar o `main.tsx` do app do jogador (RF-13) | `sucesso` | 502.917 | 14.430 | medido |
 | 06/11 | idem, subagente `codificacao` | Ligar o `main.tsx` do app do criador (RF-01) | `sucesso` | 888.402 | 17.722 | medido |
-| **Total** | | | | **74.728.238** | **1.095.983** | medido |
+| 06/11 | idem, subagente `testes` | Testes do Editor, rodada C: gravar ao sair da Edição e depois do novo login (RF-10, RF-01; PEND-020 e PEND-021) | `sucesso`; 10 casos, 6 vermelhos | 501.545 | 12.393 | medido |
+| **Total** | | | | **75.229.783** | **1.108.376** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

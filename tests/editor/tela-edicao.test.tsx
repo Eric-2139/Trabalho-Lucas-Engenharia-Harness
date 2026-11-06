@@ -1291,3 +1291,218 @@ describe('RNF-01 · TelaEdicao: aviso abaixo de 1280x720', () => {
     expect(avisoNaTela()).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Gravar ao sair e depois do novo login (modulos-editor.md §3, PEND-020 e PEND-021; telas.ts · PropsTelaEdicao)
+// - RF-10 / PEND-021: ao desmontar com alteração pendente, a Edição chama `salvarAgora` antes de `parar`; grava também
+//   no `pagehide` da janela. Sem alteração pendente, nada é gravado.
+// - RF-01 / PEND-020: depois de um 401 (alteração guardada, estado `erro`), o app incrementa `sessaoRenovada` a cada
+//   login aceito; quando o valor muda, a Edição chama `salvarAgora`.
+// Os mesmos cliente, relógio, `gerarId` e verificador valem em todas as renderizações (o `rerender` só muda
+// `sessaoRenovada`), para a tela não ser montada de novo.
+// ---------------------------------------------------------------------------
+const ERRO_SESSAO = 'Sessão expirada. Entre de novo.';
+
+async function montarControlado(sessaoInicial = 0) {
+  const user = userEvent.setup();
+  const relogio = criarRelogioFalso();
+  const cliente = criarClienteEdicaoFalso({ faseId: FASE_ID, documento: documentoSala(), revisao: REVISAO_INICIAL });
+  let contador = 0;
+  const gerarId = vi.fn(() => {
+    contador += 1;
+    return `novo-${contador}`;
+  });
+  const verificador = verificadorFalso({}).verificador;
+  const aoSair = vi.fn<() => void>();
+  const tela = (sessaoRenovada: number) => (
+    <TelaEdicao
+      faseId={FASE_ID}
+      cliente={cliente}
+      relogio={relogio}
+      baseUrlApi="/api"
+      gerarId={gerarId}
+      verificadorTeste={verificador}
+      aoSair={aoSair}
+      sessaoRenovada={sessaoRenovada}
+    />
+  );
+  const { rerender, unmount } = render(tela(sessaoInicial));
+  await screen.findAllByRole('tab');
+  await esperarDesenho();
+
+  /** Re-renderiza a mesma tela com outro `sessaoRenovada` (o app faz isso a cada login aceito). */
+  async function renovarSessao(valor: number): Promise<void> {
+    rerender(tela(valor));
+    await assentar();
+  }
+
+  /** Sai da rota: a tela é desmontada e as respostas do cliente falso chegam. */
+  async function desmontar(): Promise<void> {
+    unmount();
+    await act(async () => {
+      await drenarPromessas();
+    });
+  }
+
+  return { user, relogio, cliente, renovarSessao, desmontar };
+}
+
+async function dispararPagehide(): Promise<void> {
+  await act(async () => {
+    window.dispatchEvent(new Event('pagehide'));
+    await drenarPromessas();
+  });
+}
+
+describe('RF-10 · TelaEdicao: grava ao sair da Edição (PEND-021)', () => {
+  // @req RF-10 @tipo feliz
+  test('test_RF10_tela_desmontar_com_alteracao_pendente_grava_o_documento_alterado', async () => {
+    const { user, relogio, cliente, desmontar } = await montarControlado();
+    await escolherObjeto(user, 'porta');
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+
+    await desmontar();
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    const chamada = cliente.salvarFase.mock.calls[0];
+    expect(chamada?.[0]).toBe(FASE_ID);
+    expect(chamada?.[1]).toBe(REVISAO_INICIAL);
+    expect(idsDe(objetosSalvos(cliente, 'frente'))).toEqual(['fala-frente', 'novo-1']);
+    expect(idsDe(cliente.servidor.documento.paredes.frente.objetos)).toEqual(['fala-frente', 'novo-1']);
+
+    // Depois de sair, o salvamento parou: o relógio não grava mais nada.
+    await avancar(relogio, 60_000);
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+  });
+
+  // @req RF-10 @tipo feliz
+  test('test_RF10_tela_pagehide_com_alteracao_pendente_grava_o_documento_alterado', async () => {
+    const { user, cliente } = await montarControlado();
+    await escolherObjeto(user, 'janela');
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+
+    await dispararPagehide();
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    expect(cliente.salvarFase.mock.calls[0]?.[0]).toBe(FASE_ID);
+    expect(idsDe(objetosSalvos(cliente, 'frente'))).toEqual(['fala-frente', 'novo-1']);
+    expect(objetosSalvos(cliente, 'frente').find((o) => o.id === 'novo-1')).toMatchObject({ imagem: 'sprite:janela' });
+  });
+
+  // @req RF-10 @tipo borda
+  test('test_RF10_tela_desmontar_a_1_ms_do_prazo_de_30_s_grava_uma_unica_vez', async () => {
+    const { user, relogio, cliente, desmontar } = await montarControlado();
+    await escolherObjeto(user, 'relogio');
+    await avancar(relogio, 29_999);
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+
+    await desmontar();
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    expect(idsDe(objetosSalvos(cliente, 'frente'))).toEqual(['fala-frente', 'novo-1']);
+
+    // O prazo de 30 s venceria agora; com a tela fora, não há segunda gravação.
+    await avancar(relogio, 1);
+    await avancar(relogio, 30_000);
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+  });
+
+  // @req RF-10 @tipo negativo
+  test('test_RF10_tela_desmontar_sem_alteracao_pendente_nao_grava', async () => {
+    const { cliente, desmontar } = await montarControlado();
+
+    await desmontar();
+
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+  });
+
+  // @req RF-10 @tipo negativo
+  test('test_RF10_tela_desmontar_depois_de_tudo_gravado_nao_grava_de_novo', async () => {
+    const { user, cliente, desmontar } = await montarControlado();
+    await escolherObjeto(user, 'porta');
+    await clicarSalvar(user);
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    await screen.findByText(ROTULOS_EDITOR.estadoSalvamento.salvo);
+
+    await desmontar();
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+  });
+
+  // @req RF-10 @tipo negativo
+  test('test_RF10_tela_pagehide_sem_alteracao_pendente_nao_grava', async () => {
+    const { cliente } = await montarControlado();
+
+    await dispararPagehide();
+
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+  });
+});
+
+describe('RF-01 · TelaEdicao: depois do novo login, grava a alteração guardada (PEND-020)', () => {
+  /** Alteração pendente cujo salvamento volta 401: fica guardada e o indicador mostra `erro`. */
+  async function salvarComSessaoExpirada(user: Usuario, cliente: ClienteEdicaoFalso): Promise<void> {
+    cliente.salvarFase.mockResolvedValueOnce(recusa(401, ERRO_SESSAO));
+    await escolherObjeto(user, 'porta');
+    await clicarSalvar(user);
+    await screen.findByText(ROTULOS_EDITOR.estadoSalvamento.erro);
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+  }
+
+  // @req RF-01 @tipo feliz
+  test('test_RF01_tela_sessao_renovada_depois_de_401_grava_a_alteracao_guardada_e_mostra_salvo', async () => {
+    const { user, cliente, renovarSessao } = await montarControlado(0);
+    await salvarComSessaoExpirada(user, cliente);
+
+    await renovarSessao(1);
+
+    await waitFor(() => expect(cliente.salvarFase).toHaveBeenCalledTimes(2));
+    const segunda = cliente.salvarFase.mock.calls[1];
+    expect(segunda?.[0]).toBe(FASE_ID);
+    expect(segunda?.[1]).toBe(REVISAO_INICIAL);
+    expect(idsDe(objetosSalvos(cliente, 'frente'))).toEqual(['fala-frente', 'novo-1']);
+    expect(idsDe(cliente.servidor.documento.paredes.frente.objetos)).toEqual(['fala-frente', 'novo-1']);
+    await screen.findByText(ROTULOS_EDITOR.estadoSalvamento.salvo);
+    expect(screen.queryByText(ROTULOS_EDITOR.estadoSalvamento.erro)).toBeNull();
+  });
+
+  // @req RF-01 @tipo borda
+  test('test_RF01_tela_rerender_com_o_mesmo_sessaoRenovada_nao_grava_e_o_valor_seguinte_grava', async () => {
+    const { user, cliente, renovarSessao } = await montarControlado(0);
+    await salvarComSessaoExpirada(user, cliente);
+
+    await renovarSessao(0);
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(ROTULOS_EDITOR.estadoSalvamento.erro)).toBeInTheDocument();
+
+    await renovarSessao(1);
+
+    await waitFor(() => expect(cliente.salvarFase).toHaveBeenCalledTimes(2));
+    expect(idsDe(objetosSalvos(cliente, 'frente'))).toEqual(['fala-frente', 'novo-1']);
+    await screen.findByText(ROTULOS_EDITOR.estadoSalvamento.salvo);
+  });
+
+  // @req RF-01 @tipo negativo
+  test('test_RF01_tela_sessao_renovada_sem_alteracao_pendente_nao_grava', async () => {
+    const { cliente, renovarSessao } = await montarControlado(0);
+
+    await renovarSessao(1);
+    await renovarSessao(2);
+
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+    expect(screen.getByText(ROTULOS_EDITOR.estadoSalvamento.salvo)).toBeInTheDocument();
+  });
+
+  // @req RF-01 @tipo negativo
+  test('test_RF01_tela_nova_renovacao_depois_de_gravado_nao_grava_de_novo', async () => {
+    const { user, cliente, renovarSessao } = await montarControlado(0);
+    await salvarComSessaoExpirada(user, cliente);
+    await renovarSessao(1);
+    await waitFor(() => expect(cliente.salvarFase).toHaveBeenCalledTimes(2));
+    await screen.findByText(ROTULOS_EDITOR.estadoSalvamento.salvo);
+
+    await renovarSessao(2);
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(2);
+  });
+});

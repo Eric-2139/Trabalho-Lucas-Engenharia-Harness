@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-06T01:04:34.040Z",
+  "gerado_em": "2026-11-06T04:47:49.570Z",
   "requisitos": {
     "RF-06": {
       "feliz": 8,
@@ -13,12 +13,13 @@
       ]
     },
     "RF-01": {
-      "feliz": 9,
-      "borda": 12,
-      "negativo": 9,
+      "feliz": 10,
+      "borda": 13,
+      "negativo": 11,
       "arquivos": [
         "tests/api/auth.test.ts",
         "tests/editor/cliente-api.test.ts",
+        "tests/editor/tela-edicao.test.tsx",
         "tests/editor/tela-entrar.test.tsx"
       ]
     },
@@ -58,9 +59,9 @@
       ]
     },
     "RF-10": {
-      "feliz": 11,
-      "borda": 14,
-      "negativo": 15,
+      "feliz": 13,
+      "borda": 15,
+      "negativo": 18,
       "arquivos": [
         "tests/api/fases.test.ts",
         "tests/editor/barra-ferramentas.test.tsx",
