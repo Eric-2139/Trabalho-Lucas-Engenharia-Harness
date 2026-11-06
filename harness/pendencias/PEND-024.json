@@ -1,0 +1,15 @@
+{
+  "id": "PEND-024",
+  "tipo": "defeito_codigo",
+  "agente_origem": "testes",
+  "req_ids": ["RF-06"],
+  "chamado_id": null,
+  "pergunta": "DEF-03: imagem enviada já usada na fase vira entrada inutilizável/duplicada em Minhas imagens. Os testes novos do contrato da LAC-043 estão vermelhos; o agente 4 converte os uuids de referenciasDeAsset em asset:<uuid> e deduplica a lista na Edição?",
+  "opcoes": [
+    "(a) Sim: agente 4 implementa conforme componentes.ts e telas.ts (LAC-043, opção a) até os testes ficarem verdes.",
+    "(b) Rever o contrato antes (voltar ao arquiteto)."
+  ],
+  "contexto": "Critério do RF-06: 'PNG, JPG ou WebP de até 5 MB pode ser usado como fundo ou objeto'. Contrato LAC-043 (Eric, 06/11/2026). Vermelhos na rodada D, em tests/editor/tela-edicao.test.tsx: test_RF06_tela_objeto_com_imagem_enviada_aparece_uma_vez_e_usar_como_objeto_grava_asset_uuid e test_RF06_tela_mesma_imagem_como_objeto_e_como_fundo_aparece_uma_vez_e_vira_fundo_com_asset_uuid (usar a imagem da fase não grava nada: salvarFase não é chamado, compatível com o store recusando o uuid puro); test_RF06_tela_enviar_de_novo_a_imagem_que_ja_esta_na_fase_nao_duplica_minhas_imagens (a lista fica com 2 pares para a mesma imagem). Relatório: docs/testes/relatorio-defeitos.md (DEF-03).",
+  "impacto": "Sem a correção, imagem já usada na fase não pode ser reutilizada depois de recarregar e aparece duplicada. Bloqueia o fechamento do DEF-03.",
+  "status": "aberta"
+}

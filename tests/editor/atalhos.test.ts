@@ -1,6 +1,8 @@
 /**
  * Módulo: Atalhos (apps/editor/contrato/store.ts · AtalhoTeclado; modulos-editor.md §1).
- * Requisito: RF-09 — desfazer e refazer com Ctrl+Z e Ctrl+Y (Cmd no macOS); outra tecla → null.
+ * Requisitos:
+ * - RF-09 — desfazer e refazer com Ctrl+Z e Ctrl+Y (Cmd no macOS); outra tecla → null;
+ * - RF-05 (LAC-044) — Delete ou Backspace sem Ctrl nem Cmd → 'excluir'.
  */
 import { atalhoTeclado } from '@math-scape/app-editor';
 import { describe, expect, test } from 'vitest';
@@ -44,6 +46,35 @@ describe('RF-09 · atalhoTeclado', () => {
     for (const key of ['x', 'c', 'v', 'a', 's', 'Enter', 'Control']) {
       expect(atalhoTeclado(tecla(key, { ctrlKey: true }))).toBeNull();
       expect(atalhoTeclado(tecla(key, { metaKey: true }))).toBeNull();
+    }
+  });
+});
+
+// RF-05 (LAC-044, Eric em 06/11/2026): Delete ou Backspace sem Ctrl nem Cmd → 'excluir'.
+describe('RF-05 · atalhoTeclado exclui com Delete ou Backspace', () => {
+  // @req RF-05 @tipo feliz
+  test('test_RF05_delete_sem_ctrl_nem_cmd_exclui', () => {
+    expect(atalhoTeclado(tecla('Delete'))).toBe('excluir');
+  });
+
+  // @req RF-05 @tipo borda
+  test('test_RF05_backspace_sem_ctrl_nem_cmd_tambem_exclui', () => {
+    expect(atalhoTeclado(tecla('Backspace'))).toBe('excluir');
+  });
+
+  // @req RF-05 @tipo negativo
+  test('test_RF05_delete_ou_backspace_com_ctrl_ou_cmd_nao_exclui', () => {
+    for (const key of ['Delete', 'Backspace']) {
+      expect(atalhoTeclado(tecla(key, { ctrlKey: true })), `Ctrl+${key}`).not.toBe('excluir');
+      expect(atalhoTeclado(tecla(key, { metaKey: true })), `Cmd+${key}`).not.toBe('excluir');
+      expect(atalhoTeclado(tecla(key, { ctrlKey: true, metaKey: true })), `Ctrl+Cmd+${key}`).not.toBe('excluir');
+    }
+  });
+
+  // @req RF-05 @tipo negativo
+  test('test_RF05_outras_teclas_sem_modificador_nao_excluem', () => {
+    for (const key of ['d', 'x', 'Escape', 'Enter', ' ']) {
+      expect(atalhoTeclado(tecla(key)), key).toBeNull();
     }
   });
 });

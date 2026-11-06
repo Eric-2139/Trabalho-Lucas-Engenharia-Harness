@@ -3,8 +3,9 @@
  * LAC-029, ADR-012).
  * Requisitos:
  * - RF-04: a biblioteca contém porta, quadro, janela, relógio e os objetos da fase original (giz, selo, árvore...),
- *   e escolher um deles (Enter ou clique; o arraste até o palco é o mesmo `aoEscolher`) o põe na parede ativa
- *   como objeto: `aoEscolher('sprite:<id>', 'objeto')`;
+ *   e escolher um deles (Enter ou clique) o põe na parede ativa como objeto: `aoEscolher('sprite:<id>', 'objeto')`.
+ *   Arraste (LAC-045): cada botão de Objetos é draggable e o dragstart grava `sprite:<id>` com o tipo
+ *   TIPO_ARRASTE_BIBLIOTECA; o arraste não chama `aoEscolher` (quem recebe é o CanvasParede);
  * - RF-06: imagem enviada pode ser usada como objeto ou como fundo (`aoEscolher('asset:<uuid>', destino)`); enviar
  *   entrega o arquivo a `aoEnviarImagem` (POST /assets); a imagem só entra em "Minhas imagens" quando a Api aceita
  *   (o pai acrescenta a `imagensEnviadas`). A mensagem de recusa da Api é mostrada pela tela de edição (rodada B2).
@@ -17,12 +18,13 @@
  * Arquivos sintéticos: assinatura do tipo seguida de zeros, sem aleatoriedade; uuids escritos à mão.
  */
 import { BibliotecaObjetos } from '@math-scape/app-editor';
-import { ROTULOS_EDITOR } from '@math-scape/app-editor/contrato';
+import { ROTULOS_EDITOR, TIPO_ARRASTE_BIBLIOTECA } from '@math-scape/app-editor/contrato';
 import { LIMITES_CORPO } from '@math-scape/api/contrato';
 import { CATALOGO, type RefImagem } from '@math-scape/schema/contrato';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, test, vi } from 'vitest';
+import { criarDataTransfer, dispararArraste } from '../support/arraste.ts';
 
 type AoEscolher = (ref: RefImagem | null, destino: 'objeto' | 'fundo') => void;
 type AoEnviarImagem = (arquivo: File) => void;
@@ -142,6 +144,80 @@ describe('RF-04 · seção Objetos', () => {
       expect(aoEscolher, sprite.id).toHaveBeenLastCalledWith(`sprite:${sprite.id}`, 'fundo');
     }
     expect(aoEscolher.mock.calls.some(([, destino]) => destino === 'objeto')).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RF-04 · arraste da seção Objetos (LAC-045, Eric em 06/11/2026)
+// Cada botão de Objetos é draggable; no dragstart grava `sprite:<id>` no dataTransfer com o tipo
+// TIPO_ARRASTE_BIBLIOTECA. Quem recebe é o CanvasParede; a biblioteca não chama aoEscolher no arraste.
+// ---------------------------------------------------------------------------
+describe('RF-04 · arrastar um objeto da biblioteca', () => {
+  function botaoDoSprite(id: string): HTMLElement {
+    const sprite = OBJETOS.find((s) => s.id === id);
+    if (!sprite) throw new Error(`sprite ${id} ausente do catálogo`);
+    return within(secao(ROTULOS_EDITOR.objetos)).getByRole('button', { name: sprite.nome });
+  }
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_cada_objeto_da_secao_objetos_e_arrastavel', () => {
+    montar();
+    const objetos = secao(ROTULOS_EDITOR.objetos);
+
+    for (const sprite of OBJETOS) {
+      expect(within(objetos).getByRole('button', { name: sprite.nome }), sprite.id).toHaveAttribute('draggable', 'true');
+    }
+  });
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_dragstart_da_janela_grava_a_referencia_com_o_tipo_da_biblioteca', () => {
+    const { aoEscolher } = montar();
+    const transferencia = criarDataTransfer();
+
+    dispararArraste(botaoDoSprite('janela'), 'dragStart', transferencia);
+
+    expect(transferencia.getData(TIPO_ARRASTE_BIBLIOTECA)).toBe('sprite:janela');
+    expect(transferencia.types).toContain(TIPO_ARRASTE_BIBLIOTECA);
+    expect(aoEscolher).not.toHaveBeenCalled();
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_cada_objeto_arrastado_grava_a_propria_referencia', () => {
+    const { aoEscolher } = montar();
+
+    for (const sprite of OBJETOS) {
+      const transferencia = criarDataTransfer();
+      const botao = within(secao(ROTULOS_EDITOR.objetos)).getByRole('button', { name: sprite.nome });
+      dispararArraste(botao, 'dragStart', transferencia);
+      dispararArraste(botao, 'dragEnd', transferencia);
+      expect(transferencia.getData(TIPO_ARRASTE_BIBLIOTECA), sprite.id).toBe(`sprite:${sprite.id}`);
+    }
+    expect(aoEscolher).not.toHaveBeenCalled();
+  });
+
+  // @req RF-04 @tipo negativo
+  test('test_RF04_arrastar_e_soltar_fora_do_palco_nao_chama_aoEscolher', () => {
+    const { aoEscolher } = montar();
+    const transferencia = criarDataTransfer();
+    const porta = botaoDoSprite('porta');
+
+    dispararArraste(porta, 'dragStart', transferencia);
+    dispararArraste(porta, 'dragEnd', transferencia);
+
+    expect(aoEscolher).not.toHaveBeenCalled();
+  });
+
+  // @req RF-04 @tipo negativo
+  test('test_RF04_clique_depois_de_um_arraste_continua_escolhendo_no_centro_uma_unica_vez', async () => {
+    const user = userEvent.setup();
+    const { aoEscolher } = montar();
+    const quadro = botaoDoSprite('quadro');
+    dispararArraste(quadro, 'dragStart', criarDataTransfer());
+
+    await user.click(quadro);
+
+    expect(aoEscolher).toHaveBeenCalledTimes(1);
+    expect(aoEscolher).toHaveBeenCalledWith('sprite:quadro', 'objeto');
   });
 });
 

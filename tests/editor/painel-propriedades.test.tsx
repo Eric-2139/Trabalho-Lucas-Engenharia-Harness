@@ -7,7 +7,9 @@
  * - RF-08: fala grava texto; enigma grava pergunta, uma ou mais respostas numéricas (resposta que não é número é
  *   recusada), dica e zero ou mais dígitos; a senha (da porta e de Propriedades da fase) começa com 5 dígitos, aceita
  *   de 4 a 8 e rejeita 3, 9 ou não dígitos. Sem objeto, o painel é "Propriedades da fase" (título e senha, PEND-007).
- *   Valor inválido mostra o erro e não altera o store (ADR-011).
+ *   Valor inválido mostra o erro e não altera o store (ADR-011);
+ * - RF-05 (LAC-044): com objeto selecionado, botões trazerParaFrente, enviarParaTras, duplicarObjeto (seleciona a
+ *   cópia com o id de `gerarId`) e excluirObjeto; recusa do store em role="alert"; sem seleção, nenhum deles.
  *
  * O store é o real (`criarStoreEditor`, contrato público); o painel é montado como na tela de edição: objeto
  * selecionado e título/senha lidos do store a cada mudança. Leituras assumidas, que o contrato não fixa (PEND-017):
@@ -24,7 +26,7 @@ import { type Fase, type Objeto, TIPOS_INTERACAO } from '@math-scape/schema/cont
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useSyncExternalStore } from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { decoracao, enigma, fala, fase, porta } from '../fixtures/fases.ts';
 
 type Usuario = ReturnType<typeof userEvent.setup>;
@@ -88,6 +90,181 @@ function esperarRecusa(store: StoreEditor, antes: Fase): void {
   expect(store.getState().documento).toEqual(antes);
   expect(store.getState().podeDesfazer()).toBe(false);
 }
+
+// ---------------------------------------------------------------------------
+// RF-05 · camada, duplicar e excluir pelo painel (LAC-044, Eric em 06/11/2026)
+// Com objeto selecionado: trazerParaFrente / enviarParaTras → mudarCamada; duplicarObjeto → duplicarObjeto(id,
+// gerarId()) e seleciona a cópia; excluirObjeto → excluirObjeto(id) e o painel volta a Propriedades da fase.
+// Recusa do store em role="alert" com erros[0].mensagem. Sem seleção, nenhum dos 4.
+// ---------------------------------------------------------------------------
+const BOTOES_DO_OBJETO = [
+  ROTULOS_EDITOR.trazerParaFrente,
+  ROTULOS_EDITOR.enviarParaTras,
+  ROTULOS_EDITOR.duplicarObjeto,
+  ROTULOS_EDITOR.excluirObjeto,
+] as const;
+
+/** Painel ligado ao store, com `gerarId` fixo para a cópia. */
+function PainelComId({ store, gerarId }: { store: StoreEditor; gerarId: () => string }) {
+  const estado = useSyncExternalStore(store.subscribe, store.getState);
+  const { titulo, senha } = estado.documento;
+  return (
+    <PainelPropriedades
+      objeto={acharObjeto(estado.documento, estado.selecionado)}
+      fase={{ titulo, senha }}
+      store={store}
+      gerarId={gerarId}
+    />
+  );
+}
+
+function montarComId(documento: Fase, selecionado: string | null, ids: string[] = ['copia-1']) {
+  const store = criarStoreEditor(documento);
+  if (selecionado !== null) store.getState().selecionar(selecionado);
+  const fila = [...ids];
+  const gerarId = vi.fn(() => fila.shift() ?? 'id-esgotado');
+  render(<PainelComId store={store} gerarId={gerarId} />);
+  return { store, gerarId };
+}
+
+/** Ordem de desenho da parede: camada crescente, empate pela posição na lista. */
+function ordemVisual(objetos: Objeto[]): string[] {
+  return objetos
+    .map((o, indice) => ({ o, indice }))
+    .sort((a, b) => a.o.camada - b.o.camada || a.indice - b.indice)
+    .map(({ o }) => o.id);
+}
+
+/** Frente com três decorações em camadas distintas: a (0) atrás, b (1) no meio, c (2) na frente. */
+function faseTresCamadas(): Fase {
+  return fase('12345', {
+    frente: [{ ...decoracao('a'), camada: 0 }, { ...decoracao('b'), camada: 1 }, { ...decoracao('c'), camada: 2 }],
+  });
+}
+
+function alertasComTexto(texto: string): HTMLElement[] {
+  return screen.queryAllByRole('alert').filter((el) => (el.textContent ?? '').includes(texto));
+}
+
+describe('RF-05 · botões do objeto selecionado no painel', () => {
+  // @req RF-05 @tipo feliz
+  test('test_RF05_objeto_selecionado_mostra_os_4_botoes_do_objeto', () => {
+    montarComId(faseTresCamadas(), 'b');
+
+    for (const nome of BOTOES_DO_OBJETO) {
+      expect(screen.getByRole('button', { name: nome }), nome).toBeInTheDocument();
+    }
+  });
+
+  // @req RF-05 @tipo feliz
+  test('test_RF05_trazer_para_a_frente_pelo_painel_altera_a_sobreposicao', async () => {
+    const user = userEvent.setup();
+    const { store } = montarComId(faseTresCamadas(), 'a');
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.trazerParaFrente }));
+
+    expect(ordemVisual(store.getState().documento.paredes.frente.objetos)).toEqual(['b', 'a', 'c']);
+    expect(store.getState().podeDesfazer()).toBe(true);
+  });
+
+  // @req RF-05 @tipo feliz
+  test('test_RF05_enviar_para_tras_pelo_painel_altera_a_sobreposicao', async () => {
+    const user = userEvent.setup();
+    const { store } = montarComId(faseTresCamadas(), 'c');
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.enviarParaTras }));
+
+    expect(ordemVisual(store.getState().documento.paredes.frente.objetos)).toEqual(['a', 'c', 'b']);
+  });
+
+  // @req RF-05 @tipo feliz
+  test('test_RF05_duplicar_pelo_painel_cria_copia_na_mesma_parede_com_o_id_gerado_e_seleciona_a_copia', async () => {
+    const user = userEvent.setup();
+    const original: Objeto = { ...fala('fala-1', 'Você: o giz sumiu.'), x: 0.3, y: 0.4 };
+    const { store, gerarId } = montarComId(fase('12345', { direita: [original], frente: [porta('porta-1')] }), 'fala-1', [
+      'fala-1-copia',
+    ]);
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.duplicarObjeto }));
+
+    expect(gerarId).toHaveBeenCalledTimes(1);
+    const direita = store.getState().documento.paredes.direita.objetos;
+    expect(direita.map((o) => o.id).sort()).toEqual(['fala-1', 'fala-1-copia']);
+    expect(direita.find((o) => o.id === 'fala-1-copia')).toMatchObject({
+      imagem: original.imagem,
+      interacao: original.interacao,
+    });
+    expect(store.getState().documento.paredes.frente.objetos.map((o) => o.id)).toEqual(['porta-1']);
+    expect(store.getState().selecionado).toBe('fala-1-copia');
+  });
+
+  // @req RF-05 @tipo feliz
+  test('test_RF05_excluir_pelo_painel_remove_o_objeto_e_volta_a_propriedades_da_fase', async () => {
+    const user = userEvent.setup();
+    const { store } = montarComId(fase('12345', { frente: [porta('porta-1'), decoracao('quadro-1')] }), 'quadro-1');
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.excluirObjeto }));
+
+    expect(store.getState().documento.paredes.frente.objetos.map((o) => o.id)).toEqual(['porta-1']);
+    expect(store.getState().selecionado).toBeNull();
+    expect(screen.getByText(ROTULOS_EDITOR.propriedadesDaFase)).toBeInTheDocument();
+    for (const nome of BOTOES_DO_OBJETO) {
+      expect(screen.queryByRole('button', { name: nome }), nome).toBeNull();
+    }
+  });
+
+  // @req RF-05 @tipo borda
+  test('test_RF05_trazer_para_a_frente_o_que_ja_esta_na_frente_mostra_a_recusa_e_nao_muda_o_documento', async () => {
+    const user = userEvent.setup();
+    const documento = faseTresCamadas();
+    const { store } = montarComId(structuredClone(documento), 'c');
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.trazerParaFrente }));
+
+    expect(alertasComTexto('O objeto já está na frente de todos.')).toHaveLength(1);
+    expect(store.getState().documento).toEqual(documento);
+    expect(store.getState().podeDesfazer()).toBe(false);
+    expect(store.getState().selecionado).toBe('c');
+  });
+
+  // @req RF-05 @tipo borda
+  test('test_RF05_enviar_para_tras_o_que_ja_esta_atras_mostra_a_recusa_e_nao_muda_o_documento', async () => {
+    const user = userEvent.setup();
+    const documento = faseTresCamadas();
+    const { store } = montarComId(structuredClone(documento), 'a');
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.enviarParaTras }));
+
+    expect(alertasComTexto('O objeto já está atrás de todos.')).toHaveLength(1);
+    expect(store.getState().documento).toEqual(documento);
+    expect(store.getState().podeDesfazer()).toBe(false);
+  });
+
+  // @req RF-05 @tipo negativo
+  test('test_RF05_sem_objeto_selecionado_nenhum_dos_4_botoes_aparece', () => {
+    montarComId(faseTresCamadas(), null);
+
+    expect(screen.getByText(ROTULOS_EDITOR.propriedadesDaFase)).toBeInTheDocument();
+    for (const nome of BOTOES_DO_OBJETO) {
+      expect(screen.queryByRole('button', { name: nome }), nome).toBeNull();
+    }
+  });
+
+  // @req RF-05 @tipo negativo
+  test('test_RF05_duplicar_com_id_ja_usado_mostra_a_recusa_e_mantem_a_selecao', async () => {
+    const user = userEvent.setup();
+    const documento = faseTresCamadas();
+    const { store } = montarComId(structuredClone(documento), 'a', ['b']);
+
+    await user.click(screen.getByRole('button', { name: ROTULOS_EDITOR.duplicarObjeto }));
+
+    const alertas = screen.queryAllByRole('alert').filter((el) => (el.textContent ?? '').trim().length > 0);
+    expect(alertas.length).toBeGreaterThan(0);
+    expect(store.getState().documento).toEqual(documento);
+    expect(store.getState().selecionado).toBe('a');
+    expect(store.getState().podeDesfazer()).toBe(false);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // RF-07 · tipo do objeto

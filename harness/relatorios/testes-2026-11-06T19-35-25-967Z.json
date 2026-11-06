@@ -1,0 +1,53 @@
+{
+  "agente": "testes",
+  "execucao": "a2e87199eb0c44b69",
+  "inicio": "2026-11-06T19:26:41.147Z",
+  "fim": "2026-11-06T19:35:25.967Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "escopo": [
+      "RF-03",
+      "RF-04",
+      "RF-05",
+      "RF-06"
+    ],
+    "requisitos_elegiveis": 4,
+    "cobertos_completamente": 4,
+    "devolvidos_ao_agente_1": [],
+    "taxa_sem_criterio": 0,
+    "razao_negativo_por_feliz": {
+      "RF-06": 1.2,
+      "RF-01": 1.09,
+      "RNF-05": 0.67,
+      "RNF-06": 1,
+      "RF-19": 1.25,
+      "RF-02": 1.55,
+      "RF-10": 1.29,
+      "RNF-09": 2.25,
+      "RF-12": 1.5,
+      "RF-14": 1.2,
+      "RNF-04": 1.4,
+      "RF-11": 0.83,
+      "RF-13": 1.22,
+      "RF-15": 1.41,
+      "RF-03": 0.71,
+      "RF-04": 0.65,
+      "RF-05": 0.79,
+      "RF-08": 1,
+      "RF-09": 1.14,
+      "RF-17": 1,
+      "RNF-03": null,
+      "RF-16": 0.8,
+      "RF-18": 0.46,
+      "RNF-01": 0.5,
+      "RNF-02": 0.5,
+      "RNF-07": 0.58,
+      "RF-07": 1.17
+    }
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

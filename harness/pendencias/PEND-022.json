@@ -1,0 +1,15 @@
+{
+  "id": "PEND-022",
+  "tipo": "defeito_codigo",
+  "agente_origem": "testes",
+  "req_ids": ["RF-05"],
+  "chamado_id": null,
+  "pergunta": "DEF-01: excluir, duplicar e mudar camada não têm controle na interface. Os testes novos do contrato da LAC-044 estão vermelhos; o agente 4 implementa os 4 botões no PainelPropriedades e o 'excluir' do atalhoTeclado e da Edição?",
+  "opcoes": [
+    "(a) Sim: agente 4 implementa conforme componentes.ts, store.ts e telas.ts (LAC-044) até os testes ficarem verdes.",
+    "(b) Rever o contrato antes (voltar ao arquiteto)."
+  ],
+  "contexto": "Critério do RF-05: 'mudar camada altera a sobreposição; duplicar cria cópia na mesma parede; excluir remove o objeto'. Contrato LAC-044 (Eric, 06/11/2026). Vermelhos na rodada D: tests/editor/atalhos.test.ts (test_RF05_delete_sem_ctrl_nem_cmd_exclui, test_RF05_backspace_sem_ctrl_nem_cmd_tambem_exclui: atalhoTeclado devolve null); tests/editor/painel-propriedades.test.tsx (8 casos test_RF05_*: botões ROTULOS_EDITOR.trazerParaFrente/enviarParaTras/duplicarObjeto/excluirObjeto não existem); tests/editor/tela-edicao.test.tsx (test_RF05_tela_delete_com_objeto_selecionado_exclui_e_ctrl_z_traz_de_volta, test_RF05_tela_backspace_com_objeto_selecionado_tambem_exclui: nada é excluído). Relatório: docs/testes/relatorio-defeitos.md (DEF-01).",
+  "impacto": "Sem a correção, o RF-05 só existe no store: o criador não consegue excluir, duplicar nem mudar camada pela interface. Bloqueia o fechamento do DEF-01.",
+  "status": "aberta"
+}

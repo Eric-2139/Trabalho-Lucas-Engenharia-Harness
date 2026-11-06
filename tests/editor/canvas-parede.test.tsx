@@ -6,7 +6,9 @@
  *   contêineres de tamanhos e proporções diferentes, inclusive ao redimensionar;
  * - RF-05: arrastar move o objeto no documento (o que é salvo e volta ao recarregar), e o fim do arraste chega ao
  *   store como UM passo de histórico; mudar camada altera qual objeto fica por cima; a cópia duplicada aparece na
- *   mesma parede; o objeto excluído some do palco; clicar seleciona.
+ *   mesma parede; o objeto excluído some do palco; clicar seleciona;
+ * - RF-04 (LAC-045): o palco fica numa região ROTULOS_EDITOR.palco que aceita o arraste da biblioteca
+ *   (TIPO_ARRASTE_BIBLIOTECA) e chama `aoSoltar(ref, posicao)` com o ponto em frações da parede, limitado a 0..1.
  *
  * O store é o real (`criarStoreEditor`, contrato público). Clique e arraste são reais no canvas Konva do jsdom
  * (pacote `canvas`, ADR-016), nas coordenadas de calcularPalco/paraPixels (tests/support/palco-tela.ts e
@@ -14,15 +16,16 @@
  * Fases sintéticas de tests/fixtures/fases.ts; objetos grandes e sem rotação, em posições escritas à mão.
  */
 import { CanvasParede, criarStoreEditor } from '@math-scape/app-editor';
-import type { StoreEditor } from '@math-scape/app-editor/contrato';
+import { ROTULOS_EDITOR, type StoreEditor, TIPO_ARRASTE_BIBLIOTECA } from '@math-scape/app-editor/contrato';
 import { calcularPalco } from '@math-scape/player';
 import { validarFase } from '@math-scape/schema';
-import type { Fase, Objeto } from '@math-scape/schema/contrato';
-import { act, render } from '@testing-library/react';
-import { describe, expect, test } from 'vitest';
+import type { Fase, Objeto, RefImagem } from '@math-scape/schema/contrato';
+import { act, cleanup, render, screen } from '@testing-library/react';
+import { describe, expect, test, vi } from 'vitest';
 import { decoracao, fase } from '../fixtures/fases.ts';
+import { criarDataTransfer, dispararArraste, soltarEm } from '../support/arraste.ts';
 import { arrastarNoPalco, dentro, pontoNoObjeto } from '../support/palco-editor.ts';
-import { clicarNoPalco, esperarDesenho, palcoDaTela, pontoDoObjeto } from '../support/palco-tela.ts';
+import { clicarNoPalco, conteudoDoPalco, esperarDesenho, palcoDaTela, pontoDoObjeto } from '../support/palco-tela.ts';
 
 type Caixa = Pick<Objeto, 'x' | 'y' | 'largura' | 'altura'>;
 
@@ -158,6 +161,150 @@ describe('RF-03 · CanvasParede mostra a parede ativa', () => {
       expect(store.getState().selecionado, `${largura}×${altura}`).toBeNull();
       unmount();
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RF-04 · o palco recebe o item arrastado da biblioteca (LAC-045, Eric em 06/11/2026)
+// Região role="region" com nome ROTULOS_EDITOR.palco; dragover com TIPO_ARRASTE_BIBLIOTECA é cancelado; o drop
+// chama aoSoltar(ref, posicao) com o ponto em frações da parede (palco 16:9), limitado a 0..1; sem o tipo, nada.
+// No jsdom, getBoundingClientRect devolve zero: clientX/clientY = pixel no Stage.
+// ---------------------------------------------------------------------------
+type AoSoltar = (ref: RefImagem, posicao: { x: number; y: number }) => void;
+
+async function montarComSoltar(largura: number, altura: number) {
+  const store = criarStoreEditor(fase('12345', { frente: [em(decoracao('deco-a'), POS.a)] }));
+  const aoSoltar = vi.fn<AoSoltar>();
+  render(
+    <CanvasParede
+      store={store}
+      baseUrlApi="/api"
+      larguraConteiner={largura}
+      alturaConteiner={altura}
+      aoSoltar={aoSoltar}
+    />,
+  );
+  await esperarDesenho();
+  return { store, aoSoltar };
+}
+
+function regiaoDoPalco(): HTMLElement {
+  return screen.getByRole('region', { name: ROTULOS_EDITOR.palco });
+}
+
+/** Pixel no Stage da fração (fx, fy) da parede 16:9 do contêiner. */
+function pixelDaFracao(fx: number, fy: number, largura: number, altura: number) {
+  const palco = calcularPalco(largura, altura);
+  return { x: palco.x + fx * palco.largura, y: palco.y + fy * palco.altura };
+}
+
+function itemDaBiblioteca(ref: RefImagem) {
+  return criarDataTransfer({ [TIPO_ARRASTE_BIBLIOTECA]: ref });
+}
+
+describe('RF-04 · CanvasParede recebe o objeto arrastado da biblioteca', () => {
+  // @req RF-04 @tipo feliz
+  test('test_RF04_palco_fica_numa_regiao_com_o_nome_do_palco', async () => {
+    await montarComSoltar(1280, 720);
+
+    const regiao = regiaoDoPalco();
+    expect(regiao.querySelector('.konvajs-content')).not.toBeNull();
+  });
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_dragover_com_o_tipo_da_biblioteca_e_aceito', async () => {
+    await montarComSoltar(1280, 720);
+
+    const { cancelado } = dispararArraste(
+      conteudoDoPalco(),
+      'dragOver',
+      itemDaBiblioteca('sprite:janela'),
+      pixelDaFracao(0.5, 0.5, 1280, 720),
+    );
+
+    expect(cancelado).toBe(true);
+  });
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_drop_chama_aoSoltar_com_a_referencia_e_o_ponto_em_fracoes_da_parede', async () => {
+    const { aoSoltar, store } = await montarComSoltar(1280, 720);
+    const antes = structuredClone(store.getState().documento);
+
+    soltarEm(conteudoDoPalco(), itemDaBiblioteca('sprite:janela'), pixelDaFracao(0.25, 0.6, 1280, 720));
+
+    expect(aoSoltar).toHaveBeenCalledTimes(1);
+    const [ref, posicao] = aoSoltar.mock.calls[0] ?? [];
+    expect(ref).toBe('sprite:janela');
+    expect(posicao?.x).toBeCloseTo(0.25, 3);
+    expect(posicao?.y).toBeCloseTo(0.6, 3);
+    // O palco só avisa; quem põe o objeto é a Edição (aoSoltar).
+    expect(store.getState().documento).toEqual(antes);
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_drop_converte_pelo_palco_16_9_centralizado_em_conteiner_largo_e_alto', async () => {
+    for (const [largura, altura] of [
+      [1600, 700],
+      [1000, 900],
+    ] as const) {
+      const { aoSoltar } = await montarComSoltar(largura, altura);
+
+      soltarEm(conteudoDoPalco(), itemDaBiblioteca('sprite:relogio'), pixelDaFracao(0.8, 0.3, largura, altura));
+
+      expect(aoSoltar, `${largura}×${altura}`).toHaveBeenCalledTimes(1);
+      const [ref, posicao] = aoSoltar.mock.calls[0] ?? [];
+      expect(ref).toBe('sprite:relogio');
+      expect(posicao?.x, `${largura}×${altura}`).toBeCloseTo(0.8, 3);
+      expect(posicao?.y, `${largura}×${altura}`).toBeCloseTo(0.3, 3);
+      cleanup();
+    }
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_drop_fora_da_parede_16_9_e_limitado_a_0_e_1', async () => {
+    // 1600×700: faixas vazias à esquerda e à direita da parede.
+    const largo = calcularPalco(1600, 700);
+    expect(largo.x).toBeGreaterThan(20);
+    let montado = await montarComSoltar(1600, 700);
+    soltarEm(conteudoDoPalco(), itemDaBiblioteca('sprite:janela'), { x: 10, y: 350 });
+    soltarEm(conteudoDoPalco(), itemDaBiblioteca('sprite:janela'), { x: 1590, y: 350 });
+
+    const largoChamadas = montado.aoSoltar.mock.calls.map(([, p]) => p);
+    expect(largoChamadas).toHaveLength(2);
+    expect(largoChamadas[0]?.x).toBe(0);
+    expect(largoChamadas[0]?.y).toBeCloseTo(0.5, 3);
+    expect(largoChamadas[1]?.x).toBe(1);
+    expect(largoChamadas[1]?.y).toBeCloseTo(0.5, 3);
+    cleanup();
+
+    // 1000×900: faixas vazias em cima e embaixo.
+    const alto = calcularPalco(1000, 900);
+    expect(alto.y).toBeGreaterThan(20);
+    montado = await montarComSoltar(1000, 900);
+    soltarEm(conteudoDoPalco(), itemDaBiblioteca('sprite:janela'), { x: 500, y: 10 });
+    soltarEm(conteudoDoPalco(), itemDaBiblioteca('sprite:janela'), { x: 500, y: 890 });
+
+    const altoChamadas = montado.aoSoltar.mock.calls.map(([, p]) => p);
+    expect(altoChamadas).toHaveLength(2);
+    expect(altoChamadas[0]?.x).toBeCloseTo(0.5, 3);
+    expect(altoChamadas[0]?.y).toBe(0);
+    expect(altoChamadas[1]?.x).toBeCloseTo(0.5, 3);
+    expect(altoChamadas[1]?.y).toBe(1);
+  });
+
+  // @req RF-04 @tipo negativo
+  test('test_RF04_arraste_sem_o_tipo_da_biblioteca_e_ignorado', async () => {
+    const { aoSoltar, store } = await montarComSoltar(1280, 720);
+    const antes = structuredClone(store.getState().documento);
+    const ponto = pixelDaFracao(0.5, 0.5, 1280, 720);
+    const outro = () => criarDataTransfer({ 'text/plain': 'sprite:janela' });
+
+    const { cancelado } = dispararArraste(conteudoDoPalco(), 'dragOver', outro(), ponto);
+    soltarEm(conteudoDoPalco(), outro(), ponto);
+
+    expect(cancelado).toBe(false);
+    expect(aoSoltar).not.toHaveBeenCalled();
+    expect(store.getState().documento).toEqual(antes);
   });
 });
 

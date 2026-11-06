@@ -22,6 +22,12 @@
  * - RF-14: Exportar chama `exportarFase` e entrega o arquivo para download sem alterá-lo;
  * - RNF-01: aviso abaixo de 1280x720 (1279x720 e 1280x719), ausente a partir de 1280x720; a edição continua.
  *
+ * Rodada D (decisões do Eric em 06/11/2026, LAC-043 a LAC-046), blocos no fim do arquivo:
+ * - RF-03 (LAC-046): o palco mede o contêiner por ResizeObserver; sem ele, usa a janela; com ele, nunca a janela;
+ * - RF-04 (LAC-045): item da biblioteca solto no palco vira objeto da parede ativa, com o centro no ponto solto;
+ * - RF-05 (LAC-044): Delete/Backspace, com objeto selecionado e foco fora de campo de texto, exclui; Ctrl+Z desfaz;
+ * - RF-06 (LAC-043): as imagens `asset:` já usadas na fase aparecem uma vez só em Minhas imagens, como `asset:<uuid>`.
+ *
  * O documento é observado pelo que a tela grava (`salvarFase`) e pelo palco: clicar numa fala seleciona-a e o painel
  * mostra o campo ROTULOS_EDITOR.texto com o texto dela; clicar em área vazia mostra Propriedades da fase.
  * Leituras assumidas, que o contrato não fixa (pendência arquitetura aberta nesta rodada):
@@ -33,7 +39,7 @@
  * Fases sintéticas de tests/fixtures/; ids, textos e uuids escritos à mão, sem aleatoriedade.
  */
 import { TelaEdicao } from '@math-scape/app-editor';
-import { type ClienteApiEditor, ROTULOS_EDITOR } from '@math-scape/app-editor/contrato';
+import { type ClienteApiEditor, ROTULOS_EDITOR, TIPO_ARRASTE_BIBLIOTECA } from '@math-scape/app-editor/contrato';
 import { LIMITES_CORPO } from '@math-scape/api/contrato';
 import { calcularPalco } from '@math-scape/player';
 import { MENSAGENS, type Verificador } from '@math-scape/player/contrato';
@@ -51,10 +57,19 @@ import {
 } from '../fixtures/fases-api.ts';
 import { acerto, erro as respostaErrada, faseJogo, falaJogo, enigmaJogo, verificadorFalso } from '../fixtures/fases-jogo.ts';
 import { enigma, fala, fase, objeto } from '../fixtures/fases.ts';
+import { criarDataTransfer, soltarEm } from '../support/arraste.ts';
 import { adiado, lerTexto, ok, recusa, textosDosAlertas } from '../support/cliente-editor-falso.ts';
 import { type ClienteEdicaoFalso, criarClienteEdicaoFalso, uuidSintetico } from '../support/cliente-edicao-falso.ts';
 import { arrastarNoPalco, pontoNoObjeto } from '../support/palco-editor.ts';
-import { type Ponto, clicarNoPalco, definirJanela, esperarDesenho, normalizar, palcoDaTela } from '../support/palco-tela.ts';
+import {
+  type Ponto,
+  clicarNoPalco,
+  conteudoDoPalco,
+  definirJanela,
+  esperarDesenho,
+  normalizar,
+  palcoDaTela,
+} from '../support/palco-tela.ts';
 import { type RelogioFalso, criarRelogioFalso, drenarPromessas } from '../support/relogio-falso.ts';
 
 type Usuario = ReturnType<typeof userEvent.setup>;
@@ -1504,5 +1519,372 @@ describe('RF-01 · TelaEdicao: depois do novo login, grava a alteração guardad
     await renovarSessao(2);
 
     expect(cliente.salvarFase).toHaveBeenCalledTimes(2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RF-05 · Delete/Backspace exclui o objeto selecionado (LAC-044, Eric em 06/11/2026)
+// Com objeto selecionado e o foco fora de campo de texto; Ctrl+Z desfaz. Sem seleção, nada acontece.
+// ---------------------------------------------------------------------------
+describe('RF-05 · TelaEdicao: excluir pelo teclado', () => {
+  async function selecionarFalaDaFrente(): Promise<void> {
+    await clicarNaPosicao(POS.a);
+    expect(textoDoSelecionado()).toBe(FALAS.frente);
+  }
+
+  // @req RF-05 @tipo feliz
+  test('test_RF05_tela_delete_com_objeto_selecionado_exclui_e_ctrl_z_traz_de_volta', async () => {
+    const { user, cliente } = await montar();
+    await selecionarFalaDaFrente();
+
+    await user.keyboard('{Delete}');
+    await assentar();
+    await esperarDesenho();
+    await clicarSalvar(user);
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    expect(acharSalvo(cliente, 'fala-frente')).toBeUndefined();
+    expect(objetosSalvos(cliente, 'frente')).toEqual([]);
+    expect(idsDe(objetosSalvos(cliente, 'direita'))).toEqual(['fala-direita']);
+
+    await user.keyboard('{Control>}z{/Control}');
+    await assentar();
+    await esperarDesenho();
+    await clicarSalvar(user);
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(2);
+    expect(acharSalvo(cliente, 'fala-frente')).toEqual(em(fala('fala-frente', FALAS.frente), POS.a));
+  });
+
+  // @req RF-05 @tipo feliz
+  test('test_RF05_tela_backspace_com_objeto_selecionado_tambem_exclui', async () => {
+    const { user, cliente } = await montar();
+    await selecionarFalaDaFrente();
+
+    await user.keyboard('{Backspace}');
+    await assentar();
+    await clicarSalvar(user);
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    expect(acharSalvo(cliente, 'fala-frente')).toBeUndefined();
+  });
+
+  // @req RF-05 @tipo borda
+  test('test_RF05_tela_delete_com_o_foco_num_campo_de_texto_do_painel_nao_exclui', async () => {
+    const { user, cliente } = await montar();
+    await selecionarFalaDaFrente();
+    const campo = screen.getByLabelText(ROTULOS_EDITOR.texto);
+    await user.click(campo);
+    expect(campo).toHaveFocus();
+
+    await user.keyboard('{Delete}');
+    await assentar();
+
+    expect(botao(ROTULOS_EDITOR.desfazer)).toBeDisabled();
+    expect(screen.queryByLabelText(ROTULOS_EDITOR.texto)).not.toBeNull();
+    await clicarSalvar(user);
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+  });
+
+  // @req RF-05 @tipo negativo
+  test('test_RF05_tela_delete_e_backspace_sem_selecao_nao_mudam_nada', async () => {
+    const { user, cliente } = await montar();
+    expect(textoDoSelecionado()).toBeNull();
+
+    await user.keyboard('{Delete}');
+    await user.keyboard('{Backspace}');
+    await assentar();
+
+    expect(botao(ROTULOS_EDITOR.desfazer)).toBeDisabled();
+    await clicarSalvar(user);
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+    await clicarNaPosicao(POS.a);
+    expect(textoDoSelecionado()).toBe(FALAS.frente);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RF-04 · soltar um objeto da biblioteca no palco (LAC-045, Eric em 06/11/2026)
+// O CanvasParede chama aoSoltar e a Edição faz store.adicionarObjeto('decoracao', ref, gerarId(), posicao):
+// o objeto nasce na parede ativa com o centro no ponto solto (limitado para caber).
+// ---------------------------------------------------------------------------
+describe('RF-04 · TelaEdicao: arrastar da biblioteca até o palco', () => {
+  /** Pixel do palco na fração (fx, fy) da parede 16:9 desenhada. */
+  function pixelNaParede(fx: number, fy: number): Ponto {
+    const palco = palcoDaTela();
+    return { x: palco.x + fx * palco.largura, y: palco.y + fy * palco.altura };
+  }
+
+  async function soltarNoPalco(dados: Record<string, string>, ponto: Ponto): Promise<void> {
+    soltarEm(conteudoDoPalco(), criarDataTransfer(dados), ponto);
+    await assentar();
+    await esperarDesenho();
+  }
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_tela_soltar_a_janela_no_palco_poe_o_objeto_na_parede_ativa_perto_do_ponto', async () => {
+    const { user, cliente, gerarId } = await montar();
+
+    await soltarNoPalco({ [TIPO_ARRASTE_BIBLIOTECA]: 'sprite:janela' }, pixelNaParede(0.4, 0.45));
+    await clicarSalvar(user);
+
+    expect(gerarId).toHaveBeenCalledTimes(1);
+    expect(idsDe(objetosSalvos(cliente, 'frente'))).toEqual(['fala-frente', 'novo-1']);
+    const novo = objetosSalvos(cliente, 'frente').find((o) => o.id === 'novo-1');
+    expect(novo).toMatchObject({ imagem: 'sprite:janela', interacao: { tipo: 'decoracao' } });
+    expect((novo?.x ?? Number.NaN) + (novo?.largura ?? 0) / 2).toBeCloseTo(0.4, 2);
+    expect((novo?.y ?? Number.NaN) + (novo?.altura ?? 0) / 2).toBeCloseTo(0.45, 2);
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_tela_soltar_perto_do_canto_da_outra_aba_poe_o_objeto_inteiro_dentro_dessa_parede', async () => {
+    const { user, cliente } = await montar();
+    await trocarPara(user, 'teto');
+
+    await soltarNoPalco({ [TIPO_ARRASTE_BIBLIOTECA]: 'sprite:relogio' }, pixelNaParede(0.99, 0.99));
+    await clicarSalvar(user);
+
+    const novo = objetosSalvos(cliente, 'teto').find((o) => o.id === 'novo-1');
+    expect(novo).toMatchObject({ imagem: 'sprite:relogio' });
+    expect((novo?.x ?? Number.NaN) + (novo?.largura ?? 0)).toBeCloseTo(1, 3);
+    expect((novo?.y ?? Number.NaN) + (novo?.altura ?? 0)).toBeCloseTo(1, 3);
+    for (const parede of PAREDES.filter((p) => p !== 'teto')) {
+      expect(idsDe(objetosSalvos(cliente, parede)), parede).toEqual([`fala-${parede}`]);
+    }
+  });
+
+  // @req RF-04 @tipo negativo
+  test('test_RF04_tela_soltar_algo_que_nao_veio_da_biblioteca_nao_cria_objeto', async () => {
+    const { user, cliente, gerarId } = await montar();
+
+    await soltarNoPalco({ 'text/plain': 'sprite:janela' }, pixelNaParede(0.5, 0.5));
+    await clicarSalvar(user);
+
+    expect(gerarId).not.toHaveBeenCalled();
+    expect(cliente.salvarFase).not.toHaveBeenCalled();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RF-06 · imagens já usadas na fase em Minhas imagens (DEF-03, LAC-043, Eric em 06/11/2026)
+// referenciasDeAsset devolve uuids; a Edição os converte em `asset:<uuid>`, soma as enviadas, sem repetição.
+// ---------------------------------------------------------------------------
+describe('RF-06 · TelaEdicao: Minhas imagens com as imagens da fase', () => {
+  const REF_ASSET = `asset:${UUID_ASSET}` as const;
+
+  function documentoComImagem(): Fase {
+    const documento = documentoSala();
+    documento.paredes.frente.objetos.push(em(objeto('imagem-1', { tipo: 'decoracao' }, REF_ASSET), POS.e));
+    return documento;
+  }
+
+  // @req RF-06 @tipo feliz
+  test('test_RF06_tela_objeto_com_imagem_enviada_aparece_uma_vez_e_usar_como_objeto_grava_asset_uuid', async () => {
+    const { user, cliente } = await montar({ documento: documentoComImagem() });
+
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoObjeto)).toHaveLength(1);
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoFundo)).toHaveLength(1);
+
+    await user.click(botoesMinhasImagens(ROTULOS_EDITOR.usarComoObjeto)[0] as HTMLElement);
+    await assentar();
+    await clicarSalvar(user);
+
+    expect(cliente.salvarFase).toHaveBeenCalledTimes(1);
+    const novo = objetosSalvos(cliente, 'frente').find((o) => o.id === 'novo-1');
+    expect(novo?.imagem).toBe(REF_ASSET);
+    expect(novo?.imagem).not.toBe(UUID_ASSET);
+  });
+
+  // @req RF-06 @tipo borda
+  test('test_RF06_tela_mesma_imagem_como_objeto_e_como_fundo_aparece_uma_vez_e_vira_fundo_com_asset_uuid', async () => {
+    const documento = documentoComImagem();
+    documento.paredes.fundo.fundo = REF_ASSET;
+    documento.paredes.teto.objetos.push(em(objeto('imagem-2', { tipo: 'decoracao' }, REF_ASSET), POS.a));
+    const { user, cliente } = await montar({ documento });
+
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoObjeto)).toHaveLength(1);
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoFundo)).toHaveLength(1);
+
+    await trocarPara(user, 'direita');
+    await user.click(botoesMinhasImagens(ROTULOS_EDITOR.usarComoFundo)[0] as HTMLElement);
+    await assentar();
+    await clicarSalvar(user);
+
+    expect(documentoSalvo(cliente).paredes.direita.fundo).toBe(REF_ASSET);
+    expect(textosDosAlertas()).toEqual([]);
+  });
+
+  // @req RF-06 @tipo negativo
+  test('test_RF06_tela_enviar_de_novo_a_imagem_que_ja_esta_na_fase_nao_duplica_minhas_imagens', async () => {
+    const { user, cliente } = await montar({ documento: documentoComImagem() });
+    cliente.enviarImagem.mockResolvedValueOnce(ok({ id: UUID_ASSET, ref: REF_ASSET, url: `/api/assets/${UUID_ASSET}` }));
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoObjeto)).toHaveLength(1);
+
+    await user.upload(campoEnviarImagem(), arquivoPng());
+    await assentar();
+
+    expect(cliente.enviarImagem).toHaveBeenCalledTimes(1);
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoObjeto)).toHaveLength(1);
+    expect(botoesMinhasImagens(ROTULOS_EDITOR.usarComoFundo)).toHaveLength(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RF-03 · o palco mede o contêiner (DEF-04, LAC-046, Eric em 06/11/2026)
+// Com ResizeObserver, o Stage tem o tamanho medido no elemento que contém o palco, nunca o da janela. Sem
+// ResizeObserver (jsdom), a janela é a reserva. O ResizeObserver falso devolve a medida configurada para qualquer
+// elemento observado (contentRect, borderBoxSize e contentBoxSize) e é removido depois de cada caso.
+// ---------------------------------------------------------------------------
+describe('RF-03 · TelaEdicao: palco com o tamanho do contêiner', () => {
+  interface Medida {
+    largura: number;
+    altura: number;
+  }
+
+  const escopo = globalThis as unknown as Record<string, unknown>;
+  const janela = window as unknown as Record<string, unknown>;
+  const original = { global: escopo.ResizeObserver, janela: janela.ResizeObserver };
+  let medida: Medida = { largura: 900, altura: 500 };
+  let observadores: ResizeObserverFalso[] = [];
+
+  function entrada(alvo: Element, m: Medida) {
+    const caixa = [{ inlineSize: m.largura, blockSize: m.altura }];
+    return {
+      target: alvo,
+      contentRect: {
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
+        width: m.largura,
+        height: m.altura,
+        right: m.largura,
+        bottom: m.altura,
+        toJSON: () => ({}),
+      },
+      borderBoxSize: caixa,
+      contentBoxSize: caixa,
+      devicePixelContentBoxSize: caixa,
+    };
+  }
+
+  class ResizeObserverFalso {
+    readonly alvos: Element[] = [];
+    readonly callback: (entradas: unknown[], observador: unknown) => void;
+    constructor(callback: (entradas: unknown[], observador: unknown) => void) {
+      this.callback = callback;
+      observadores.push(this);
+    }
+    observe(alvo: Element): void {
+      this.alvos.push(alvo);
+      this.callback([entrada(alvo, medida)], this);
+    }
+    unobserve(alvo: Element): void {
+      const i = this.alvos.indexOf(alvo);
+      if (i >= 0) this.alvos.splice(i, 1);
+    }
+    disconnect(): void {
+      this.alvos.length = 0;
+    }
+    notificar(): void {
+      if (this.alvos.length > 0) this.callback(this.alvos.map((alvo) => entrada(alvo, medida)), this);
+    }
+  }
+
+  function instalarResizeObserver(m: Medida): void {
+    medida = m;
+    observadores = [];
+    escopo.ResizeObserver = ResizeObserverFalso;
+    janela.ResizeObserver = ResizeObserverFalso;
+  }
+
+  function restaurar(chave: Record<string, unknown>, valor: unknown): void {
+    if (valor === undefined) Reflect.deleteProperty(chave, 'ResizeObserver');
+    else chave.ResizeObserver = valor;
+  }
+
+  /** O contêiner passa a medir `m` e os observadores avisam (como no redimensionamento real). */
+  async function redimensionarConteiner(m: Medida): Promise<void> {
+    medida = m;
+    act(() => {
+      for (const observador of observadores) observador.notificar();
+    });
+    await esperarDesenho();
+  }
+
+  function tamanhoDoStage(): Medida {
+    const el = conteudoDoPalco();
+    return { largura: Number.parseFloat(el.style.width), altura: Number.parseFloat(el.style.height) };
+  }
+
+  beforeEach(() => definirJanela(1280, 720));
+
+  afterEach(() => {
+    restaurar(escopo, original.global);
+    restaurar(janela, original.janela);
+    observadores = [];
+  });
+
+  // @req RF-03 @tipo feliz
+  test('test_RF03_tela_com_resize_observer_o_palco_tem_o_tamanho_do_conteiner_e_nao_o_da_janela', async () => {
+    instalarResizeObserver({ largura: 900, altura: 500 });
+    await montar();
+    await esperarDesenho();
+
+    await waitFor(() => expect(tamanhoDoStage()).toEqual({ largura: 900, altura: 500 }));
+    expect(palcoDaTela().largura / palcoDaTela().altura).toBeCloseTo(16 / 9, 2);
+    await clicarNaPosicao(POS_PAREDE.frente);
+    expect(textoDoSelecionado()).toBe(FALAS.frente);
+  });
+
+  // @req RF-03 @tipo borda
+  test('test_RF03_tela_conteiner_redimensionado_muda_o_palco_e_mantem_16_9', async () => {
+    instalarResizeObserver({ largura: 900, altura: 500 });
+    await montar();
+    await waitFor(() => expect(tamanhoDoStage()).toEqual({ largura: 900, altura: 500 }));
+
+    await redimensionarConteiner({ largura: 1200, altura: 400 });
+
+    await waitFor(() => expect(tamanhoDoStage()).toEqual({ largura: 1200, altura: 400 }));
+    const palco = palcoDaTela();
+    expect(palco.largura / palco.altura).toBeCloseTo(16 / 9, 2);
+    expect(palco.altura).toBeCloseTo(400, 0);
+    await clicarNaPosicao(POS_PAREDE.frente);
+    expect(textoDoSelecionado()).toBe(FALAS.frente);
+  });
+
+  // @req RF-03 @tipo borda
+  test('test_RF03_tela_sem_resize_observer_o_palco_usa_a_janela_como_reserva', async () => {
+    restaurar(escopo, undefined);
+    restaurar(janela, undefined);
+    expect(typeof escopo.ResizeObserver).toBe('undefined');
+
+    await montar();
+
+    // A janela é a reserva: o palco cabe nela e acompanha o redimensionamento da janela.
+    const antes = tamanhoDoStage();
+    expect(antes.largura).toBeGreaterThan(0);
+    expect(antes.altura).toBeGreaterThan(0);
+    expect(antes.largura).toBeLessThanOrEqual(1280);
+    expect(antes.altura).toBeLessThanOrEqual(720);
+
+    act(() => definirJanela(1920, 1080));
+    await esperarDesenho();
+
+    await waitFor(() => expect(tamanhoDoStage()).not.toEqual(antes));
+    expect(tamanhoDoStage().largura).toBeLessThanOrEqual(1920);
+    expect(tamanhoDoStage().altura).toBeLessThanOrEqual(1080);
+  });
+
+  // @req RF-03 @tipo negativo
+  test('test_RF03_tela_com_resize_observer_mudar_a_janela_nao_muda_o_palco', async () => {
+    instalarResizeObserver({ largura: 900, altura: 500 });
+    await montar();
+    await waitFor(() => expect(tamanhoDoStage()).toEqual({ largura: 900, altura: 500 }));
+
+    act(() => definirJanela(1920, 1080));
+    await esperarDesenho();
+
+    expect(tamanhoDoStage()).toEqual({ largura: 900, altura: 500 });
   });
 });

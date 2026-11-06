@@ -172,6 +172,117 @@ describe('RF-04 · adicionarObjeto', () => {
 });
 
 // ---------------------------------------------------------------------------
+// RF-04 · adicionarObjeto com posição (LAC-045: item da biblioteca solto no palco)
+// O centro do objeto fica no ponto; x em [0, 1 − largura], y em [0, 1 − altura]; largura/altura de objetoPadrao.
+// ---------------------------------------------------------------------------
+describe('RF-04 · adicionarObjeto no ponto solto', () => {
+  const PADRAO = objetoPadrao('decoracao', 'sprite:janela', 'novo-1');
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_adicionar_com_posicao_poe_o_centro_do_objeto_no_ponto_em_um_unico_passo', () => {
+    // Pré-condição do ponto escolhido: o objeto padrão cabe centrado em (0.4, 0.6) sem ser limitado.
+    expect(PADRAO.largura).toBeLessThanOrEqual(0.8);
+    expect(PADRAO.altura).toBeLessThanOrEqual(0.8);
+    const documento = fase('12345', { frente: [porta('porta-1')] });
+    const store = criarStoreEditor(structuredClone(documento));
+
+    const resultado = store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'novo-1', { x: 0.4, y: 0.6 });
+
+    expect(resultado).toEqual({ ok: true });
+    const novo = achar(store, 'novo-1');
+    expect(novo?.x).toBeCloseTo(0.4 - PADRAO.largura / 2, 9);
+    expect(novo?.y).toBeCloseTo(0.6 - PADRAO.altura / 2, 9);
+    expect(novo).toMatchObject({
+      imagem: 'sprite:janela',
+      largura: PADRAO.largura,
+      altura: PADRAO.altura,
+      rotacao: PADRAO.rotacao,
+      interacao: PADRAO.interacao,
+      camada: 1,
+    });
+    expect(objetosDe(store, 'frente').map((o) => o.id)).toEqual(['porta-1', 'novo-1']);
+    expect(store.getState().selecionado).toBe('novo-1');
+
+    store.getState().desfazer();
+    expect(store.getState().documento).toEqual(documento);
+    expect(store.getState().podeDesfazer()).toBe(false);
+  });
+
+  // @req RF-04 @tipo feliz
+  test('test_RF04_adicionar_com_posicao_vai_para_a_parede_ativa', () => {
+    const store = criarStoreEditor(fase('12345', { frente: [porta('porta-1')] }));
+    store.getState().trocarParede('esquerda');
+
+    store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'novo-1', { x: 0.5, y: 0.5 });
+
+    expect(objetosDe(store, 'esquerda').map((o) => o.id)).toEqual(['novo-1']);
+    expect(objetosDe(store, 'frente').map((o) => o.id)).toEqual(['porta-1']);
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_ponto_perto_da_borda_limita_o_objeto_para_caber_na_parede', () => {
+    // Pré-condição: o objeto é mais largo e mais alto que 0,02, então o centro em (0.99, 0.01) passaria da parede.
+    expect(PADRAO.largura).toBeGreaterThan(0.02);
+    expect(PADRAO.altura).toBeGreaterThan(0.02);
+    const store = criarStoreEditor(fase('12345'));
+
+    const resultado = store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'novo-1', { x: 0.99, y: 0.01 });
+
+    expect(resultado).toEqual({ ok: true });
+    const novo = achar(store, 'novo-1');
+    expect(novo?.x).toBeCloseTo(1 - PADRAO.largura, 9);
+    expect(novo?.y).toBeCloseTo(0, 9);
+    expect(novo?.x).toBeLessThanOrEqual(1 - PADRAO.largura + 1e-9);
+    expect(novo?.y).toBeGreaterThanOrEqual(0);
+    expect(novo?.largura).toBe(PADRAO.largura);
+    expect(novo?.altura).toBe(PADRAO.altura);
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_ponto_no_canto_oposto_limita_x_em_0_e_y_em_1_menos_altura', () => {
+    const store = criarStoreEditor(fase('12345'));
+
+    store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'novo-1', { x: 0, y: 1 });
+
+    const novo = achar(store, 'novo-1');
+    expect(novo?.x).toBeCloseTo(0, 9);
+    expect(novo?.y).toBeCloseTo(1 - PADRAO.altura, 9);
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_ponto_que_deixa_o_objeto_encostado_na_borda_nao_e_limitado', () => {
+    const store = criarStoreEditor(fase('12345'));
+
+    store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'novo-1', { x: PADRAO.largura / 2, y: PADRAO.altura / 2 });
+
+    const novo = achar(store, 'novo-1');
+    expect(novo?.x).toBeCloseTo(0, 9);
+    expect(novo?.y).toBeCloseTo(0, 9);
+  });
+
+  // @req RF-04 @tipo borda
+  test('test_RF04_sem_posicao_o_objeto_continua_igual_ao_objeto_padrao', () => {
+    const store = criarStoreEditor(fase('12345'));
+
+    store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'novo-1');
+
+    // A camada da parede vazia não é o assunto aqui; o resto é o objetoPadrao, no centro da parede.
+    const { camada: _camada, ...semCamada } = PADRAO;
+    expect(achar(store, 'novo-1')).toMatchObject(semCamada);
+  });
+
+  // @req RF-04 @tipo negativo
+  test('test_RF04_adicionar_com_posicao_e_id_ja_usado_e_recusado_sem_efeito', () => {
+    const documento = fase('12345', { frente: [porta('porta-1')] });
+    const store = criarStoreEditor(structuredClone(documento));
+
+    const resultado = store.getState().adicionarObjeto('decoracao', 'sprite:janela', 'porta-1', { x: 0.3, y: 0.3 });
+
+    esperarRecusaSemEfeito(store, documento, resultado, null);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // RF-05 · alterarGeometria
 // ---------------------------------------------------------------------------
 describe('RF-05 · alterarGeometria', () => {
