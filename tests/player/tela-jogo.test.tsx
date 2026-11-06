@@ -5,6 +5,10 @@
  * - RF-17: enigma com dica D mostra o ícone (clicável e acessível pelo teclado) que exibe D; sem dica, sem ícone;
  * - RF-15: acerto mostra "Resposta correta!" com os dígitos; erro mostra "Resposta Errada!!"; a porta abre só com a senha;
  * - RNF-01: abaixo de 1280x720 aparece um aviso (sem bloquear o jogo);
+ * - RNF-02 (LAC-046, Eric em 06/11/2026; rodada E, DEF-05): o palco mede o elemento que o contém (ResizeObserver) e a
+ *   sala é o maior 16:9 dentro dele; sem ResizeObserver, a janela é a reserva; com ele, a janela nunca é usada.
+ *   O clique continua acertando o objeto com o palco medido no contêiner (RF-16). O layout em colunas e "a página
+ *   não rola" não são verificáveis no jsdom (não faz layout): ficam para o teste do sistema (Playwright);
  * - RF-18: a fase original (projeção de fases-exemplo/escola-01.json) é jogável até abrir a porta com 92139.
  *
  * O verificador é sempre um falso injetado (sem rede). O clique em objeto do palco é um clique real no
@@ -15,10 +19,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { TelaJogo } from '@math-scape/app-player';
-import { MENSAGENS, type Verificador } from '@math-scape/player/contrato';
+import { calcularPalco } from '@math-scape/player';
+import { MENSAGENS, type Retangulo, type Verificador } from '@math-scape/player/contrato';
 import { projetarParaJogo, respostaConfere, senhaConfere, validarFase } from '@math-scape/schema';
 import type { DigitoRevelado, Fase, FaseJogo, ObjetoJogo, ParedeJogo } from '@math-scape/schema/contrato';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
@@ -33,7 +38,22 @@ import {
   portaJogo,
   verificadorFalso,
 } from '../fixtures/fases-jogo.ts';
-import { clicarObjeto, definirJanela, esperarDesenho, normalizar } from '../support/palco-tela.ts';
+import {
+  clicarObjeto,
+  conteudoDoPalco,
+  definirJanela,
+  esperarDesenho,
+  normalizar,
+  palcoDaTela,
+} from '../support/palco-tela.ts';
+import {
+  type Medida,
+  instalarResizeObserverFalso,
+  redimensionarConteiner,
+  removerResizeObserver,
+  restaurarResizeObserver,
+  tamanhoDoElemento,
+} from '../support/resize-observer-falso.ts';
 
 type NomeParede = 'frente' | 'direita' | 'fundo' | 'esquerda' | 'teto';
 const PAREDES: NomeParede[] = ['frente', 'direita', 'fundo', 'esquerda', 'teto'];
@@ -667,4 +687,225 @@ describe('RF-18 · TelaJogo: fase original jogável', () => {
     },
     30_000,
   );
+});
+
+// ---------------------------------------------------------------------------
+// RNF-02 e RF-16 · palco medido no contêiner (DEF-05; LAC-046, Eric em 06/11/2026)
+// O ResizeObserver falso (tests/support/resize-observer-falso.ts) mede o contêiner; a janela fica em 1280x720 (beforeEach
+// do arquivo), para que a sala do contêiner e a da janela sejam diferentes. O Stage pode ter o tamanho do contêiner ou o
+// da própria sala; o contrato fixa a sala: o maior 16:9 dentro do contêiner (calcularPalco). O falso é removido depois
+// de cada caso. Posição em pixels dos elementos da coluna e rolagem da página não são testadas (o jsdom não faz layout).
+// ---------------------------------------------------------------------------
+const CONTEINER: Medida = { largura: 900, altura: 500 };
+
+/** Diferença de até 1 px (o Stage pode arredondar a medida). */
+function perto(obtido: number, esperado: number, rotulo: string): void {
+  expect(Math.abs(obtido - esperado), `${rotulo}: ${obtido} ≈ ${esperado}`).toBeLessThanOrEqual(1);
+}
+
+/** A sala desenhada é o maior 16:9 do contêiner `m`, e o Stage não passa do contêiner. */
+function conferirSalaDoConteiner(m: Medida): void {
+  const sala: Retangulo = palcoDaTela();
+  const esperada = calcularPalco(m.largura, m.altura);
+  perto(sala.largura, esperada.largura, 'largura da sala');
+  perto(sala.altura, esperada.altura, 'altura da sala');
+  const stage = tamanhoDoElemento(conteudoDoPalco());
+  expect(stage.largura, 'largura do Stage').toBeLessThanOrEqual(m.largura + 1);
+  expect(stage.altura, 'altura do Stage').toBeLessThanOrEqual(m.altura + 1);
+}
+
+async function esperarSalaDoConteiner(m: Medida): Promise<void> {
+  await waitFor(() => conferirSalaDoConteiner(m));
+}
+
+describe('RNF-02 · TelaJogo: palco medido no contêiner', () => {
+  afterEach(() => restaurarResizeObserver());
+
+  // @req RNF-02 @tipo feliz
+  test('test_RNF02_tela_com_resize_observer_a_sala_e_o_maior_16_9_do_conteiner_e_nao_da_janela', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador } = verificadorFalso({});
+    await montar(faseFalas(), verificador);
+
+    await esperarSalaDoConteiner(CONTEINER);
+    const sala = palcoDaTela();
+    expect(sala.largura / sala.altura).toBeCloseTo(16 / 9, 2);
+    // Pela janela (1280x720), a sala seria 1280x720.
+    expect(sala.largura).toBeLessThan(1279);
+    expect(sala.altura).toBeLessThan(719);
+  });
+
+  // @req RNF-02 @tipo feliz
+  test.each([
+    [1280, 720, 960, 660],
+    [1920, 1080, 1600, 800],
+    [2560, 1440, 1920, 1360],
+  ])(
+    'test_RNF02_tela_janela_%ix%i_conteiner_%ix%i_sala_16_9_e_objeto_na_posicao_relativa',
+    async (larguraJanela, alturaJanela, larguraConteiner, alturaConteiner) => {
+      definirJanela(larguraJanela, alturaJanela);
+      const conteiner = { largura: larguraConteiner, altura: alturaConteiner };
+      instalarResizeObserverFalso(conteiner);
+      const { verificador } = verificadorFalso({});
+      const fase = faseFalas();
+      await montar(fase, verificador);
+
+      await esperarSalaDoConteiner(conteiner);
+      const sala = palcoDaTela();
+      expect(sala.largura / sala.altura).toBeCloseTo(16 / 9, 2);
+      clicarObjeto(fase.paredes.frente, 'fala-frente');
+      await aparece(FALA_FRENTE);
+    },
+  );
+
+  // @req RNF-02 @tipo borda
+  test('test_RNF02_tela_conteiner_redimensionado_a_sala_acompanha_e_o_clique_ainda_acerta', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador } = verificadorFalso({});
+    const fase = faseFalas();
+    await montar(fase, verificador);
+    await esperarSalaDoConteiner(CONTEINER);
+
+    // 640x600: agora a largura limita (sala 640x360); antes, a altura limitava (888,9x500).
+    redimensionarConteiner({ largura: 640, altura: 600 });
+    await esperarDesenho();
+
+    await esperarSalaDoConteiner({ largura: 640, altura: 600 });
+    perto(palcoDaTela().largura, 640, 'largura da sala');
+    perto(palcoDaTela().altura, 360, 'altura da sala');
+    clicarObjeto(fase.paredes.frente, 'fala-frente');
+    await aparece(FALA_FRENTE);
+  });
+
+  // @req RNF-02 @tipo borda
+  test('test_RNF02_tela_sem_resize_observer_a_janela_e_a_reserva', async () => {
+    removerResizeObserver();
+    expect(typeof (globalThis as { ResizeObserver?: unknown }).ResizeObserver).toBe('undefined');
+    const { verificador } = verificadorFalso({});
+    const fase = faseFalas();
+    await montar(fase, verificador);
+
+    const antes = tamanhoDoElemento(conteudoDoPalco());
+    expect(antes.largura).toBeGreaterThan(0);
+    expect(antes.altura).toBeGreaterThan(0);
+    expect(antes.largura).toBeLessThanOrEqual(1280);
+    expect(antes.altura).toBeLessThanOrEqual(720);
+
+    act(() => definirJanela(1920, 1080));
+    await esperarDesenho();
+
+    await waitFor(() => expect(tamanhoDoElemento(conteudoDoPalco())).not.toEqual(antes));
+    expect(tamanhoDoElemento(conteudoDoPalco()).largura).toBeLessThanOrEqual(1920);
+    expect(tamanhoDoElemento(conteudoDoPalco()).altura).toBeLessThanOrEqual(1080);
+    clicarObjeto(fase.paredes.frente, 'fala-frente');
+    await aparece(FALA_FRENTE);
+  });
+
+  // @req RNF-02 @tipo borda
+  test('test_RNF02_tela_pergunta_campo_e_digitos_aparecem_com_o_palco_no_lugar_e_do_mesmo_tamanho', async () => {
+    const user = userEvent.setup();
+    instalarResizeObserverFalso(CONTEINER);
+    const digitos: DigitoRevelado[] = [{ posicao: 4, valor: '3' }];
+    const { verificador } = verificadorFalso({ enigma: acerto(...digitos) });
+    const fase = faseEnigmas();
+    await montar(fase, verificador);
+    await esperarSalaDoConteiner(CONTEINER);
+
+    clicarObjeto(fase.paredes.frente, 'enigma-b');
+    await aparece(PERGUNTA_B);
+    const campo = await campoAberto();
+
+    // A pergunta e o campo ficam na coluna: o palco continua na tela, com a mesma sala, e as paredes continuam.
+    conferirSalaDoConteiner(CONTEINER);
+    for (const nome of PAREDES) expect(botaoParede(nome)).toBeInTheDocument();
+
+    await enviar(user, campo, '60');
+    await aparece(MENSAGENS.respostaCorreta(digitos));
+    conferirSalaDoConteiner(CONTEINER);
+  });
+
+  // @req RNF-02 @tipo negativo
+  test('test_RNF02_tela_com_resize_observer_mudar_a_janela_nao_muda_o_palco', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador } = verificadorFalso({});
+    await montar(faseFalas(), verificador);
+    await esperarSalaDoConteiner(CONTEINER);
+    const antes = tamanhoDoElemento(conteudoDoPalco());
+
+    act(() => definirJanela(1920, 1080));
+    await esperarDesenho();
+    expect(tamanhoDoElemento(conteudoDoPalco())).toEqual(antes);
+
+    act(() => definirJanela(1024, 768));
+    await esperarDesenho();
+    expect(tamanhoDoElemento(conteudoDoPalco())).toEqual(antes);
+    conferirSalaDoConteiner(CONTEINER);
+  });
+});
+
+describe('RF-16 · TelaJogo: falas e decorações com o palco medido no contêiner', () => {
+  afterEach(() => restaurarResizeObserver());
+
+  // @req RF-16 @tipo feliz
+  test('test_RF16_tela_palco_no_conteiner_clicar_fala_mostra_o_texto', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador } = verificadorFalso({});
+    const fase = faseFalas();
+    await montar(fase, verificador);
+    await esperarSalaDoConteiner(CONTEINER);
+    expect(estaNaTela(FALA_FRENTE)).toBe(false);
+
+    clicarObjeto(fase.paredes.frente, 'fala-frente');
+
+    await aparece(FALA_FRENTE);
+  });
+
+  // @req RF-16 @tipo borda
+  test('test_RF16_tela_palco_no_conteiner_redimensionado_cada_parede_mostra_a_sua_fala', async () => {
+    const user = userEvent.setup();
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador } = verificadorFalso({});
+    const fase = faseFalas();
+    await montar(fase, verificador);
+    await esperarSalaDoConteiner(CONTEINER);
+    redimensionarConteiner({ largura: 640, altura: 600 });
+    await esperarDesenho();
+    await esperarSalaDoConteiner({ largura: 640, altura: 600 });
+
+    const falas: Record<Exclude<NomeParede, 'frente'>, [string, string]> = {
+      direita: ['fala-direita', FALA_DIREITA],
+      fundo: ['fala-fundo', FALA_FUNDO],
+      esquerda: ['fala-esquerda', FALA_ESQUERDA],
+      teto: ['fala-teto', FALA_TETO],
+    };
+    for (const nome of ['direita', 'fundo', 'esquerda', 'teto'] as const) {
+      const [id, texto] = falas[nome];
+      await irPara(user, nome);
+      clicarObjeto(fase.paredes[nome], id);
+      await aparece(texto);
+    }
+  });
+
+  // @req RF-16 @tipo negativo
+  test('test_RF16_tela_palco_no_conteiner_clicar_decoracao_nao_mostra_fala_nem_muda_o_jogo', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador, enigma, porta } = verificadorFalso({});
+    const fase = faseFalas();
+    const { aoConcluir } = await montar(fase, verificador);
+    await esperarSalaDoConteiner(CONTEINER);
+    const textoAntes = document.body.textContent;
+
+    clicarObjeto(fase.paredes.frente, 'decoracao-frente');
+    await esperarDesenho();
+
+    expect(document.body.textContent).toBe(textoAntes);
+    expect(document.querySelector(SELETOR_CAMPO)).toBeNull();
+    expect(enigma).not.toHaveBeenCalled();
+    expect(porta).not.toHaveBeenCalled();
+    expect(aoConcluir).not.toHaveBeenCalled();
+
+    // Controle: no mesmo desenho, o clique na fala ao lado funciona.
+    clicarObjeto(fase.paredes.frente, 'fala-frente');
+    await aparece(FALA_FRENTE);
+  });
 });

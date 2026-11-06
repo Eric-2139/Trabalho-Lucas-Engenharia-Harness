@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-11-06T19:32:52.272Z",
+  "gerado_em": "2026-11-06T19:39:55.232Z",
   "requisitos": {
     "RF-06": {
       "feliz": 10,
@@ -237,9 +237,9 @@
       ]
     },
     "RF-16": {
-      "feliz": 5,
-      "borda": 5,
-      "negativo": 4,
+      "feliz": 6,
+      "borda": 6,
+      "negativo": 5,
       "arquivos": [
         "tests/e2e/equivalencia-legado.spec.ts",
         "tests/player/motor.test.ts",
@@ -269,12 +269,14 @@
       ]
     },
     "RNF-02": {
-      "feliz": 4,
-      "borda": 5,
-      "negativo": 2,
+      "feliz": 7,
+      "borda": 10,
+      "negativo": 4,
       "arquivos": [
         "tests/e2e/nao-funcionais.spec.ts",
-        "tests/player/palco.test.ts"
+        "tests/editor/tela-edicao.test.tsx",
+        "tests/player/palco.test.ts",
+        "tests/player/tela-jogo.test.tsx"
       ]
     },
     "RNF-07": {

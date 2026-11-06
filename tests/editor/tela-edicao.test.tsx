@@ -28,6 +28,10 @@
  * - RF-05 (LAC-044): Delete/Backspace, com objeto selecionado e foco fora de campo de texto, exclui; Ctrl+Z desfaz;
  * - RF-06 (LAC-043): as imagens `asset:` já usadas na fase aparecem uma vez só em Minhas imagens, como `asset:<uuid>`.
  *
+ * Rodada E (DEF-05, LAC-046), último bloco: RNF-02 no modo testar — o palco do jogo mede o contêiner por
+ * ResizeObserver (falso de tests/support/resize-observer-falso.ts) e a sala é o maior 16:9 dentro dele; sem ele, a
+ * janela é a reserva; com ele, mudar a janela não muda o palco.
+ *
  * O documento é observado pelo que a tela grava (`salvarFase`) e pelo palco: clicar numa fala seleciona-a e o painel
  * mostra o campo ROTULOS_EDITOR.texto com o texto dela; clicar em área vazia mostra Propriedades da fase.
  * Leituras assumidas, que o contrato não fixa (pendência arquitetura aberta nesta rodada):
@@ -71,6 +75,13 @@ import {
   palcoDaTela,
 } from '../support/palco-tela.ts';
 import { type RelogioFalso, criarRelogioFalso, drenarPromessas } from '../support/relogio-falso.ts';
+import {
+  instalarResizeObserverFalso,
+  redimensionarConteiner as redimensionarConteinerDoTeste,
+  removerResizeObserver,
+  restaurarResizeObserver,
+  tamanhoDoElemento,
+} from '../support/resize-observer-falso.ts';
 
 type Usuario = ReturnType<typeof userEvent.setup>;
 type Caixa = Pick<Objeto, 'x' | 'y' | 'largura' | 'altura'>;
@@ -1886,5 +1897,125 @@ describe('RF-03 · TelaEdicao: palco com o tamanho do contêiner', () => {
     await esperarDesenho();
 
     expect(tamanhoDoStage()).toEqual({ largura: 900, altura: 500 });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// RNF-02 · modo testar com o palco medido no contêiner (DEF-05; LAC-046, Eric em 06/11/2026)
+// O modo testar tem o mesmo layout da TelaJogo (modulos-editor.md, "Modo testar"): palco medido no elemento que o contém
+// e sala no maior 16:9 dentro dele; sem ResizeObserver, a janela (1600x900, beforeEach do arquivo) é a reserva.
+// O palco do jogo é o `.konvajs-content` que não existia antes de entrar no teste (a edição pode ficar montada).
+// ---------------------------------------------------------------------------
+describe('RNF-02 · TelaEdicao: palco do modo testar medido no contêiner', () => {
+  const CONTEINER = { largura: 900, altura: 500 };
+
+  afterEach(() => restaurarResizeObserver());
+
+  function palcoDoJogoAgora(palcosAntes: HTMLElement[]): HTMLElement {
+    const todos = palcos();
+    const novo = todos.find((el) => !palcosAntes.includes(el)) ?? todos.at(-1);
+    if (!novo) throw new Error('O modo testar não tem palco Konva.');
+    return novo;
+  }
+
+  async function palcoDoJogo(palcosAntes: HTMLElement[]): Promise<HTMLElement> {
+    return waitFor(() => palcoDoJogoAgora(palcosAntes));
+  }
+
+  /** Sala do palco do jogo (o maior 16:9 dentro do Stage desenhado). */
+  function salaDoJogo(el: HTMLElement) {
+    const { largura, altura } = tamanhoDoElemento(el);
+    return calcularPalco(largura, altura);
+  }
+
+  function perto(obtido: number, esperado: number, rotulo: string): void {
+    expect(Math.abs(obtido - esperado), `${rotulo}: ${obtido} ≈ ${esperado}`).toBeLessThanOrEqual(1);
+  }
+
+  /** A sala do jogo é o maior 16:9 do contêiner, e o Stage não passa do contêiner. */
+  async function esperarSalaDoConteiner(palcosAntes: HTMLElement[], m: { largura: number; altura: number }) {
+    const esperada = calcularPalco(m.largura, m.altura);
+    await waitFor(() => {
+      const el = palcoDoJogoAgora(palcosAntes);
+      const sala = salaDoJogo(el);
+      perto(sala.largura, esperada.largura, 'largura da sala do teste');
+      perto(sala.altura, esperada.altura, 'altura da sala do teste');
+      expect(tamanhoDoElemento(el).largura).toBeLessThanOrEqual(m.largura + 1);
+      expect(tamanhoDoElemento(el).altura).toBeLessThanOrEqual(m.altura + 1);
+    });
+  }
+
+  // @req RNF-02 @tipo feliz
+  test('test_RNF02_teste_com_resize_observer_a_sala_do_jogo_e_o_maior_16_9_do_conteiner_e_a_resposta_funciona', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador, enigma: verificarEnigma } = verificadorFalso({ enigma: acerto({ posicao: 1, valor: '9' }) });
+    const { user } = await montar({ documento: documentoTestavel(), jogo: jogoTestavel(), verificador });
+    const palcosAntes = await entrarNoTeste(user);
+
+    await esperarSalaDoConteiner(palcosAntes, CONTEINER);
+    const sala = salaDoJogo(await palcoDoJogo(palcosAntes));
+    expect(sala.largura / sala.altura).toBeCloseTo(16 / 9, 2);
+    // Pela janela (1600x900), a sala seria 1600x900.
+    expect(sala.largura).toBeLessThan(1599);
+
+    await responderNoTeste(user, palcosAntes, POS.b, '56');
+    expect(verificarEnigma).toHaveBeenCalledWith('enigma-teste', '56');
+    await aparece(MENSAGENS.respostaCorreta([{ posicao: 1, valor: '9' }]));
+  });
+
+  // @req RNF-02 @tipo borda
+  test('test_RNF02_teste_conteiner_redimensionado_a_sala_do_jogo_acompanha', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { verificador } = verificadorFalso({ enigma: acerto({ posicao: 1, valor: '9' }) });
+    const { user } = await montar({ documento: documentoTestavel(), jogo: jogoTestavel(), verificador });
+    const palcosAntes = await entrarNoTeste(user);
+    await esperarSalaDoConteiner(palcosAntes, CONTEINER);
+
+    redimensionarConteinerDoTeste({ largura: 640, altura: 600 });
+    await esperarDesenho();
+
+    await esperarSalaDoConteiner(palcosAntes, { largura: 640, altura: 600 });
+    perto(salaDoJogo(await palcoDoJogo(palcosAntes)).altura, 360, 'altura da sala do teste');
+    await responderNoTeste(user, palcosAntes, POS.b, '56');
+    await aparece(MENSAGENS.respostaCorreta([{ posicao: 1, valor: '9' }]));
+  });
+
+  // @req RNF-02 @tipo borda
+  test('test_RNF02_teste_sem_resize_observer_o_palco_do_jogo_usa_a_janela_como_reserva', async () => {
+    removerResizeObserver();
+    expect(typeof (globalThis as { ResizeObserver?: unknown }).ResizeObserver).toBe('undefined');
+    const { user } = await montar({ documento: documentoTestavel(), jogo: jogoTestavel() });
+    const palcosAntes = await entrarNoTeste(user);
+
+    const antes = tamanhoDoElemento(await palcoDoJogo(palcosAntes));
+    expect(antes.largura).toBeGreaterThan(0);
+    expect(antes.altura).toBeGreaterThan(0);
+    expect(antes.largura).toBeLessThanOrEqual(1600);
+    expect(antes.altura).toBeLessThanOrEqual(900);
+
+    act(() => definirJanela(1920, 1080));
+    await esperarDesenho();
+
+    await waitFor(async () => expect(tamanhoDoElemento(await palcoDoJogo(palcosAntes))).not.toEqual(antes));
+    const depois = tamanhoDoElemento(await palcoDoJogo(palcosAntes));
+    expect(depois.largura).toBeLessThanOrEqual(1920);
+    expect(depois.altura).toBeLessThanOrEqual(1080);
+  });
+
+  // @req RNF-02 @tipo negativo
+  test('test_RNF02_teste_com_resize_observer_mudar_a_janela_nao_muda_o_palco_do_jogo', async () => {
+    instalarResizeObserverFalso(CONTEINER);
+    const { user } = await montar({ documento: documentoTestavel(), jogo: jogoTestavel() });
+    const palcosAntes = await entrarNoTeste(user);
+    await esperarSalaDoConteiner(palcosAntes, CONTEINER);
+    const antes = tamanhoDoElemento(await palcoDoJogo(palcosAntes));
+
+    act(() => definirJanela(1920, 1080));
+    await esperarDesenho();
+    expect(tamanhoDoElemento(await palcoDoJogo(palcosAntes))).toEqual(antes);
+
+    act(() => definirJanela(1280, 720));
+    await esperarDesenho();
+    expect(tamanhoDoElemento(await palcoDoJogo(palcosAntes))).toEqual(antes);
   });
 });
