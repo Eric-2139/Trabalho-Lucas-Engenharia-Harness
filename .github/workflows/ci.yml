@@ -1,0 +1,51 @@
+# CI das fases 5-6: testes a cada push e pull request. Roda nos mesmos contêineres sem rede usados localmente (ADR-016).
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  harness:
+    name: Testes do harness
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test ".claude/testes-harness/*.test.js"
+
+  suite:
+    name: Análise, unidade, integração e cobertura
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f infra/testes/Dockerfile -t math-scape-testes .
+      - name: Biome e TypeScript
+        run: docker run --rm --network none -v .:/src math-scape-testes analise
+      - name: Vitest com a meta de 80% no núcleo
+        run: docker run --rm --network none -v .:/src --entrypoint bash math-scape-testes /src/infra/testes/cobertura.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cobertura
+          path: coverage/coverage-summary.json
+          if-no-files-found: ignore
+
+  sistema:
+    name: Sistema (Playwright)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f infra/testes/Dockerfile -t math-scape-testes .
+      - run: docker build -f infra/e2e/Dockerfile -t math-scape-e2e tests/e2e
+      - name: Equivalência, fluxos e não funcionais
+        run: docker run --rm --network none -v .:/src math-scape-e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relatorio-playwright
+          path: tests/e2e/resultado/
+          if-no-files-found: ignore
