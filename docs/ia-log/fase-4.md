@@ -47,6 +47,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 37 | RF-05 | Editor | rodada B1 (3 casos de arraste em `canvas-parede.test.tsx`; os outros 27 já verdes) | arraste no nó Konva com `dragBoundFunc`, `alterarGeometria` só no `dragend` (um passo de histórico) e `Transformer` no selecionado com `boundBoxFunc`; recusa do store devolve o nó à geometria do documento; verde no 1º de 5 ciclos, sem reversão. Redimensionar e rotacionar pelo `Transformer` não têm teste de canvas (o store cobre `alterarGeometria`) | `codificacao-2026-11-06T00-23-53-306Z.json` |
 | 38 | RF-06 | Editor | rodada B1 (6 casos de RF-06 e 5 de RF-04 em `biblioteca-objetos.test.tsx`) | `BibliotecaObjetos` com as seções Objetos, Fundos (com "Sem fundo") e Minhas imagens, "usar como objeto/fundo" e o `input` de envio, que só repassa o arquivo; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-04 da biblioteca. A mensagem de recusa da Api fica na `TelaEdicao` (rodada B2) | `codificacao-2026-11-06T00-26-46-479Z.json` |
 | 39 | RF-08 | Editor | rodada B1 (14 casos de RF-08 e 5 de RF-07 em `painel-propriedades.test.tsx`) | `PainelPropriedades` com rascunho local, `<select>` do tipo, campos de fala, enigma e porta, Propriedades da fase sem seleção, Aplicar que valida antes do store e erro em `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-07 do painel. Porta que troca tipo e senha na mesma aplicação gera dois passos de histórico (o contrato não diz) | `codificacao-2026-11-06T00-31-04-055Z.json` |
+| 40 | RNF-07 | Editor | rodada B1 (3 casos de teclado e 9 de RF-09/RF-10 em `barra-ferramentas.test.tsx`) | `BarraFerramentas` com botões nativos, desfazer/refazer desabilitados sem passo, indicador do estado de salvamento e aviso com "Publicar de novo"; verde no 1º de 5 ciclos, suíte 501 de 501, sem reversão; de carona os casos de RF-09 e RF-10 da barra. Foco visível e contraste no editor ficam para o E2E | `codificacao-2026-11-06T00-34-05-692Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -160,7 +161,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RF-05 (arraste e Transformer no palco) | `sucesso` no 1º ciclo | 630.504 | 9.751 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-06 (biblioteca e envio de imagem) | `sucesso` no 1º ciclo | 882.990 | 7.378 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-08 (painel de propriedades) | `sucesso` no 1º ciclo | 597.485 | 12.537 | medido |
-| **Total** | | | | **58.108.114** | **815.186** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar RNF-07 (barra de ferramentas) | `sucesso` no 1º ciclo | 273.462 | 4.255 | medido |
+| **Total** | | | | **58.381.576** | **819.441** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
