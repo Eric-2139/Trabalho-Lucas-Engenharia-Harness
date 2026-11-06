@@ -1,0 +1,28 @@
+{
+  "id": "PEND-017",
+  "tipo": "arquitetura",
+  "agente_origem": "testes",
+  "req_ids": [
+    "RF-03",
+    "RF-04",
+    "RF-06",
+    "RF-07",
+    "RF-08",
+    "RF-10",
+    "RNF-07"
+  ],
+  "chamado_id": null,
+  "pergunta": "Os testes dos componentes do Editor (rodada B1) assumiram a estrutura acessível abaixo, que apps/editor/contrato/componentes.ts e modulos-editor.md §4 não fixam. Confirma (e registra em modulos-editor.md §4) ou define outra?",
+  "opcoes": [
+    "(a) confirmar o que os testes assumem. AbasParedes: as abas são identificadas pela posição (a ordem é contrato); ArrowRight/ArrowLeft movem o foco para a aba vizinha; Enter/Espaço ativam; só focar com Tab não chama aoTrocar. BibliotecaObjetos: cada seção é role=\"region\" com nome ROTULOS_EDITOR.objetos / fundos / minhasImagens (ex.: <section aria-labelledby>); cada sprite é <button> com o `nome` do CATALOGO; 'Sem fundo' é botão da seção Fundos; em Minhas imagens, um par de botões usarComoObjeto / usarComoFundo por imagem, na ordem de imagensEnviadas; o envio é <input type=\"file\"> com nome acessível ROTULOS_EDITOR.enviarImagem; o componente não acrescenta sozinho a imagem enviada. PainelPropriedades: tipo = <select> com nome ROTULOS_EDITOR.tipo e 4 <option> cujo value é o id do tipo (decoracao, fala, enigma, porta); campos com <label> ROTULOS_EDITOR.texto / pergunta / respostas (textarea, uma por linha) / dica / senha / titulo; posições reveladas = checkboxes na ordem 1..tamanho da senha; um único botão ROTULOS_EDITOR.aplicar aplica o rascunho; erro de validação (do painel ou recusa do store) num elemento role=\"alert\"; 'Propriedades da fase' aparece como texto. BarraFerramentas: o indicador mostra só o texto do estado atual; com alteracoesNaoPublicadas aparecem o texto ROTULOS_EDITOR.alteracoesNaoPublicadas e o botão ROTULOS_EDITOR.publicarDeNovo (chama aoPublicar), e sem ele nenhum dos dois",
+    "(b) fixar outra estrutura (ex.: tipo como grupo de rádios, seções com heading em vez de region, envio por botão que abre o seletor) e o agente 3 ajusta os localizadores numa próxima rodada, antes de o agente 4 implementar os componentes",
+    "outro"
+  ],
+  "contexto": "PropsBibliotecaObjetos, PropsPainelPropriedades, PropsBarraFerramentas e PropsAbasParedes tipam as propriedades, e ROTULOS_EDITOR (apps/editor/contrato/telas.ts) fixa os textos, mas não o papel acessível dos elementos (região, select ou rádio, input de arquivo, onde fica o erro) nem o comportamento das setas nas abas ('Setas e Tab navegam', modulos-editor.md §4). Os testes em tests/editor/abas-paredes.test.tsx, biblioteca-objetos.test.tsx, painel-propriedades.test.tsx e barra-ferramentas.test.tsx localizam os elementos pelas regras da opção (a); o cabeçalho de cada arquivo lista as leituras usadas. No painel, os testes da senha de 9 dígitos e com letra aceitam tanto um campo que bloqueia a digitação (maxLength, filtro) quanto um que mostra o erro: o critério do RF-08 é que essa senha nunca chegue ao documento.",
+  "impacto": "Se a implementação escolher outra estrutura acessível, os testes ficam vermelhos sem defeito real, e o agente 4 não pode alterá-los. Não bloqueia a rodada; pede só a confirmação antes de o agente 4 implementar os componentes do Editor.",
+  "status": "respondida",
+  "resposta": "Opção (a): confirmada a estrutura acessível que os testes assumem; registrada em modulos-editor.md §4 (Convenções dos componentes).",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T00:25:00.000Z"
+}

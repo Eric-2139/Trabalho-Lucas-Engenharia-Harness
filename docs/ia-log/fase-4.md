@@ -55,6 +55,7 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Rodada A do Editor (agente 3).** 89 casos em `tests/editor/{store,atalhos,salvamento,cliente-api}.test.ts` e o relógio falso em `tests/support/relogio-falso.ts`. A sessão principal conferiu os tipos dos testes com `tsc -p tests` no contêiner, sem erro. Pontos que o agente deixou sem asserção, por não estarem no critério: o eixo do deslocamento de +0,02 ao duplicar, a camada do primeiro objeto numa parede vazia, nada gravado antes de 30 s, o que vem depois de um `conflito` e se `assinar` notifica o estado atual.
 - **Análise de tipos muda.** O agente 4 do RF-05 viu a análise falhar sem saber onde: `pnpm run --silent typecheck` escondia a saída do `tsc` dos pacotes. A IA tirou o `--silent` do typecheck em `infra/testes/entrada.sh` e reconstruiu a imagem.
 - **Achados do agente 4 no RF-10.** Depois de um `conflito` (409), o salvamento automático não tenta de novo sozinho, para não repetir o 409 a cada 30 s. O §3 não diz como sair do conflito, e falta decidir isso antes do indicador na barra. O cliente envia a imagem no campo multipart `arquivo` e o envelope como `application/json`. A sessão principal conferiu que a Api lê o primeiro arquivo do multipart, qualquer que seja o nome do campo.
+- **Rodada B1 do Editor (agente 3).** 61 casos para os 5 componentes em `tests/editor/{abas-paredes,canvas-parede,biblioteca-objetos,painel-propriedades,barra-ferramentas}.test.tsx` e o apoio de arraste no palco Konva em `tests/support/palco-editor.ts`. Tipos conferidos com `tsc -p tests`. A PEND-017 pediu para confirmar a estrutura acessível que os testes assumem. A IA respondeu (a) e registrou em `modulos-editor.md` §4. Risco apontado pelo agente: a simulação de arraste ainda não rodou contra nós `draggable` reais.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -150,7 +151,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-04 (`objetoPadrao`) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 595.111 | 6.151 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-09 (atalhos) | `sucesso` no 1º ciclo | 257.913 | 3.803 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-10 (salvamento e cliente HTTP do editor) | `sucesso` no 1º ciclo | 561.577 | 10.731 | medido |
-| **Total** | | | | **51.783.590** | **698.137** | medido |
+| 05/11 | idem, subagente `testes` | Testes do Editor, rodada B1: os 5 componentes (RF-03 a RF-10, RNF-07) | `sucesso`; 61 casos, vermelhos só pelos stubs; PEND-017; 1 bloqueio P1 | 3.319.219 | 76.723 | medido |
+| **Total** | | | | **55.102.809** | **774.860** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

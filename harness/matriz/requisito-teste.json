@@ -1,12 +1,13 @@
 {
-  "gerado_em": "2026-11-05T23:46:28.087Z",
+  "gerado_em": "2026-11-06T00:14:18.700Z",
   "requisitos": {
     "RF-06": {
-      "feliz": 4,
-      "borda": 5,
-      "negativo": 7,
+      "feliz": 6,
+      "borda": 8,
+      "negativo": 8,
       "arquivos": [
         "tests/api/assets.test.ts",
+        "tests/editor/biblioteca-objetos.test.tsx",
         "tests/schema/imagens.test.ts"
       ]
     },
@@ -52,11 +53,12 @@
       ]
     },
     "RF-10": {
-      "feliz": 5,
-      "borda": 11,
-      "negativo": 9,
+      "feliz": 8,
+      "borda": 12,
+      "negativo": 11,
       "arquivos": [
         "tests/api/fases.test.ts",
+        "tests/editor/barra-ferramentas.test.tsx",
         "tests/editor/cliente-api.test.ts",
         "tests/editor/salvamento.test.ts"
       ]
@@ -129,58 +131,74 @@
         "tests/schema/comparacao.test.ts"
       ]
     },
+    "RF-03": {
+      "feliz": 3,
+      "borda": 2,
+      "negativo": 3,
+      "arquivos": [
+        "tests/editor/abas-paredes.test.tsx",
+        "tests/editor/canvas-parede.test.tsx"
+      ]
+    },
+    "RNF-07": {
+      "feliz": 7,
+      "borda": 8,
+      "negativo": 6,
+      "arquivos": [
+        "tests/editor/abas-paredes.test.tsx",
+        "tests/editor/barra-ferramentas.test.tsx",
+        "tests/player/escolher-fase.test.tsx",
+        "tests/player/tema.test.ts"
+      ]
+    },
     "RF-09": {
-      "feliz": 4,
-      "borda": 7,
-      "negativo": 5,
+      "feliz": 5,
+      "borda": 8,
+      "negativo": 6,
       "arquivos": [
         "tests/editor/atalhos.test.ts",
+        "tests/editor/barra-ferramentas.test.tsx",
         "tests/editor/store.test.ts"
       ]
     },
     "RF-04": {
-      "feliz": 3,
-      "borda": 4,
-      "negativo": 3,
+      "feliz": 5,
+      "borda": 5,
+      "negativo": 5,
       "arquivos": [
+        "tests/editor/biblioteca-objetos.test.tsx",
         "tests/editor/store.test.ts",
         "tests/schema/imagens.test.ts"
       ]
     },
     "RF-05": {
-      "feliz": 6,
-      "borda": 9,
-      "negativo": 7,
+      "feliz": 9,
+      "borda": 11,
+      "negativo": 10,
       "arquivos": [
+        "tests/editor/canvas-parede.test.tsx",
         "tests/editor/store.test.ts"
       ]
     },
     "RF-07": {
-      "feliz": 4,
-      "borda": 5,
-      "negativo": 5,
+      "feliz": 6,
+      "borda": 6,
+      "negativo": 7,
       "arquivos": [
+        "tests/editor/painel-propriedades.test.tsx",
         "tests/editor/store.test.ts",
         "tests/schema/fase.test.ts"
       ]
     },
     "RF-08": {
-      "feliz": 9,
-      "borda": 14,
-      "negativo": 6,
+      "feliz": 13,
+      "borda": 18,
+      "negativo": 12,
       "arquivos": [
+        "tests/editor/painel-propriedades.test.tsx",
         "tests/editor/store.test.ts",
         "tests/schema/fase.test.ts",
         "tests/schema/padroes.test.ts"
-      ]
-    },
-    "RNF-07": {
-      "feliz": 5,
-      "borda": 6,
-      "negativo": 4,
-      "arquivos": [
-        "tests/player/escolher-fase.test.tsx",
-        "tests/player/tema.test.ts"
       ]
     },
     "RF-16": {
