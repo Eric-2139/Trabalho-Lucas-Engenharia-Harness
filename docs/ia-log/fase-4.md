@@ -54,6 +54,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 44 | RF-03 | Editor | rodada B2b (4 casos de RF-03 em `tela-edicao.test.tsx`) | `TelaEdicao` em `apps/editor/src/telas/TelaEdicao.tsx`: abre a fase, valida o documento, cria o store e monta abas, palco (tamanho da janela, PEND-019) e painel; verde no 1º de 5 ciclos, sem reversão | `codificacao-2026-11-06T01-09-41-553Z.json` |
 | 45 | RF-10 | Editor | rodada B2b (9 casos de RF-10 em `tela-edicao.test.tsx`) | `TelaEdicao` com o salvamento (revisão lida ao abrir, gravação ao trocar de aba e no botão, "Recarregar a fase" em conflito), a barra e a biblioteca ligadas, `gerarId` nos objetos novos; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-04 e RF-06 da tela | `codificacao-2026-11-06T01-14-42-515Z.json` |
 | 46 | RF-09 | Editor | rodada B2b (5 casos de RF-09 em `tela-edicao.test.tsx`) | atalhos na `TelaEdicao`: `keydown` no `document` com `atalhoTeclado`, desligados com o foco em campo de texto; verde no 1º de 5 ciclos, sem reversão (execução interrompida pelo limite de uso e retomada) | `codificacao-2026-11-06T04-04-03-595Z.json` |
+| 47 | RF-12 | Editor | rodada B2b (5 casos de RF-12 em `tela-edicao.test.tsx`) | Publicar na `TelaEdicao`: grava a pendência antes (conflito ou erro impedem a publicação), 422 mostra o bloco `posicoesSemEnigma` com um botão por posição que leva a Propriedades da fase, outra falha vai para `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona 3 dos 4 casos de RF-13 da tela | `codificacao-2026-11-06T04-09-54-001Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -179,7 +180,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RF-03 na `TelaEdicao` (base da tela) | `sucesso` | 843.111 | 8.049 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-10 na `TelaEdicao` (salvamento) | `sucesso` | 1.163.582 | 12.342 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-09 na `TelaEdicao` (atalhos; interrompido e retomado) | `sucesso` | 809.702 | 7.349 | medido |
-| **Total** | | | | **67.513.228** | **1.002.531** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar RF-12 na `TelaEdicao` (publicar) | `sucesso` | 1.895.990 | 13.803 | medido |
+| **Total** | | | | **69.409.218** | **1.016.334** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 

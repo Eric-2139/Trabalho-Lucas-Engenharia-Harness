@@ -5,6 +5,8 @@
  * Salvamento (RF-10, ADR-002): toda mudança do documento chama `marcarAlterado`; trocar de aba e o botão salvar chamam
  * `salvarAgora`. Em `conflito`, "Recarregar a fase" lê a fase de novo, `store.carregar` e cria um salvamento novo com a
  * revisão lida; a alteração local é descartada.
+ * Publicar (RF-12): grava a alteração pendente e chama `publicarFase`; o 422 mostra as posições da senha sem enigma
+ * num bloco com o título ROTULOS_EDITOR.posicoesSemEnigma; outra recusa mostra só a mensagem em role="alert".
  * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
  */
 import { referenciasDeAsset, validarFase } from '@math-scape/schema';
@@ -66,17 +68,36 @@ interface PropsEdicao {
   store: StoreEditor;
   salvamento: Salvamento;
   cliente: ClienteApiEditor;
+  faseId: string;
   baseUrlApi: string;
   gerarId: () => string;
   alteracoesNaoPublicadas: boolean;
   aoRecarregar: () => void;
+  aoPublicado: () => void;
 }
 
-function Edicao({ store, salvamento, cliente, baseUrlApi, gerarId, alteracoesNaoPublicadas, aoRecarregar }: PropsEdicao) {
+/** Recusa da publicação: a mensagem da Api e, no 422, as posições da senha sem enigma (RF-12). */
+interface RecusaNaTela {
+  erro: string;
+  posicoes: number[];
+}
+
+function Edicao({
+  store,
+  salvamento,
+  cliente,
+  faseId,
+  baseUrlApi,
+  gerarId,
+  alteracoesNaoPublicadas,
+  aoRecarregar,
+  aoPublicado,
+}: PropsEdicao) {
   const janela = useJanela();
   const estadoSalvamento = useEstadoSalvamento(salvamento);
   const [enviadas, definirEnviadas] = useState<RefImagem[]>([]);
   const [erroEnvio, definirErroEnvio] = useState<string | null>(null);
+  const [recusaPublicacao, definirRecusaPublicacao] = useState<RecusaNaTela | null>(null);
   const documento = useStore(store, (estado) => estado.documento);
   const paredeAtiva = useStore(store, (estado) => estado.paredeAtiva);
   const objeto = useStore(store, (estado) =>
@@ -130,6 +151,24 @@ function Edicao({ store, salvamento, cliente, baseUrlApi, gerarId, alteracoesNao
     });
   }
 
+  // RF-12: publica o rascunho gravado. A alteração pendente é gravada antes; sem gravação aceita, não publica
+  // (o indicador mostra o conflito ou o erro). 422 mostra as posições sem enigma; outra falha, só a mensagem.
+  async function publicar(): Promise<void> {
+    const estadoGravacao = await salvamento.salvarAgora();
+    if (estadoGravacao === 'conflito' || estadoGravacao === 'erro') return;
+    const resposta = await cliente.publicarFase(faseId);
+    if (resposta.ok) {
+      definirRecusaPublicacao(null);
+      aoPublicado();
+      return;
+    }
+    if ('recusa' in resposta) {
+      definirRecusaPublicacao({ erro: resposta.recusa.erro, posicoes: [...resposta.recusa.posicoesSemEnigma] });
+      return;
+    }
+    definirRecusaPublicacao({ erro: resposta.erro, posicoes: [] });
+  }
+
   const estado = store.getState();
   const nada = () => undefined;
 
@@ -151,9 +190,30 @@ function Edicao({ store, salvamento, cliente, baseUrlApi, gerarId, alteracoesNao
         aoRefazer={() => store.getState().refazer()}
         aoSalvar={() => void salvamento.salvarAgora()}
         aoTestar={nada}
-        aoPublicar={nada}
+        aoPublicar={() => void publicar()}
         aoExportar={nada}
       />
+      {recusaPublicacao !== null ? (
+        <section>
+          <p role="alert">{recusaPublicacao.erro}</p>
+          {/* Bloco só com o título e as posições: nenhum outro número aparece junto (modulos-editor.md §5). */}
+          {recusaPublicacao.posicoes.length > 0 ? (
+            <div>
+              <h2>{ROTULOS_EDITOR.posicoesSemEnigma}</h2>
+              <ul>
+                {recusaPublicacao.posicoes.map((posicao) => (
+                  <li key={posicao}>
+                    {/* Posição sem enigma: leva a Propriedades da fase, onde está a senha (modulos-editor.md §5). */}
+                    <button type="button" onClick={() => store.getState().selecionar(null)}>
+                      {posicao}
+                    </button>{' '}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
       {estadoSalvamento === 'conflito' ? (
         <button type="button" onClick={aoRecarregar}>
           {ROTULOS_EDITOR.recarregarFase}
@@ -269,6 +329,11 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
     });
   }, [aberta, ler, faseId, cliente, relogio]);
 
+  // Publicação aceita: a versão publicada passa a ser o rascunho, então não há alterações não publicadas até a fase
+  // ser lida de novo. Guarda a abertura em que publicou, sem trocar `aberta` (trocar pararia o salvamento agendado).
+  const [publicadaEm, definirPublicadaEm] = useState<object | null>(null);
+  const publicado = useCallback(() => definirPublicadaEm(aberta), [aberta]);
+
   if (erro !== null) return <p role="alert">{erro}</p>;
   if (aberta === null) return <p>Abrindo a fase…</p>;
   return (
@@ -276,10 +341,12 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
       store={aberta.store}
       salvamento={aberta.salvamento}
       cliente={cliente}
+      faseId={faseId}
       baseUrlApi={baseUrlApi}
       gerarId={gerarId}
-      alteracoesNaoPublicadas={aberta.alteracoesNaoPublicadas}
+      alteracoesNaoPublicadas={aberta.alteracoesNaoPublicadas && publicadaEm !== aberta}
       aoRecarregar={recarregar}
+      aoPublicado={publicado}
     />
   );
 }
