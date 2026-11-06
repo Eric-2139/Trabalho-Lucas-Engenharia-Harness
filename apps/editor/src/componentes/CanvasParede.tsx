@@ -4,6 +4,8 @@
  * escuta) e objetos por `camada`. Clicar num objeto o seleciona; clicar fora de objeto desfaz a seleção.
  * RF-05: arrastar e o `Transformer` do selecionado mudam só o nó Konva; o store recebe a geometria no fim do gesto
  * (`dragend`/`transformend`), um passo de histórico. `dragBoundFunc`/`boundBoxFunc` prendem ao palco (ADR-011).
+ * RF-04 (LAC-045): o Stage fica numa região ROTULOS_EDITOR.palco que aceita o arraste nativo da biblioteca
+ * (TIPO_ARRASTE_BIBLIOTECA) e chama `aoSoltar(ref, posicao)` com o ponto em frações da parede, limitado a 0..1.
  */
 import { calcularPalco, paraPixels } from '@math-scape/player';
 import type { Retangulo } from '@math-scape/player/contrato';
@@ -12,10 +14,15 @@ import type { Objeto, RefImagem } from '@math-scape/schema/contrato';
 import type Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import type { Box } from 'konva/lib/shapes/Transformer';
-import { useEffect, useRef, useState } from 'react';
+import { type DragEvent, useEffect, useRef, useState } from 'react';
 import { Image as ImagemKonva, Layer, Stage, Transformer } from 'react-konva';
 import { useStore } from 'zustand';
-import type { Geometria, PropsCanvasParede } from '../../contrato/index.ts';
+import {
+  type Geometria,
+  type PropsCanvasParede,
+  ROTULOS_EDITOR,
+  TIPO_ARRASTE_BIBLIOTECA,
+} from '../../contrato/index.ts';
 
 /** URL da referência, ou null se ela não resolve: o objeto continua clicável, só sem desenho. */
 function urlDaImagem(ref: string | null, baseUrlApi: string): string | null {
@@ -161,7 +168,13 @@ function Transformador({ camada, selecionado, palco }: { camada: Konva.Layer | n
   return <Transformer ref={ref} boundBoxFunc={limiteDaCaixa} />;
 }
 
-export function CanvasParede({ store, baseUrlApi, larguraConteiner, alturaConteiner }: PropsCanvasParede) {
+/** O arraste veio da biblioteca (LAC-045)? No `dragover` só os tipos são legíveis, não os dados. */
+function veioDaBiblioteca(evento: DragEvent<HTMLElement>): boolean {
+  const tipos = evento.dataTransfer?.types;
+  return tipos ? Array.from(tipos).includes(TIPO_ARRASTE_BIBLIOTECA) : false;
+}
+
+export function CanvasParede({ store, baseUrlApi, larguraConteiner, alturaConteiner, aoSoltar }: PropsCanvasParede) {
   const paredeAtiva = useStore(store, (estado) => estado.paredeAtiva);
   const parede = useStore(store, (estado) => estado.documento.paredes[estado.paredeAtiva]);
   const selecionado = useStore(store, (estado) => estado.selecionado);
@@ -176,24 +189,44 @@ export function CanvasParede({ store, baseUrlApi, larguraConteiner, alturaContei
     if (evento.target === evento.target.getStage()) selecionar(null);
   };
 
+  const aoArrastarSobre = (evento: DragEvent<HTMLElement>) => {
+    if (!veioDaBiblioteca(evento)) return;
+    evento.preventDefault();
+    evento.dataTransfer.dropEffect = 'copy';
+  };
+
+  /** RF-04 (LAC-045): ponto solto → frações da parede 16:9, limitadas a 0..1; quem insere é a Edição. */
+  const aoSoltarNaRegiao = (evento: DragEvent<HTMLElement>) => {
+    if (!veioDaBiblioteca(evento)) return;
+    evento.preventDefault();
+    const ref = evento.dataTransfer.getData(TIPO_ARRASTE_BIBLIOTECA) as RefImagem;
+    if (!ref) return;
+    const caixa = evento.currentTarget.getBoundingClientRect();
+    const x = (evento.clientX - caixa.left - palco.x) / palco.largura;
+    const y = (evento.clientY - caixa.top - palco.y) / palco.altura;
+    aoSoltar?.(ref, { x: limitar(x, 0, 1), y: limitar(y, 0, 1) });
+  };
+
   return (
-    <Stage width={larguraConteiner} height={alturaConteiner} onClick={aoClicarNoPalco} onTap={aoClicarNoPalco}>
-      <Layer listening={false}>
-        <Fundo key={paredeAtiva} fundo={parede.fundo} palco={palco} baseUrlApi={baseUrlApi} />
-      </Layer>
-      <Layer key={paredeAtiva} ref={definirCamadaObjetos}>
-        {ordemDeDesenho(parede.objetos).map((objeto) => (
-          <ObjetoNoPalco
-            key={objeto.id}
-            objeto={objeto}
-            palco={palco}
-            baseUrlApi={baseUrlApi}
-            aoSelecionar={(id) => selecionar(id)}
-            aoTerminarGesto={aoTerminarGesto}
-          />
-        ))}
-        <Transformador camada={camadaObjetos} selecionado={selecionado} palco={palco} />
-      </Layer>
-    </Stage>
+    <section aria-label={ROTULOS_EDITOR.palco} onDragOver={aoArrastarSobre} onDrop={aoSoltarNaRegiao}>
+      <Stage width={larguraConteiner} height={alturaConteiner} onClick={aoClicarNoPalco} onTap={aoClicarNoPalco}>
+        <Layer listening={false}>
+          <Fundo key={paredeAtiva} fundo={parede.fundo} palco={palco} baseUrlApi={baseUrlApi} />
+        </Layer>
+        <Layer key={paredeAtiva} ref={definirCamadaObjetos}>
+          {ordemDeDesenho(parede.objetos).map((objeto) => (
+            <ObjetoNoPalco
+              key={objeto.id}
+              objeto={objeto}
+              palco={palco}
+              baseUrlApi={baseUrlApi}
+              aoSelecionar={(id) => selecionar(id)}
+              aoTerminarGesto={aoTerminarGesto}
+            />
+          ))}
+          <Transformador camada={camadaObjetos} selecionado={selecionado} palco={palco} />
+        </Layer>
+      </Stage>
+    </section>
   );
 }

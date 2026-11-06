@@ -108,10 +108,15 @@ export const criarStoreEditor: CriarStoreEditor = (documentoInicial) => {
             set({ selecionado: objetoId });
           },
 
-          adicionarObjeto(tipo, imagem, id) {
+          adicionarObjeto(tipo, imagem, id, posicao) {
             const { documento, paredeAtiva } = get();
             const objetos = documento.paredes[paredeAtiva].objetos;
             const novo: Objeto = { ...objetoPadrao(tipo, imagem, id), camada: camadaMaisAlta(objetos) + 1 };
+            if (posicao) {
+              // LAC-045: centro no ponto solto, limitado para o objeto caber na parede.
+              novo.x = Math.min(Math.max(posicao.x - novo.largura / 2, 0), Math.max(0, 1 - novo.largura));
+              novo.y = Math.min(Math.max(posicao.y - novo.altura / 2, 0), Math.max(0, 1 - novo.altura));
+            }
             return aplicar(comObjetos(documento, paredeAtiva, [...objetos, novo]), { selecionado: id });
           },
 

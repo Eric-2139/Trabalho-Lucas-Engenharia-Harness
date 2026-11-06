@@ -298,6 +298,7 @@ function Edicao({
         baseUrlApi={baseUrlApi}
         larguraConteiner={janela.largura}
         alturaConteiner={janela.altura}
+        aoSoltar={(ref, posicao) => store.getState().adicionarObjeto('decoracao', ref, gerarId(), posicao)}
       />
       <BibliotecaObjetos
         catalogo={CATALOGO}

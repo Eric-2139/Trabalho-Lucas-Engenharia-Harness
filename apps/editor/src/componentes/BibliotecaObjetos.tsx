@@ -8,7 +8,7 @@
  */
 import type { RefImagem, SpriteCatalogo } from '@math-scape/schema/contrato';
 import { type ChangeEvent, type ReactNode, useId } from 'react';
-import { type PropsBibliotecaObjetos, ROTULOS_EDITOR } from '../../contrato/index.ts';
+import { type PropsBibliotecaObjetos, ROTULOS_EDITOR, TIPO_ARRASTE_BIBLIOTECA } from '../../contrato/index.ts';
 
 const TIPOS_ACEITOS = 'image/png,image/jpeg,image/webp';
 
@@ -45,7 +45,16 @@ export function BibliotecaObjetos({ catalogo, imagensEnviadas, aoEscolher, aoEnv
         <ul>
           {objetos.map((sprite) => (
             <li key={sprite.id}>
-              <button type="button" onClick={() => aoEscolher(refSprite(sprite), 'objeto')}>
+              <button
+                type="button"
+                draggable
+                onDragStart={(evento) => {
+                  // LAC-045: quem recebe é o palco (CanvasParede.aoSoltar); o arraste não chama aoEscolher.
+                  evento.dataTransfer.setData(TIPO_ARRASTE_BIBLIOTECA, refSprite(sprite));
+                  evento.dataTransfer.effectAllowed = 'copy';
+                }}
+                onClick={() => aoEscolher(refSprite(sprite), 'objeto')}
+              >
                 {sprite.nome}
               </button>
             </li>
