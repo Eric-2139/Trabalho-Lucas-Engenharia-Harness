@@ -1,0 +1,23 @@
+{
+  "agente": "codificacao",
+  "execucao": "a7cf9aec9661880f2",
+  "inicio": "2026-11-06T04:36:53.980Z",
+  "fim": "2026-11-06T04:40:41.680Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-13",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/player/src/mensagens.ts",
+      "apps/player/src/telas/TelaInicial.tsx",
+      "apps/player/src/main.tsx",
+      "apps/player/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 1
+  }
+}

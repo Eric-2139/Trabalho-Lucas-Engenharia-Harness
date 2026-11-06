@@ -4,6 +4,7 @@ import { criarClienteApiJogo as criarClienteApiJogoImpl } from './cliente-api.ts
 
 export * from '../contrato/index.ts';
 export { EscolherFase } from './telas/EscolherFase.tsx';
+export { TelaInicial } from './telas/TelaInicial.tsx';
 export { TelaJogo } from './telas/TelaJogo.tsx';
 
 export const criarClienteApiJogo: CriarClienteApiJogo = criarClienteApiJogoImpl;

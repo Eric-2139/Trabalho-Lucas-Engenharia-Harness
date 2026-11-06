@@ -1,5 +1,18 @@
 /** Textos da interface do app do jogador, em português (ADR-014, RNF-07). */
 export const mensagens = {
+  inicial: {
+    titulo: 'Math Scape',
+    apresentacao:
+      'Um jogo de fuga com enigmas de matemática: resolva os enigmas de cada sala para descobrir a senha da porta.',
+    linkFases: 'Escolher fase',
+    linkEditor: 'Criar fases no editor',
+  },
+  navegacao: {
+    carregando: 'Carregando…',
+    voltarInicio: 'Voltar ao início',
+    voltarFases: 'Voltar para Escolher fase',
+    paginaNaoEncontrada: 'Página não encontrada.',
+  },
   escolherFase: {
     titulo: 'Escolher fase',
     rotuloLista: 'Fases publicadas',
