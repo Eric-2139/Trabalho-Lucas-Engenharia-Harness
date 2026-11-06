@@ -16,7 +16,9 @@
  * role="alert" e nada é baixado.
  * Resolução (RNF-01, ADR-006): abaixo de 1280x720 de janela (`precisaAvisoResolucao`), mostra
  * ROTULOS_EDITOR.avisoResolucao sem bloquear a edição.
- * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
+ * Layout (LAC-046): abas, barra, avisos e erros em cima; abaixo, biblioteca à esquerda, palco no centro e painel à
+ * direita (classes `edicao*`, estilo em main.tsx). O palco mede o elemento que o contém por `ResizeObserver`; sem ele
+ * (jsdom, que não faz layout), e até a primeira medida chegar, a janela é a reserva (PEND-019).
  */
 import { referenciasDeAsset, validarFase } from '@math-scape/schema';
 import { criarVerificadorHttp, precisaAvisoResolucao } from '@math-scape/player';
@@ -47,6 +49,34 @@ function useJanela() {
     return () => window.removeEventListener('resize', aoRedimensionar);
   }, []);
   return janela;
+}
+
+interface Medida {
+  largura: number;
+  altura: number;
+}
+
+/**
+ * LAC-046: tamanho do elemento que contém o palco, medido por `ResizeObserver`. Sem `ResizeObserver` (jsdom) e antes
+ * da primeira medida, devolve a `reserva` (a janela). Com medida, a janela não muda o palco.
+ */
+function useMedidaDoConteiner(reserva: Medida): [(elemento: HTMLElement | null) => void, Medida] {
+  const [elemento, definirElemento] = useState<HTMLElement | null>(null);
+  const [medida, definirMedida] = useState<Medida | null>(null);
+  useEffect(() => {
+    if (elemento === null || typeof ResizeObserver === 'undefined') return;
+    const observador = new ResizeObserver((entradas) => {
+      const ultima = entradas.at(-1);
+      if (!ultima) return;
+      const largura = Math.floor(ultima.contentRect.width);
+      const altura = Math.floor(ultima.contentRect.height);
+      // Contêiner sem tamanho (escondido): mantém a medida anterior para o palco não sumir.
+      if (largura > 0 && altura > 0) definirMedida({ largura, altura });
+    });
+    observador.observe(elemento);
+    return () => observador.disconnect();
+  }, [elemento]);
+  return [definirElemento, medida ?? reserva];
 }
 
 /** Estado atual do salvamento, atualizado por `assinar`. */
@@ -108,6 +138,7 @@ function Edicao({
   verificadorTeste,
 }: PropsEdicao) {
   const janela = useJanela();
+  const [medirPalco, conteinerDoPalco] = useMedidaDoConteiner(janela);
   const estadoSalvamento = useEstadoSalvamento(salvamento);
   const [enviadas, definirEnviadas] = useState<RefImagem[]>([]);
   const [erroEnvio, definirErroEnvio] = useState<string | null>(null);
@@ -249,72 +280,81 @@ function Edicao({
   const estado = store.getState();
 
   return (
-    <main>
-      {/* RNF-01 (ADR-006): abaixo de 1280x720 de janela, aviso que não bloqueia a edição. */}
-      {precisaAvisoResolucao(janela.largura, janela.altura) ? <p>{ROTULOS_EDITOR.avisoResolucao}</p> : null}
-      <AbasParedes
-        paredeAtiva={paredeAtiva}
-        aoTrocar={(parede) => {
-          store.getState().trocarParede(parede);
-          void salvamento.salvarAgora();
-        }}
-      />
-      <BarraFerramentas
-        estadoSalvamento={estadoSalvamento}
-        podeDesfazer={estado.podeDesfazer()}
-        podeRefazer={estado.podeRefazer()}
-        alteracoesNaoPublicadas={alteracoesNaoPublicadas}
-        aoDesfazer={() => store.getState().desfazer()}
-        aoRefazer={() => store.getState().refazer()}
-        aoSalvar={() => void salvamento.salvarAgora()}
-        aoTestar={() => void testar()}
-        aoPublicar={() => void publicar()}
-        aoExportar={() => void exportar()}
-      />
-      {recusaPublicacao !== null ? (
-        <section>
-          <p role="alert">{recusaPublicacao.erro}</p>
-          {/* Bloco só com o título e as posições: nenhum outro número aparece junto (modulos-editor.md §5). */}
-          {recusaPublicacao.posicoes.length > 0 ? (
-            <div>
-              <h2>{ROTULOS_EDITOR.posicoesSemEnigma}</h2>
-              <ul>
-                {recusaPublicacao.posicoes.map((posicao) => (
-                  <li key={posicao}>
-                    {/* Posição sem enigma: leva a Propriedades da fase, onde está a senha (modulos-editor.md §5). */}
-                    <button type="button" onClick={() => store.getState().selecionar(null)}>
-                      {posicao}
-                    </button>{' '}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </section>
-      ) : null}
-      {erroTeste !== null ? <p role="alert">{erroTeste}</p> : null}
-      {erroExportar !== null ? <p role="alert">{erroExportar}</p> : null}
-      {estadoSalvamento === 'conflito' ? (
-        <button type="button" onClick={aoRecarregar}>
-          {ROTULOS_EDITOR.recarregarFase}
-        </button>
-      ) : null}
-      <CanvasParede
-        store={store}
-        baseUrlApi={baseUrlApi}
-        larguraConteiner={janela.largura}
-        alturaConteiner={janela.altura}
-        aoSoltar={(ref, posicao) => store.getState().adicionarObjeto('decoracao', ref, gerarId(), posicao)}
-      />
-      <BibliotecaObjetos
-        catalogo={CATALOGO}
-        imagensEnviadas={imagensEnviadas}
-        aoEscolher={escolher}
-        aoEnviarImagem={enviarImagem}
-      />
-      {erroEnvio !== null ? <p role="alert">{erroEnvio}</p> : null}
-      {erroEscolha !== null ? <p role="alert">{erroEscolha}</p> : null}
-      <aside>
+    <main className="edicao">
+      <div className="edicao-topo">
+        {/* RNF-01 (ADR-006): abaixo de 1280x720 de janela, aviso que não bloqueia a edição. */}
+        {precisaAvisoResolucao(janela.largura, janela.altura) ? <p>{ROTULOS_EDITOR.avisoResolucao}</p> : null}
+        <AbasParedes
+          paredeAtiva={paredeAtiva}
+          aoTrocar={(parede) => {
+            store.getState().trocarParede(parede);
+            void salvamento.salvarAgora();
+          }}
+        />
+        <BarraFerramentas
+          estadoSalvamento={estadoSalvamento}
+          podeDesfazer={estado.podeDesfazer()}
+          podeRefazer={estado.podeRefazer()}
+          alteracoesNaoPublicadas={alteracoesNaoPublicadas}
+          aoDesfazer={() => store.getState().desfazer()}
+          aoRefazer={() => store.getState().refazer()}
+          aoSalvar={() => void salvamento.salvarAgora()}
+          aoTestar={() => void testar()}
+          aoPublicar={() => void publicar()}
+          aoExportar={() => void exportar()}
+        />
+        {recusaPublicacao !== null ? (
+          <section>
+            <p role="alert">{recusaPublicacao.erro}</p>
+            {/* Bloco só com o título e as posições: nenhum outro número aparece junto (modulos-editor.md §5). */}
+            {recusaPublicacao.posicoes.length > 0 ? (
+              <div>
+                <h2>{ROTULOS_EDITOR.posicoesSemEnigma}</h2>
+                <ul>
+                  {recusaPublicacao.posicoes.map((posicao) => (
+                    <li key={posicao}>
+                      {/* Posição sem enigma: leva a Propriedades da fase, onde está a senha (modulos-editor.md §5). */}
+                      <button type="button" onClick={() => store.getState().selecionar(null)}>
+                        {posicao}
+                      </button>{' '}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+        {erroTeste !== null ? <p role="alert">{erroTeste}</p> : null}
+        {erroExportar !== null ? <p role="alert">{erroExportar}</p> : null}
+        {estadoSalvamento === 'conflito' ? (
+          <button type="button" onClick={aoRecarregar}>
+            {ROTULOS_EDITOR.recarregarFase}
+          </button>
+        ) : null}
+        {erroEnvio !== null ? <p role="alert">{erroEnvio}</p> : null}
+        {erroEscolha !== null ? <p role="alert">{erroEscolha}</p> : null}
+      </div>
+      <div className="edicao-biblioteca">
+        <BibliotecaObjetos
+          catalogo={CATALOGO}
+          imagensEnviadas={imagensEnviadas}
+          aoEscolher={escolher}
+          aoEnviarImagem={enviarImagem}
+        />
+      </div>
+      {/* LAC-046: o elemento medido; o palco fica numa camada absoluta para não mudar a medida do contêiner. */}
+      <div className="edicao-palco" ref={medirPalco}>
+        <div>
+          <CanvasParede
+            store={store}
+            baseUrlApi={baseUrlApi}
+            larguraConteiner={conteinerDoPalco.largura}
+            alturaConteiner={conteinerDoPalco.altura}
+            aoSoltar={(ref, posicao) => store.getState().adicionarObjeto('decoracao', ref, gerarId(), posicao)}
+          />
+        </div>
+      </div>
+      <aside className="edicao-painel">
         <PainelPropriedades
           objeto={objeto}
           fase={{ titulo: documento.titulo, senha: documento.senha }}

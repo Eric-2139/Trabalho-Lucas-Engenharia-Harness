@@ -131,6 +131,15 @@ a { color: ${cores.primaria}; }
 [role="alert"] { color: ${cores.erro}; }
 :focus-visible { outline: ${foco.largura} ${foco.estilo} ${cores.foco}; outline-offset: 2px; }
 header nav ul { display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0 0 1rem; align-items: center; }
+/* Edição (LAC-046): ocupa a altura que sobra da janela (100dvh menos o padding do body) sem rolar a página. */
+#raiz > div:has(> main.edicao) { display: flex; flex-direction: column; height: calc(100dvh - 2rem); }
+#raiz > div:has(> main.edicao) > header { flex: none; }
+main.edicao { flex: 1; min-height: 0; display: grid; gap: 1rem;
+  grid-template-columns: 14rem minmax(0, 1fr) 18rem; grid-template-rows: auto minmax(0, 1fr); }
+.edicao-topo { grid-column: 1 / -1; }
+.edicao-biblioteca, .edicao-painel { min-height: 0; overflow: auto; }
+.edicao-palco { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+.edicao-palco > div { position: absolute; inset: 0; }
 .login-por-cima { position: fixed; inset: 0; overflow: auto; background: rgba(0, 0, 0, 0.5); padding: 2rem; }
 .login-por-cima [role="dialog"] { background: ${cores.superficie}; max-width: 40rem; margin: 0 auto; padding: 1rem; }
 `;
