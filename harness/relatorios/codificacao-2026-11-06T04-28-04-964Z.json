@@ -1,0 +1,18 @@
+{
+  "agente": "codificacao",
+  "execucao": "a8041bba256caf7e4",
+  "inicio": "2026-11-06T04:26:03.751Z",
+  "fim": "2026-11-06T04:28:04.964Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-07",
+    "ciclos_editar_testar": 0,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": []
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

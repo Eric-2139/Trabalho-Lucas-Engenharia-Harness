@@ -59,6 +59,11 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 49 | RF-11 | Editor | rodada B2b (6 casos de RF-11 em `tela-edicao.test.tsx`) | `ModoTestar` em `apps/editor/src/telas/ModoTestar.tsx` (motor do `packages/player`, palco pela janela, campo de resposta, `MENSAGENS`, "Sair do teste"); Testar salva antes e só segue com a gravação aceita, chama `jogoTeste`, atalhos desligados durante o teste; verde no 1º de 5 ciclos, sem reversão. Repete a lógica de tela da `TelaJogo` (o editor não importa de outro app) e tem textos fixos no componente | `codificacao-2026-11-06T04-19-59-145Z.json` |
 | 50 | RF-14 | Editor | rodada B2b (3 casos de RF-14 em `tela-edicao.test.tsx`) | Exportar na `TelaEdicao`: grava a pendência antes, chama `exportarFase` e baixa `fase-<id>.json` sem alteração por `createObjectURL`; recusa em `role="alert"`; verde no 1º de 5 ciclos, sem reversão | `codificacao-2026-11-06T04-22-58-481Z.json` |
 | 51 | RNF-01 | Editor | rodada B2b (5 casos de RNF-01 em `tela-edicao.test.tsx`) | aviso `ROTULOS_EDITOR.avisoResolucao` na `TelaEdicao` com `precisaAvisoResolucao` e o tamanho da janela, sem bloquear a edição (PEND-015); verde no 1º de 5 ciclos, suíte 597 de 597, sem reversão | `codificacao-2026-11-06T04-25-36-358Z.json` |
+| 52 | RF-07 | SchemaFase + Editor | testes das rodadas A a B2b | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (597 de 597) | `codificacao-2026-11-06T04-28-04-964Z.json` |
+| 53 | RF-04 | Editor | testes das rodadas A a B2b | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (597 de 597) | `codificacao-2026-11-06T04-30-08-096Z.json` |
+| 54 | RF-06 | Api + Editor | testes das rodadas A a B2b | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (597 de 597) | `codificacao-2026-11-06T04-32-11-523Z.json` |
+| 55 | RNF-06 | Api + Editor | testes das rodadas A a B2b | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (597 de 597) | `codificacao-2026-11-06T04-34-09-091Z.json` |
+| 56 | RNF-07 | Player + Editor | testes das rodadas A a B2b | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (597 de 597) | `codificacao-2026-11-06T04-36-07-435Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -189,7 +194,12 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RF-11 (modo testar) | `sucesso` | 1.147.280 | 16.650 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-14 na `TelaEdicao` (exportar) | `sucesso` | 691.715 | 6.103 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RNF-01 na `TelaEdicao` (aviso de resolução) | `sucesso` | 414.004 | 3.982 | medido |
-| **Total** | | | | **72.928.207** | **1.055.490** | medido |
+| 06/11 | idem, subagente `codificacao` | Confirmar RF-07 | `sucesso` com 0 ciclos | 107.399 | 2.076 | medido |
+| 06/11 | idem, subagente `codificacao` | Confirmar RF-04 | `sucesso` com 0 ciclos | 92.142 | 1.871 | medido |
+| 06/11 | idem, subagente `codificacao` | Confirmar RF-06 | `sucesso` com 0 ciclos | 58.184 | 1.567 | medido |
+| 06/11 | idem, subagente `codificacao` | Confirmar RNF-06 | `sucesso` com 0 ciclos | 75.549 | 1.445 | medido |
+| 06/11 | idem, subagente `codificacao` | Confirmar RNF-07 | `sucesso` com 0 ciclos | 75.438 | 1.382 | medido |
+| **Total** | | | | **73.336.919** | **1.063.831** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
