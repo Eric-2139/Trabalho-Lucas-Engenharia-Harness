@@ -7,11 +7,13 @@
  * revisão lida; a alteração local é descartada.
  * Publicar (RF-12): grava a alteração pendente e chama `publicarFase`; o 422 mostra as posições da senha sem enigma
  * num bloco com o título ROTULOS_EDITOR.posicoesSemEnigma; outra recusa mostra só a mensagem em role="alert".
+ * Alterações não publicadas (RF-13): o aviso vem de `abrirFase`; depois de cada PUT aceito numa fase publicada, a
+ * fase é lida de novo para atualizar o aviso.
  * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
  */
 import { referenciasDeAsset, validarFase } from '@math-scape/schema';
 import { CATALOGO, type Fase, type RefImagem } from '@math-scape/schema/contrato';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from 'zustand';
 import type { ClienteApiEditor, EstadoSalvamento, Relogio, Salvamento } from '../../contrato/salvamento.ts';
 import type { StoreEditor } from '../../contrato/store.ts';
@@ -243,24 +245,37 @@ function Edicao({
   );
 }
 
-interface FaseAberta {
+interface FaseAberta extends Aviso {
   documento: Fase;
   revisao: number;
+}
+
+/** O que a tela sabe da publicação: se a fase está publicada e se o rascunho difere da versão publicada (RF-13). */
+interface Aviso {
+  publicada: boolean;
   alteracoesNaoPublicadas: boolean;
 }
 
+/** Cria o salvamento; cada `PUT` aceito chama `aoGravado` (RF-13: o aviso de alterações é lido de novo). */
 function novoSalvamento(
   faseId: string,
   revisao: number,
   store: StoreEditor,
   cliente: ClienteApiEditor,
   relogio: Relogio,
+  aoGravado: () => void,
 ): Salvamento {
   return criarSalvamento({
     faseId,
     revisaoInicial: revisao,
     obterDocumento: () => store.getState().documento,
-    cliente,
+    cliente: {
+      salvarFase: async (id, rev, documento) => {
+        const resultado = await cliente.salvarFase(id, rev, documento);
+        if (resultado.ok) aoGravado();
+        return resultado;
+      },
+    },
     relogio,
   });
 }
@@ -269,9 +284,33 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
   const [aberta, definirAberta] = useState<{
     store: StoreEditor;
     salvamento: Salvamento;
-    alteracoesNaoPublicadas: boolean;
   } | null>(null);
   const [erro, definirErro] = useState<string | null>(null);
+
+  // RF-13 (contrato do editor, "Publicar"): o aviso vem de `GET /fases/:id`; depois de cada `PUT` aceito numa fase
+  // publicada, a fase é lida de novo só para atualizar o aviso. Fica fora de `aberta` porque trocar `aberta` pararia
+  // o salvamento agendado. A geração descarta leituras que chegam depois de uma publicação ou de uma nova abertura.
+  const [aviso, definirAviso] = useState<Aviso>({ publicada: false, alteracoesNaoPublicadas: false });
+  const publicadaAgora = useRef(false);
+  const geracaoAviso = useRef(0);
+
+  const atualizarAviso = useCallback((novo: Aviso) => {
+    geracaoAviso.current += 1;
+    publicadaAgora.current = novo.publicada;
+    definirAviso(novo);
+  }, []);
+
+  const relerAviso = useCallback(() => {
+    if (!publicadaAgora.current) return;
+    const geracao = geracaoAviso.current;
+    void cliente.abrirFase(faseId).then((resposta) => {
+      if (!resposta.ok || geracao !== geracaoAviso.current) return;
+      atualizarAviso({
+        publicada: resposta.valor.publicada,
+        alteracoesNaoPublicadas: resposta.valor.alteracoesNaoPublicadas,
+      });
+    });
+  }, [cliente, faseId, atualizarAviso]);
 
   const ler = useCallback(async (): Promise<FaseAberta | null> => {
     const resposta = await cliente.abrirFase(faseId);
@@ -287,6 +326,7 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
     return {
       documento: validacao.fase,
       revisao: resposta.valor.revisao,
+      publicada: resposta.valor.publicada,
       alteracoesNaoPublicadas: resposta.valor.alteracoesNaoPublicadas,
     };
   }, [cliente, faseId]);
@@ -296,16 +336,16 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
     void ler().then((fase) => {
       if (!ativo || fase === null) return;
       const store = criarStoreEditor(fase.documento);
+      atualizarAviso({ publicada: fase.publicada, alteracoesNaoPublicadas: fase.alteracoesNaoPublicadas });
       definirAberta({
         store,
-        salvamento: novoSalvamento(faseId, fase.revisao, store, cliente, relogio),
-        alteracoesNaoPublicadas: fase.alteracoesNaoPublicadas,
+        salvamento: novoSalvamento(faseId, fase.revisao, store, cliente, relogio, relerAviso),
       });
     });
     return () => {
       ativo = false;
     };
-  }, [ler, faseId, cliente, relogio]);
+  }, [ler, faseId, cliente, relogio, atualizarAviso, relerAviso]);
 
   // Fechar a fase (ou trocar de salvamento) para o agendamento.
   useEffect(() => {
@@ -321,18 +361,20 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
       if (fase === null) return;
       salvamento.parar();
       store.getState().carregar(fase.documento);
+      atualizarAviso({ publicada: fase.publicada, alteracoesNaoPublicadas: fase.alteracoesNaoPublicadas });
       definirAberta({
         store,
-        salvamento: novoSalvamento(faseId, fase.revisao, store, cliente, relogio),
-        alteracoesNaoPublicadas: fase.alteracoesNaoPublicadas,
+        salvamento: novoSalvamento(faseId, fase.revisao, store, cliente, relogio, relerAviso),
       });
     });
-  }, [aberta, ler, faseId, cliente, relogio]);
+  }, [aberta, ler, faseId, cliente, relogio, atualizarAviso, relerAviso]);
 
-  // Publicação aceita: a versão publicada passa a ser o rascunho, então não há alterações não publicadas até a fase
-  // ser lida de novo. Guarda a abertura em que publicou, sem trocar `aberta` (trocar pararia o salvamento agendado).
-  const [publicadaEm, definirPublicadaEm] = useState<object | null>(null);
-  const publicado = useCallback(() => definirPublicadaEm(aberta), [aberta]);
+  // Publicação aceita: a versão publicada passa a ser o rascunho, então não há alterações não publicadas até o
+  // próximo `PUT` aceito (que relê o aviso).
+  const publicado = useCallback(
+    () => atualizarAviso({ publicada: true, alteracoesNaoPublicadas: false }),
+    [atualizarAviso],
+  );
 
   if (erro !== null) return <p role="alert">{erro}</p>;
   if (aberta === null) return <p>Abrindo a fase…</p>;
@@ -344,7 +386,7 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
       faseId={faseId}
       baseUrlApi={baseUrlApi}
       gerarId={gerarId}
-      alteracoesNaoPublicadas={aberta.alteracoesNaoPublicadas && publicadaEm !== aberta}
+      alteracoesNaoPublicadas={aviso.alteracoesNaoPublicadas}
       aoRecarregar={recarregar}
       aoPublicado={publicado}
     />
