@@ -28,7 +28,7 @@ function criarPartida(fase: FaseJogo, verificador: Verificador): Partida;
 |---|---|---|
 | Inicial | Apresentação e acesso a Escolher Fase e ao editor | — |
 | Escolher Fase | Lista `GET /publicadas`; fase não publicada não aparece | RF-13 |
-| Jogo | 5 paredes trocadas por botões; palco 16:9; aviso abaixo de 1280x720 | RNF-01, RNF-02 |
+| Jogo | palco 16:9 medido no contêiner; à direita, coluna com os botões das 5 paredes, fala, pergunta, campo e dígitos, visíveis sem rolar a página (LAC-046); aviso abaixo de 1280x720 | RF-16, RNF-01, RNF-02 |
 
 A fase original (`escola-01`) aparece em Escolher Fase e é jogável igual ao critério do RF-18.
 

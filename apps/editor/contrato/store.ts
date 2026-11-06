@@ -39,8 +39,15 @@ export interface EstadoEditor {
   trocarParede(parede: ParedeId): void;
   selecionar(objetoId: string | null): void;
 
-  /** Biblioteca (RF-04): insere `objetoPadrao(tipo, imagem, id)` na parede ativa, na camada mais alta, e o seleciona. */
-  adicionarObjeto(tipo: TipoInteracao, imagem: RefImagem, id: string): ResultadoAcao;
+  /**
+   * Biblioteca (RF-04): insere `objetoPadrao(tipo, imagem, id)` na parede ativa, na camada mais alta, e o seleciona.
+   * Um passo de histórico.
+   * `posicao` (LAC-045, Eric em 06/11/2026): ponto onde o item da biblioteca foi solto, em frações da parede (0..1).
+   * O objeto nasce com o centro nesse ponto, e `x`/`y` são limitados para ele caber na parede
+   * (`x` em [0, 1 − largura], `y` em [0, 1 − altura]); largura e altura são as de `objetoPadrao`.
+   * Sem `posicao` (clique ou Enter na biblioteca), a posição é a de `objetoPadrao` (centro da parede).
+   */
+  adicionarObjeto(tipo: TipoInteracao, imagem: RefImagem, id: string, posicao?: { x: number; y: number }): ResultadoAcao;
   /** Fim de um arraste ou transformação (ADR-007): um passo de histórico. Valores fora de 0..1 são limitados; rotação normalizada para [0, 360). */
   alterarGeometria(objetoId: string, geometria: Partial<Geometria>): ResultadoAcao;
   /**
@@ -72,10 +79,14 @@ export type StoreEditor = StoreApi<EstadoEditor>;
 /** Cria um store novo para a fase aberta. Começa na parede da frente, sem seleção, histórico vazio. */
 export type CriarStoreEditor = (documento: Fase) => StoreEditor;
 
-/** RF-09: Ctrl+Z → 'desfazer'; Ctrl+Y → 'refazer' (Cmd no macOS); qualquer outra tecla → null. */
+/**
+ * RF-09: Ctrl+Z → 'desfazer'; Ctrl+Y → 'refazer' (Cmd no macOS).
+ * RF-05 (LAC-044, Eric em 06/11/2026): Delete ou Backspace sem Ctrl nem Cmd → 'excluir' (a Edição exclui o objeto
+ * selecionado; Ctrl+Z desfaz). Qualquer outra tecla → null.
+ */
 export type AtalhoTeclado = (evento: {
   key: string;
   ctrlKey: boolean;
   metaKey: boolean;
   shiftKey: boolean;
-}) => 'desfazer' | 'refazer' | null;
+}) => 'desfazer' | 'refazer' | 'excluir' | null;

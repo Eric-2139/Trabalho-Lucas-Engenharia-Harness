@@ -10,14 +10,14 @@ Chama a Api por `/api`, no mesmo site, para o cookie de sessão valer (ADR-017).
 | Login / Cadastro | Cadastro com nome, e-mail e senha; sem sessão, qualquer rota do editor redireciona para o login | RF-01 |
 | Minhas fases | Lista as fases do criador; criar, renomear (`PATCH`), duplicar, excluir (excluir publicada pede confirmação) | RF-02 |
 | Conta | Excluir a própria conta com confirmação; cancelar não muda nada | RF-19 |
-| Edição | 5 abas (frente, direita, fundo, esquerda, teto); a aba mostra só os objetos daquela parede; palco 16:9 | RF-03, RNF-02 |
+| Edição | 5 abas (frente, direita, fundo, esquerda, teto); a aba mostra só os objetos daquela parede; palco 16:9 medido no contêiner, entre a biblioteca (esquerda) e o painel (direita), sem rolar a página em 1280x720 (LAC-046) | RF-03, RNF-02 |
 
 Propriedades e rótulos das telas: `apps/editor/contrato/telas.ts` (`PropsTelaEntrar`, `PropsMinhasFases`, `PropsTelaConta`, `PropsTelaEdicao`, `ROTULOS_EDITOR`).
 
 ## Edição
 - **Documento sempre válido (ADR-011)**: o store só aplica ações cujo resultado passa em `validarFase`. Objetos novos nascem com `objetoPadrao`; o painel de propriedades edita num rascunho local e só aplica quando válido; mover/redimensionar/rotacionar ficam limitados a 0..1; encurtar a senha com enigmas que revelam posições removidas é recusado com a lista dos enigmas.
-- **Biblioteca**: catálogo `sprite:` do pacote de schema (porta, quadro, janela, relógio e os objetos da Escola), fundos e "Minhas imagens"; arrastar até o palco insere na parede ativa; um fundo ou uma imagem enviada pode virar o fundo da parede ativa (RF-04, RF-06, ADR-012).
-- **Seleção** com Transformer: mover, redimensionar, rotacionar; camada para frente/para trás; duplicar na mesma parede; excluir (RF-05).
+- **Biblioteca**: catálogo `sprite:` do pacote de schema (porta, quadro, janela, relógio e os objetos da Escola), fundos e "Minhas imagens"; arrastar até o palco insere na parede ativa, no ponto solto; clique ou Enter insere no centro (LAC-045); um fundo ou uma imagem enviada pode virar o fundo da parede ativa (RF-04, RF-06, ADR-012).
+- **Seleção** com Transformer: mover, redimensionar, rotacionar; camada para frente/para trás, duplicar na mesma parede e excluir por botões no painel de propriedades; Delete ou Backspace também exclui (RF-05, LAC-044).
 - **Painel de propriedades**: tipo do objeto; fala → texto; enigma → pergunta, respostas (só números), dica, posições reveladas; porta → senha da fase (4 a 8 dígitos, padrão 5) (RF-07, RF-08). **Propriedades da fase** (clique no fundo da parede): título e senha, editáveis mesmo sem porta (PEND-007, ADR-001).
 - **Imagens**: upload via `POST /assets`, depois "usar como objeto" ou "usar como fundo" na biblioteca; mensagem de recusa vinda da Api (RF-06).
 - **Desfazer/refazer**: Ctrl+Z / Ctrl+Y sobre o documento; um passo por gesto (RF-09, ADR-008).

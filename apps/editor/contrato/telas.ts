@@ -66,6 +66,15 @@ export const ROTULOS_EDITOR = {
   dica: 'Dica',
   aplicar: 'Aplicar',
 
+  // Objeto selecionado (RF-05, LAC-044): botões no PainelPropriedades.
+  trazerParaFrente: 'Trazer para a frente',
+  enviarParaTras: 'Enviar para trás',
+  duplicarObjeto: 'Duplicar objeto',
+  excluirObjeto: 'Excluir objeto',
+
+  // Palco da Edição (RF-04, LAC-045): região que recebe o arraste da biblioteca.
+  palco: 'Palco da parede',
+
   // Biblioteca (RF-04, RF-06, LAC-029).
   objetos: 'Objetos',
   fundos: 'Fundos',
@@ -124,6 +133,15 @@ export interface PropsTelaConta {
  *   no `pagehide` da janela.
  * - Salvamento em `conflito`: o automático não grava mais; ROTULOS_EDITOR.recarregarFase chama `abrirFase`, `store.carregar`
  *   e cria um salvamento novo com a revisão lida (ADR-002: duas abas não se sobrescrevem em silêncio).
+ * - Delete/Backspace (`atalhoTeclado` → 'excluir'), com objeto selecionado e o foco fora de campo de texto, chama
+ *   `store.excluirObjeto` (RF-05, LAC-044). Sem seleção, nada acontece.
+ * - Item da biblioteca solto no palco (`aoSoltar` do CanvasParede): `store.adicionarObjeto('decoracao', ref, gerarId(), posicao)` (RF-04, LAC-045).
+ * - "Minhas imagens" (LAC-043): os uuids de `referenciasDeAsset(documento)` viram `asset:<uuid>`, somados às imagens enviadas
+ *   nesta sessão, sem repetição. Se o store recusar "usar como objeto/fundo", a mensagem aparece em `role="alert"` (RF-06).
+ * - Layout (LAC-046, Eric em 06/11/2026): abas e barra em cima; abaixo, biblioteca à esquerda, palco no centro e painel
+ *   à direita. O palco mede o elemento que o contém (`ResizeObserver`); sem `ResizeObserver` (jsdom), usa a janela
+ *   (`innerWidth`/`innerHeight`) como reserva. Em 1280x720 ou mais, a página não rola: biblioteca e painel rolam por
+ *   dentro, se precisarem, e ficam visíveis junto com o palco.
  */
 export interface PropsTelaEdicao {
   faseId: string;

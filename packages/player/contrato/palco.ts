@@ -10,7 +10,10 @@ export interface Retangulo {
   altura: number;
 }
 
-/** Maior retângulo 16:9 que cabe no contêiner, centralizado. 1280×720 → { 0, 0, 1280, 720 }. */
+/**
+ * Maior retângulo 16:9 que cabe no contêiner, centralizado. 1280×720 → { 0, 0, 1280, 720 }.
+ * O contêiner é o elemento que contém o palco, não a janela (LAC-046): a tela reserva o espaço dos demais elementos.
+ */
 export type CalcularPalco = (larguraConteiner: number, alturaConteiner: number) => Retangulo;
 
 /** Coordenadas relativas (0..1) do documento → pixels do palco. */

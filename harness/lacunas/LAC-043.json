@@ -1,12 +1,20 @@
 {
   "id": "LAC-043",
   "tipo": "conflito_contrato",
-  "itens": ["RF-06", "Editor", "SchemaFase"],
+  "itens": [
+    "RF-06",
+    "Editor",
+    "SchemaFase"
+  ],
   "justificativa": "Os contratos de dois componentes que realizam o RF-06 são incompatíveis. packages/schema/contrato/funcoes.ts, linhas 63-64: ReferenciasDeAsset devolve string[] com os uuids (contratos/schema.md, linha 60, diz o mesmo). apps/editor/contrato/componentes.ts, linhas 22-23: imagensEnviadas é readonly RefImagem[], descrita como 'referências asset: já usadas na fase (referenciasDeAsset)'; modulos-editor.md, linha 50, repete. A implementação segue os dois textos e os une com um cast (TelaEdicao.tsx, linha 154: referenciasDeAsset(documento) as RefImagem[]), que esconde o conflito do TypeScript. É a origem provável do DEF-03 (docs/testes/relatorio-defeitos.md): imagem duplicada e inutilizável depois de recarregar. O DEF-03 trata o caso como defeito de código, mas o contrato do Editor também precisa de ajuste, senão o agente 3 e o agente 4 continuam sem texto único.",
   "proposta": "O arquiteto define um único formato na fronteira. Opções: (a) manter uuids em referenciasDeAsset, porque a Api os usa para conferir o dono e montar a exportação, e o contrato do Editor passa a dizer que a tela converte cada uuid para asset:<uuid>; (b) a função passar a devolver RefImagem, ajustando a Api. Depois, devolver ao agente 3 antes da correção do DEF-03 pelo agente 4.",
   "bloqueante": false,
   "dono_humano": "Eric (arquiteto)",
   "pendencia_vinculada": null,
   "versao_baseline": "2026-11-03.1",
-  "status": "rascunho"
+  "status": "resolvida",
+  "resolucao": "Opção (a): referenciasDeAsset continua devolvendo uuids (a Api os usa). O contrato do Editor (componentes.ts, telas.ts e modulos-editor.md §4) passa a dizer que a Edição converte cada uuid em asset:<uuid> antes de montar Minhas imagens, sem repetição, e que a recusa do store ao usar a imagem aparece em role=\"alert\". Corrige a causa do DEF-03; volta ao agente 3 antes do agente 4.",
+  "resolvido_por": "Eric (arquiteto)",
+  "resolvido_em": "2026-11-06T19:24:51.592Z",
+  "bloqueante_original": false
 }

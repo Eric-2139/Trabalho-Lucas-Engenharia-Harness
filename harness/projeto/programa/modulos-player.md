@@ -56,7 +56,7 @@ Decisões: ADR-003, ADR-006, ADR-009, ADR-012, ADR-014, ADR-017. Processo: ADR-0
 | `ClienteApiJogo` (`src/cliente-api.ts`) | `listarPublicadas`, `obterJogo`; `fetch` injetável; nunca rejeita: sem resposta → `{ ok: false, status: 0, erro: "Não foi possível falar com o servidor. Tente de novo." }` (LAC-038) | RF-13 |
 | **TelaInicial** (`src/telas/TelaInicial.tsx`) | apresentação; links para Escolher Fase e para o editor | — |
 | **EscolherFase** (`src/telas/EscolherFase.tsx`) | `PropsEscolherFase`: uma entrada por fase, em `<a>`/`<button>` nativos; Tab percorre, Enter abre; foco visível; lista vazia mostra mensagem | RF-13, RNF-07 |
-| **TelaJogo** (`src/telas/TelaJogo.tsx`) | `PropsTelaJogo`: 5 botões de parede, palco, caixa de fala, campo de resposta ou senha, dígitos revelados, aviso de resolução, fim de jogo | RF-15, RF-16, RF-17, RF-18, RNF-01, RNF-02 |
+| **TelaJogo** (`src/telas/TelaJogo.tsx`) | `PropsTelaJogo`: palco à esquerda; à direita, coluna com aviso de resolução, 5 botões de parede, dicas, caixa de fala, campo de resposta ou senha, resultado e dígitos revelados (LAC-046); fim de jogo | RF-15, RF-16, RF-17, RF-18, RNF-01, RNF-02 |
 | `src/main.tsx` | rotas: `/`, `/fases`, `/jogar/:id` | — |
 | `src/mensagens.ts` | textos em português | RNF-07 |
 
@@ -65,7 +65,9 @@ Decisões: ADR-003, ADR-006, ADR-009, ADR-012, ADR-014, ADR-017. Processo: ADR-0
 - botões de parede com o nome da parede (frente, direita, fundo, esquerda, teto);
 - controle de dica: `<button>` com "dica" no nome acessível, só para os enigmas com dica da parede ativa; ativado, mostra o texto (RF-17);
 - um único campo de resposta ou senha (`input`), enviado com Enter num `<form>` ou por botão "Responder"/"Enviar"/"Confirmar"; no modo senha, a pergunta do enigma anterior deixa de aparecer;
-- o palco tem tamanho diferente de zero no jsdom com a janela em 1280×720 (medido por `innerWidth`/`innerHeight`; o jsdom não tem `ResizeObserver`), e o nó `Image` do Konva existe com largura e altura mesmo sem a imagem carregada, para o clique acertar o objeto.
+- o palco tem tamanho diferente de zero no jsdom com a janela em 1280×720, e o nó `Image` do Konva existe com largura e altura mesmo sem a imagem carregada, para o clique acertar o objeto;
+- **medida do palco** (revista pela LAC-046, Eric em 06/11/2026): em produção, o palco mede o elemento que o contém por `ResizeObserver`, e a sala é o maior 16:9 dentro dele. Sem `ResizeObserver` (jsdom), a janela (`innerWidth`/`innerHeight`) é a reserva. A janela nunca é usada quando há medida do contêiner;
+- **layout** (LAC-046): em 1280x720, 1920x1080 e 2560x1440, a página não rola em nenhuma direção, e fala, pergunta, campo e dígitos aparecem na coluna à direita sem rolar (RF-16, RNF-02). O link de volta a Escolher Fase, depois do fim, também fica visível.
 
 O `RenderizadorParede` é testado através da `TelaJogo` (PEND-011): clique real no canvas para fala e decoração e controle de dica no DOM; o ícone desenhado não tem teste por pixel.
 

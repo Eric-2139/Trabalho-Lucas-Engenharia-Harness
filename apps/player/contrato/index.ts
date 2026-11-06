@@ -34,6 +34,12 @@ export interface PropsEscolherFase {
 /**
  * Tela de jogo: botões das 5 paredes, palco 16:9, falas, caixa de resposta, ícone de dica,
  * dígitos revelados e aviso abaixo de 1280×720 (RNF-01, RNF-02). Ao abrir a porta, mostra o fim.
+ *
+ * Layout (LAC-046, Eric em 06/11/2026): palco à esquerda e, à direita, uma coluna com o aviso de resolução, os botões
+ * das paredes, os controles de dica, a fala, a pergunta, a dica, o campo de resposta ou senha, o resultado e os
+ * dígitos revelados. O palco mede o elemento que o contém (`ResizeObserver`) e a sala é o maior 16:9 dentro dele;
+ * sem `ResizeObserver` (jsdom), a janela (`innerWidth`/`innerHeight`) é a reserva. Em 1280x720, 1920x1080 e
+ * 2560x1440, a página não rola, e o que o clique mostra (fala, pergunta, campo) aparece sem rolar (RF-16, RNF-02).
  */
 export interface PropsTelaJogo {
   faseId: string;
