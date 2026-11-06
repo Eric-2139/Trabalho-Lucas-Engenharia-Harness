@@ -1,0 +1,21 @@
+{
+  "agente": "codificacao",
+  "execucao": "a5bf9737f0cb8d585",
+  "inicio": "2026-11-06T00:50:40.451Z",
+  "fim": "2026-11-06T00:52:52.078Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-19",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/editor/src/telas/TelaConta.tsx",
+      "apps/editor/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

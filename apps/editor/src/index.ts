@@ -3,10 +3,7 @@
  * A implementação (fase 4, agente 4) substitui cada stub mantendo o tipo do contrato.
  * O app em si (main.tsx, rotas, telas) também fica em src/.
  */
-import type {
-  PropsTelaConta,
-  PropsTelaEdicao,
-} from '../contrato/index.ts';
+import type { PropsTelaEdicao } from '../contrato/index.ts';
 
 export * from '../contrato/index.ts';
 
@@ -25,10 +22,8 @@ export { PainelPropriedades } from './componentes/PainelPropriedades.tsx';
 export { BarraFerramentas } from './componentes/BarraFerramentas.tsx';
 export { TelaEntrar } from './telas/TelaEntrar.tsx';
 export { MinhasFases } from './telas/MinhasFases.tsx';
+export { TelaConta } from './telas/TelaConta.tsx';
 
-export function TelaConta(_props: PropsTelaConta): never {
-  return naoImplementado('TelaConta');
-}
 export function TelaEdicao(_props: PropsTelaEdicao): never {
   return naoImplementado('TelaEdicao');
 }
