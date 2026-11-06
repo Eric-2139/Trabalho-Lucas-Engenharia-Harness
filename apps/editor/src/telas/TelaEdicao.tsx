@@ -9,11 +9,15 @@
  * num bloco com o título ROTULOS_EDITOR.posicoesSemEnigma; outra recusa mostra só a mensagem em role="alert".
  * Alterações não publicadas (RF-13): o aviso vem de `abrirFase`; depois de cada PUT aceito numa fase publicada, a
  * fase é lida de novo para atualizar o aviso.
+ * Testar (RF-11): grava a alteração pendente, pede `jogoTeste` e mostra o ModoTestar (motor do player com o
+ * `verificadorTeste`); a recusa aparece em role="alert" e a tela fica na edição. Sair volta à edição sem mudar o store.
  * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
  */
 import { referenciasDeAsset, validarFase } from '@math-scape/schema';
-import { CATALOGO, type Fase, type RefImagem } from '@math-scape/schema/contrato';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { criarVerificadorHttp } from '@math-scape/player';
+import type { Verificador } from '@math-scape/player/contrato';
+import { CATALOGO, type Fase, type FaseJogo, type RefImagem } from '@math-scape/schema/contrato';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from 'zustand';
 import type { ClienteApiEditor, EstadoSalvamento, Relogio, Salvamento } from '../../contrato/salvamento.ts';
 import type { StoreEditor } from '../../contrato/store.ts';
@@ -27,6 +31,7 @@ import { PainelPropriedades } from '../componentes/PainelPropriedades.tsx';
 import { atalhoTeclado } from '../atalhos.ts';
 import { criarSalvamento } from '../salvamento.ts';
 import { criarStoreEditor } from '../store/index.ts';
+import { ModoTestar } from './ModoTestar.tsx';
 
 /** Tamanho da janela, atualizado no `resize`. */
 function useJanela() {
@@ -76,6 +81,7 @@ interface PropsEdicao {
   alteracoesNaoPublicadas: boolean;
   aoRecarregar: () => void;
   aoPublicado: () => void;
+  verificadorTeste: Verificador;
 }
 
 /** Recusa da publicação: a mensagem da Api e, no 422, as posições da senha sem enigma (RF-12). */
@@ -94,12 +100,18 @@ function Edicao({
   alteracoesNaoPublicadas,
   aoRecarregar,
   aoPublicado,
+  verificadorTeste,
 }: PropsEdicao) {
   const janela = useJanela();
   const estadoSalvamento = useEstadoSalvamento(salvamento);
   const [enviadas, definirEnviadas] = useState<RefImagem[]>([]);
   const [erroEnvio, definirErroEnvio] = useState<string | null>(null);
   const [recusaPublicacao, definirRecusaPublicacao] = useState<RecusaNaTela | null>(null);
+  // RF-11: projeção em teste (null fora do modo testar) e a recusa de `jogoTeste`.
+  const [jogo, definirJogo] = useState<FaseJogo | null>(null);
+  const [erroTeste, definirErroTeste] = useState<string | null>(null);
+  const testando = useRef(false);
+  testando.current = jogo !== null;
   const documento = useStore(store, (estado) => estado.documento);
   const paredeAtiva = useStore(store, (estado) => estado.paredeAtiva);
   const objeto = useStore(store, (estado) =>
@@ -111,7 +123,8 @@ function Edicao({
   // RF-09: Ctrl/Cmd+Z desfaz e Ctrl/Cmd+Y refaz, escutando no documento; com o foco num campo de texto não agem.
   useEffect(() => {
     const aoTeclar = (evento: KeyboardEvent) => {
-      if (emCampoDeTexto(evento.target)) return;
+      // Durante o modo testar, os atalhos não mexem no documento (RF-11).
+      if (testando.current || emCampoDeTexto(evento.target)) return;
       const acao = atalhoTeclado(evento);
       if (acao === null) return;
       evento.preventDefault();
@@ -171,6 +184,26 @@ function Edicao({
     definirRecusaPublicacao({ erro: resposta.erro, posicoes: [] });
   }
 
+  // RF-11: grava a alteração pendente (sem gravação aceita, não testa), pede a projeção de teste e joga com o motor
+  // do player. O store não é tocado durante o teste: ao sair, o documento é o mesmo de antes.
+  async function testar(): Promise<void> {
+    const estadoGravacao = await salvamento.salvarAgora();
+    if (estadoGravacao === 'conflito' || estadoGravacao === 'erro') return;
+    const resposta = await cliente.jogoTeste(faseId);
+    if (!resposta.ok) {
+      definirErroTeste(resposta.erro);
+      return;
+    }
+    definirErroTeste(null);
+    definirJogo(resposta.valor);
+  }
+
+  if (jogo !== null) {
+    return (
+      <ModoTestar fase={jogo} verificador={verificadorTeste} baseUrlApi={baseUrlApi} aoSair={() => definirJogo(null)} />
+    );
+  }
+
   const estado = store.getState();
   const nada = () => undefined;
 
@@ -191,7 +224,7 @@ function Edicao({
         aoDesfazer={() => store.getState().desfazer()}
         aoRefazer={() => store.getState().refazer()}
         aoSalvar={() => void salvamento.salvarAgora()}
-        aoTestar={nada}
+        aoTestar={() => void testar()}
         aoPublicar={() => void publicar()}
         aoExportar={nada}
       />
@@ -216,6 +249,7 @@ function Edicao({
           ) : null}
         </section>
       ) : null}
+      {erroTeste !== null ? <p role="alert">{erroTeste}</p> : null}
       {estadoSalvamento === 'conflito' ? (
         <button type="button" onClick={aoRecarregar}>
           {ROTULOS_EDITOR.recarregarFase}
@@ -280,7 +314,19 @@ function novoSalvamento(
   });
 }
 
-export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = gerarIdPadrao }: PropsTelaEdicao) {
+export function TelaEdicao({
+  faseId,
+  cliente,
+  relogio,
+  baseUrlApi,
+  gerarId = gerarIdPadrao,
+  verificadorTeste,
+}: PropsTelaEdicao) {
+  // RF-11: o modo testar confere as respostas no servidor com `modo=teste` (contrato telas.ts).
+  const verificador = useMemo(
+    () => verificadorTeste ?? criarVerificadorHttp({ baseUrlApi, faseId, modo: 'teste' }),
+    [verificadorTeste, baseUrlApi, faseId],
+  );
   const [aberta, definirAberta] = useState<{
     store: StoreEditor;
     salvamento: Salvamento;
@@ -389,6 +435,7 @@ export function TelaEdicao({ faseId, cliente, relogio, baseUrlApi, gerarId = ger
       alteracoesNaoPublicadas={aviso.alteracoesNaoPublicadas}
       aoRecarregar={recarregar}
       aoPublicado={publicado}
+      verificadorTeste={verificador}
     />
   );
 }

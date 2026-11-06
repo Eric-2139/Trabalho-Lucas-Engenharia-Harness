@@ -1,0 +1,22 @@
+{
+  "agente": "codificacao",
+  "execucao": "a637d4bd5aeb30f7d",
+  "inicio": "2026-11-06T04:15:30.422Z",
+  "fim": "2026-11-06T04:19:59.145Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-11",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/editor/src/componentes/AbasParedes.tsx",
+      "apps/editor/src/telas/ModoTestar.tsx",
+      "apps/editor/src/telas/TelaEdicao.tsx"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 3
+  }
+}

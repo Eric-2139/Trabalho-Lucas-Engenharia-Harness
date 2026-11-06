@@ -7,7 +7,8 @@ import { PAREDES, type ParedeId } from '@math-scape/schema/contrato';
 import { type KeyboardEvent, useRef } from 'react';
 import type { PropsAbasParedes } from '../../contrato/index.ts';
 
-const NOMES_PAREDES: Record<ParedeId, string> = {
+/** Nomes das paredes, também usados pelos botões de parede do modo testar (RF-11). */
+export const NOMES_PAREDES: Record<ParedeId, string> = {
   frente: 'Frente',
   direita: 'Direita',
   fundo: 'Fundo',
