@@ -121,6 +121,16 @@ Pontos do motor (RF-16) para o arquiteto:
 
 De carona com o RF-07 ficaram verdes os casos de schema do RF-08 e do RNF-09 em `tests/schema/fase.test.ts`. Com as entregas 2 a 5, a suíte da camada SchemaFase está toda verde (67 de 67). Ainda são stubs `projetarParaJogo`, `objetoPadrao` e `resolverImagem`, que nenhum teste da rodada 1 cobre. Elas entram com os requisitos do Player e do editor (RNF-04, RF-17, ADR-011, ADR-012). Salvar e publicar pela Api (RNF-09) ficam para a camada da Api.
 
+## Estado ao fim da sessão de 05-06/11
+- **Suíte:** 607 de 607 verdes em 34 arquivos, análise limpa (Biome e `tsc` nos 5 pacotes), harness 60 de 60. Nenhuma pendência aberta (PEND-001 a 021 respondidas).
+- **Cobertura:** 26 dos 28 requisitos têm caso feliz, de borda e negativo. Ficam sem teste unitário o RNF-03 (arrastar a 30 fps com 50 objetos) e o RNF-08 (publicar em menos de 30 min, sem ajuda), que são medição e teste de usabilidade das fases 6 e 7.
+- **Apps:** Player (`/`, `/fases`, `/jogar/:id`) e Editor (login, Minhas fases, Edição com modo testar, Conta) estão ligados em `main.tsx`. A composição não tem teste unitário e fica para o E2E.
+- **Para o Eric decidir ou rodar:**
+  1. `/verificar-rastreabilidade` (agente 5). O contrato das telas do Editor e as convenções das PEND-017 a 021 mudaram o projeto do programa, mas não a matriz.
+  2. E2E Playwright e browserslist do RNF-01 (PEND-014, fases 5-6).
+  3. Achados sem pendência, listados acima: `ModoTestar` repete a lógica da `TelaJogo` (mover a tela de jogo para `packages/player`?); textos fixos no `ModoTestar`; limite do arraste ignora a rotação; porta que troca tipo e senha gera dois passos de histórico; retomada de subagente zera a tarefa do harness; `modulos-editor.md` ainda cita `src/telas/Edicao.tsx` (o arquivo é `TelaEdicao.tsx`).
+  4. Revisar as decisões tomadas pela IA com a delegação: contrato das telas do Editor, saída do conflito, PEND-013 a 021 e o `--silent` tirado da análise.
+
 ## Preparo da fase (commit `3d77b02`)
 Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que derrubariam os agentes 3 e 4 na primeira rodada, e uma lacuna de processo:
 - **Disjuntor contra suíte vermelha.** O Claude Code trata saída ≠ 0 do Bash como falha da ferramenta (confirmado na documentação de hooks). A suíte vermelha saía com 1, então três execuções vermelhas seguidas disparavam o disjuntor: o agente 3, cujos testes nascem vermelhos contra os stubs, e o agente 4, antes do teto de 5 ciclos. Agora vermelho sai com 0.
@@ -207,6 +217,7 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Ligar o `main.tsx` do app do criador (RF-01) | `sucesso` | 888.402 | 17.722 | medido |
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada C: gravar ao sair da Edição e depois do novo login (RF-10, RF-01; PEND-020 e PEND-021) | `sucesso`; 10 casos, 6 vermelhos | 501.545 | 12.393 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar PEND-021 e PEND-020 (gravar ao sair e depois do novo login) | `sucesso` | 385.665 | 8.051 | medido |
+| 05-06/11 | Claude Code / Opus 5.5 | git pull, ler o projeto, orquestrar os agentes 3 e 4 na interface do Player e em todo o Editor, decidir as pendências delegadas, revisar cada entrega e commitar (sessão principal, Eric fora) | entregas 26 a 59; PEND-013 a 021 respondidas; suíte 607 de 607 | 37.536.853 | 103.532 | medido |
 | **Total** | | | | **75.615.448** | **1.116.427** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
