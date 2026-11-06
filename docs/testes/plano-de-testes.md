@@ -1,6 +1,6 @@
 # Plano de testes — Math Scape (fases 5 e 6)
 
-Responsável: Sarah Mota · Baseline: `2026-11-03.1` · Commit testado: `e9fa8da` (fim da fase 4) · Situação: **assinado por Sarah Mota em 06/11/2026**
+Responsável: Sarah Mota · Baseline: `2026-11-03.1` · Commit testado: `92fd9d9`, com os casos E2E ajustados nesta rodada · Situação: **assinado por Sarah Mota em 06/11/2026 (versão do reteste)**
 
 A coluna "Resultado" da matriz traz o que foi medido em 06/11/2026. Detalhes dos achados: [relatório de defeitos](relatorio-defeitos.md). Conclusão do sistema: [relatório de teste do sistema](relatorio-teste-sistema.md).
 
@@ -49,16 +49,16 @@ O CI (`.github/workflows/ci.yml`) roda os mesmos comandos a cada push na `main` 
 
 ## Matriz de rastreabilidade
 
-Os números de unidade e integração vêm de `harness/matriz/requisito-teste.json`. A coluna de sistema vem das marcas `@req` em `tests/e2e/`.
+Os números de unidade e integração vêm das marcas `@req` em `tests/`, sem contar `tests/e2e/` (a matriz `harness/matriz/requisito-teste.json` agora soma as duas). A coluna de sistema vem das marcas `@req` em `tests/e2e/`.
 
 | Requisito | Prioridade | O que testar | Unidade e integração (feliz / borda / negativo) | Sistema (`tests/e2e/`) | Resultado | Achados |
 |---|---|---|---|---|---|---|
 | RF-01 | Alta | Cadastro e login; login exigido só para criar fases, jogar fases publicadas não exige login. | 10 / 13 / 11 | criador | Aprovado |  |
 | RF-02 | Alta | Criar, renomear, duplicar e excluir as próprias fases (sala de 5 paredes); excluir fase publicada exige confirmação; exclusão não se desfaz com Ctrl+Z. | 10 / 11 / 16 | criador | Aprovado |  |
-| RF-03 | Alta | Editar as 5 paredes em área de proporção fixa, trocando por abas. | 5 / 3 / 4 | criador | Aprovado, com ressalva | DEF-04 |
-| RF-04 | Alta | Biblioteca de objetos: porta, quadro, janela, relógio e os objetos da fase original. | 7 / 6 / 6 | criador | **Reprovado** | DEF-02 |
-| RF-05 | Alta | Mover, redimensionar, rotacionar, ordenar camadas, duplicar e excluir objetos. | 9 / 11 / 10 | criador | **Reprovado** | DEF-01 |
-| RF-06 | Média | Enviar imagens PNG, JPG ou WebP de até 5 MB para fundo ou objeto. | 8 / 10 / 10 | criador | **Reprovado em parte** | DEF-03 |
+| RF-03 | Alta | Editar as 5 paredes em área de proporção fixa, trocando por abas. | 6 / 5 / 5 | criador | Aprovado | DEF-04 corrigido |
+| RF-04 | Alta | Biblioteca de objetos: porta, quadro, janela, relógio e os objetos da fase original. | 15 / 14 / 11 | criador | Aprovado | DEF-02 corrigido |
+| RF-05 | Alta | Mover, redimensionar, rotacionar, ordenar camadas, duplicar e excluir objetos. | 17 / 15 / 15 | criador | Aprovado | DEF-01 corrigido |
+| RF-06 | Média | Enviar imagens PNG, JPG ou WebP de até 5 MB para fundo ou objeto. | 9 / 11 / 11 | criador | Aprovado | DEF-03 corrigido |
 | RF-07 | Alta | 4 tipos de objeto: decoração (só visual), fala, enigma e porta. | 6 / 6 / 7 | — | Aprovado (unidade) |  |
 | RF-08 | Alta | Configurar fala (texto), enigma (pergunta, uma ou mais respostas numéricas, dica, zero ou mais dígitos) e porta (senha de 4 a 8 dígitos, padrão 5). | 13 / 18 / 12 | criador | Aprovado |  |
 | RF-09 | Média | Desfazer e refazer com Ctrl+Z e Ctrl+Y. | 6 / 10 / 8 | criador | Aprovado |  |
@@ -67,13 +67,13 @@ Os números de unidade e integração vêm de `harness/matriz/requisito-teste.js
 | RF-12 | Média | Bloquear a publicação se algum dígito da senha não estiver ligado a um enigma, indicando quais. | 4 / 9 / 5 | criador | Aprovado |  |
 | RF-13 | Alta | Publicar fase; tela Escolher Fase lista as publicadas. | 8 / 10 / 10 | criador, jogador | Aprovado, com observação | OBS-01 |
 | RF-14 | Baixa | Exportar as próprias fases e importar fase em JSON. | 4 / 7 / 5 | criador | Aprovado |  |
-| RF-15 | Alta | Enigma resolvido revela dígitos; aceita qualquer resposta cadastrada, comparando só o número; porta abre só com a senha completa. | 17 / 30 / 24 | jogador | Aprovado, com ressalva | DEF-05 |
-| RF-16 | Média | Decoração não reage ao clique; fala ao clicar é sempre objeto do tipo fala. | 4 / 5 / 3 | equivalencia-legado | Aprovado, com ressalva | DEF-05 |
+| RF-15 | Alta | Enigma resolvido revela dígitos; aceita qualquer resposta cadastrada, comparando só o número; porta abre só com a senha completa. | 17 / 30 / 24 | jogador | Aprovado | DEF-05 corrigido |
+| RF-16 | Média | Decoração não reage ao clique; fala ao clicar é sempre objeto do tipo fala. | 5 / 6 / 4 | equivalencia-legado | Aprovado | DEF-05 corrigido |
 | RF-17 | Média | Enigma com dica exibe ícone de dica que mostra a dica cadastrada. | 2 / 4 / 3 | criador, equivalencia-legado | Aprovado |  |
 | RF-18 | Alta | Fase original recriada com os mesmos enigmas, respostas, dígitos e senha 92139. | 10 / 4 / 5 | equivalencia-legado | Aprovado, com ressalva | DEF-06, DIF-01 |
 | RF-19 | Alta | Usuário pode excluir a própria conta e seus dados (LGPD). | 3 / 5 / 5 | criador | Aprovado |  |
 | RNF-01 | — | Duas últimas versões estáveis de Chrome, Edge e Firefox, no computador, tela mínima 1280x720; abaixo disso, aviso. | 5 / 8 / 3 | fluxo-completo, nao-funcionais | **Parcial**: uma versão por navegador | DEF-08 |
-| RNF-02 | — | Sala em 16:9 com posições relativas, escalando a partir de 1280x720. | 3 / 4 / 2 | nao-funcionais | Aprovado, com ressalva | DEF-05 |
+| RNF-02 | — | Sala em 16:9 com posições relativas, escalando a partir de 1280x720. | 6 / 9 / 4 | nao-funcionais | Aprovado | DEF-05 corrigido |
 | RNF-03 | — | Arrastar objetos a pelo menos 30 quadros por segundo com até 50 objetos por parede. | — | desempenho | Aprovado nesta máquina |  |
 | RNF-04 | — | Respostas e senha nunca vão ao navegador de quem joga; conferência no servidor, inclusive no modo testar. O editor do autor recebe o próprio documento. | 5 / 6 / 5 | nao-funcionais | Aprovado |  |
 | RNF-05 | — | Senhas com hash (argon2 ou bcrypt); login por sessão em cookie httpOnly. | 2 / 3 / 2 | nao-funcionais | Aprovado |  |

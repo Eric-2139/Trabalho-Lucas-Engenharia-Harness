@@ -122,7 +122,15 @@ test('test_RF03_area_16_9_mantem_a_proporcao_ao_redimensionar_a_janela', async (
       const caixa = await page.locator('.konvajs-content').first().boundingBox();
       return !!caixa && caixa.width > 0 && caixa.x + caixa.width <= largura && caixa.y + caixa.height <= altura;
     }).toBe(true);
-    await clicarObjeto(page, fase.paredes.frente.objetos[0]!);
+    // O palco 16:9 fica centralizado dentro do Stage: acertar os dois cantos opostos do objeto mostra escala e proporção.
+    // O ResizeObserver atualiza o Stage depois do resize: repete o clique até o palco assentar (falha se nunca acertar).
+    await expect(async () => {
+      await clicarObjeto(page, fase.paredes.frente.objetos[0]!, 0.1, 0.1);
+      await expect(page.getByRole('combobox', { name: 'Tipo' })).toBeVisible({ timeout: 500 });
+    }).toPass();
+    await clicarObjeto(page, { x: 0.9, y: 0.9, largura: 0.01, altura: 0.01 });
+    await expect(page.getByRole('combobox', { name: 'Tipo' })).toHaveCount(0);
+    await clicarObjeto(page, fase.paredes.frente.objetos[0]!, 0.9, 0.9);
     await expect(page.getByRole('combobox', { name: 'Tipo' })).toBeVisible();
     await clicarObjeto(page, { x: 0.9, y: 0.9, largura: 0.01, altura: 0.01 });
     await expect(page.getByRole('combobox', { name: 'Tipo' })).toHaveCount(0);
@@ -134,6 +142,8 @@ test('test_RF03_palco_area_de_trabalho_cabe_na_janela_com_a_biblioteca_e_o_paine
   await abrirNaEdicao(page, faseComUmObjeto());
   await expect(page.getByRole('button', { name: 'Porta', exact: true })).toBeInViewport();
   await expect(page.getByRole('form', { name: 'Propriedades da fase' })).toBeInViewport();
+  const pagina = await page.evaluate(() => ({ rolaX: document.documentElement.scrollWidth - innerWidth, rolaY: document.documentElement.scrollHeight - innerHeight }));
+  expect(pagina).toEqual({ rolaX: 0, rolaY: 0 });
 });
 
 // @req RF-04 @tipo feliz

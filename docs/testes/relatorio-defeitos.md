@@ -1,8 +1,19 @@
 # Relatório de defeitos — Math Scape (fases 5 e 6)
 
-Responsável: Sarah Mota · Destino: Eric (correções) · Commit testado: `e9fa8da` · Data: 06/11/2026 · Situação: **assinado por Sarah Mota em 06/11/2026**
+Responsável: Sarah Mota · Destino: Eric (correções) · Achados no commit `e9fa8da` · Reteste no commit `92fd9d9`, com os casos E2E ajustados nesta rodada · Data: 06/11/2026 · Situação: **assinado por Sarah Mota em 06/11/2026 (versão do reteste)**
 
 Os 607 testes de unidade e integração estão verdes. Todos os defeitos abaixo apareceram no sistema real ou na leitura do código: os testes verdes não os detectam, porque cobrem as peças separadas, e a composição das telas (`main.tsx`) não tem teste unitário.
+
+## Situação depois do reteste
+
+| Defeito | Situação |
+|---|---|
+| DEF-01, DEF-02 e DEF-05 (altos) | **Corrigidos.** Casos passando sem `test.fail` |
+| DEF-03 e DEF-04 (médios) | **Corrigidos.** Casos passando sem `test.fail` |
+| DEF-06 (médio) | Aberto. O quadro segue vazio; a geometria melhorou |
+| DEF-07 e DEF-08 (baixos) | Abertos |
+
+Unidade e integração: 667 de 667. Sistema: 3 execuções seguidas sem falha inesperada. O texto de cada defeito abaixo descreve o achado original no `e9fa8da`, exceto onde há uma nota de reteste.
 
 ## Resumo
 
@@ -55,7 +66,8 @@ Para reproduzir um caso, use o nome dele (ou trecho): `docker run --rm --network
 ### DEF-06 · Quadro vazio e geometria diferente do legado (RF-18, Média)
 - **Comparação:** [legado](evidencias/legado-frente-1920x1080.png) × [novo](evidencias/novo-frente-1920x1080.png), a 1920x1080.
 - **Esperado:** o agente 4 deixou a equivalência visual para esta fase (log da fase 4). O RF-18 exige perguntas iguais, sem exigir o desenho.
-- **Obtido:** o texto das perguntas é igual ao do legado, mas só aparece depois do clique. No legado, o enunciado e o campo ficam escritos no quadro; no novo, o quadro é um retângulo vazio. O quadro-negro ficou maior (cerca de 758×468 px contra 638×394) e encosta na porta. A sala ocupa a janela inteira, sem o fundo escuro do legado, e os botões das paredes ficam acima dela, não à direita.
+- **Obtido:** o texto das perguntas é igual ao do legado, mas só aparece depois do clique. No legado, o enunciado e o campo ficam escritos no quadro; no novo, o quadro é um retângulo vazio. O quadro-negro encosta na porta, e a página não tem o fundo escuro do legado.
+- **Nota de reteste:** com o layout do DEF-05, o quadro passou a cerca de 626×386 px (no legado, 638×394), e os botões das paredes ficam à direita, como no legado. O quadro vazio continua.
 
 ### DEF-07 · Rótulos diferentes no modo testar (RF-11, Baixa)
 - **Obtido:** "Resposta" e "Senha:" no modo testar; "Sua resposta" e "Senha da porta:" no jogo. O critério pede "as regras do jogador"; as regras estão iguais, só os textos diferem. O log da fase 4 já citava os textos fixos do `ModoTestar`.
@@ -78,7 +90,7 @@ Mudar isso é mudança de requisito, e passa pela Roberta. Opções: (a) aceitar
 
 ## Issues no GitHub
 
-O plano pede os defeitos como issues. Elas foram abertas em 06/11/2026, com o número igual ao do defeito: [DEF-01 (#1)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/1), [DEF-02 (#2)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/2), [DEF-03 (#3)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/3), [DEF-04 (#4)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/4), [DEF-05 (#5)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/5), [DEF-06 (#6)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/6), [DEF-07 (#7)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/7) e [DEF-08 (#8)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/8).
+O plano pede os defeitos como issues. Elas foram abertas em 06/11/2026, com o número igual ao do defeito. As #1 a #5 devem ser fechadas com o reteste assinado: [DEF-01 (#1)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/1), [DEF-02 (#2)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/2), [DEF-03 (#3)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/3), [DEF-04 (#4)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/4), [DEF-05 (#5)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/5), [DEF-06 (#6)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/6), [DEF-07 (#7)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/7) e [DEF-08 (#8)](https://github.com/Eric-2139/Trabalho-Lucas-Engenharia-Harness/issues/8).
 
 ---
 Assinatura da responsável (fase 5): Sarah Mota · Data: 06/11/2026

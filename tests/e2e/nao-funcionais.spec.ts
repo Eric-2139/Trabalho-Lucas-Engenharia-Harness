@@ -130,6 +130,8 @@ for (const [largura, altura] of [[1280, 720], [1920, 1080], [2560, 1440]] as con
     await clicarObjeto(page, objetoDe(fase, 'frente', 'frente-quadro-negro'));
     await page.evaluate(() => window.scrollTo(0, 0));
     await expect(page.getByLabel('Sua resposta')).toBeInViewport({ timeout: 2000 });
+    const pagina = await page.evaluate(() => ({ rolaX: document.documentElement.scrollWidth - innerWidth, rolaY: document.documentElement.scrollHeight - innerHeight }));
+    expect(pagina).toEqual({ rolaX: 0, rolaY: 0 });
   });
 }
 
