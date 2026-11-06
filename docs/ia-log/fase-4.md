@@ -42,6 +42,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 32 | RF-05 | Editor | rodada A (22 casos em `tests/editor/store.test.ts`) | store do editor em `apps/editor/src/store/index.ts` (Zustand + zundo, histórico só do documento, `validarFase` antes de aplicar, `mudarCamada` por ordem visual, duplicar com +0,02); o agente implementou o store inteiro, porque os testes do RF-05 usam ações de outros requisitos; verde no 2º de 5 ciclos (o 1º teve erro de tipo), sem reversão | `codificacao-2026-11-05T23-53-52-682Z.json` |
 | 33 | RF-04 | SchemaFase + Editor | rodada A (7 casos de `adicionarObjeto` em `tests/editor/store.test.ts`, mais os 3 de `resolverImagem`) | `objetoPadrao` em `packages/schema/src/padroes.ts` (tamanho do catálogo ou 0,2 para `asset:`, centralizado, camada 0); verde no 1º de 5 ciclos, análise limpa, sem reversão. A biblioteca na interface (arrastar até a parede) vem com a rodada B | `codificacao-2026-11-05T23-57-19-320Z.json` |
 | 34 | RF-09 | Editor | rodada A (6 casos em `tests/editor/atalhos.test.ts` e 10 de histórico no store) | `atalhoTeclado` em `apps/editor/src/atalhos.ts` (Ctrl ou Cmd + Z/Y, sem diferenciar maiúscula); os casos de histórico já estavam verdes pelo RF-05; verde no 1º de 5 ciclos, análise limpa, sem reversão. Ctrl+Shift+Z devolve `null`, como o contrato manda | `codificacao-2026-11-05T23-59-44-490Z.json` |
+| 35 | RF-10 | Editor | rodada A (14 casos em `tests/editor/salvamento.test.ts` e 3 em `cliente-api.test.ts`) | `criarSalvamento` em `apps/editor/src/salvamento.ts` (prazo de 30 s sem reiniciar, revisão encadeada, 409 → conflito, outras falhas → erro com a alteração guardada) e `criarClienteApiEditor` em `cliente-api.ts` (nunca rejeita, 401 → `aoNaoAutenticado`); verde no 1º de 5 ciclos, suíte 440 de 440, sem reversão; de carona os casos do RF-01 no cliente | `codificacao-2026-11-06T00-02-56-333Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -53,6 +54,7 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Contrato das telas do Editor** (commit `16d215c`, decisão da IA como arquiteta). O contrato da fase 3 não tipava as telas do editor. A IA acrescentou `apps/editor/contrato/telas.ts` (`PropsTelaEntrar`, `PropsMinhasFases`, `PropsTelaConta`, `PropsTelaEdicao`, `ROTULOS_EDITOR`) e os stubs, e registrou as convenções em `modulos-editor.md` §5. A matriz requisito → componente → decisão não mudou, então o gerador do projeto e o agente 5 não foram rodados.
 - **Rodada A do Editor (agente 3).** 89 casos em `tests/editor/{store,atalhos,salvamento,cliente-api}.test.ts` e o relógio falso em `tests/support/relogio-falso.ts`. A sessão principal conferiu os tipos dos testes com `tsc -p tests` no contêiner, sem erro. Pontos que o agente deixou sem asserção, por não estarem no critério: o eixo do deslocamento de +0,02 ao duplicar, a camada do primeiro objeto numa parede vazia, nada gravado antes de 30 s, o que vem depois de um `conflito` e se `assinar` notifica o estado atual.
 - **Análise de tipos muda.** O agente 4 do RF-05 viu a análise falhar sem saber onde: `pnpm run --silent typecheck` escondia a saída do `tsc` dos pacotes. A IA tirou o `--silent` do typecheck em `infra/testes/entrada.sh` e reconstruiu a imagem.
+- **Achados do agente 4 no RF-10.** Depois de um `conflito` (409), o salvamento automático não tenta de novo sozinho, para não repetir o 409 a cada 30 s. O §3 não diz como sair do conflito, e falta decidir isso antes do indicador na barra. O cliente envia a imagem no campo multipart `arquivo` e o envelope como `application/json`. A sessão principal conferiu que a Api lê o primeiro arquivo do multipart, qualquer que seja o nome do campo.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -147,7 +149,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-05 (store do editor) | `sucesso` no 2º ciclo; 3 bloqueios P1 | 2.207.100 | 20.478 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-04 (`objetoPadrao`) | `sucesso` no 1º ciclo; 2 bloqueios P1 | 595.111 | 6.151 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-09 (atalhos) | `sucesso` no 1º ciclo | 257.913 | 3.803 | medido |
-| **Total** | | | | **51.222.013** | **687.406** | medido |
+| 05/11 | idem, subagente `codificacao` | Implementar RF-10 (salvamento e cliente HTTP do editor) | `sucesso` no 1º ciclo | 561.577 | 10.731 | medido |
+| **Total** | | | | **51.783.590** | **698.137** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
