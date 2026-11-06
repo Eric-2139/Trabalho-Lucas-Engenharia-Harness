@@ -51,6 +51,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 41 | RF-01 | Editor | rodada B2a (7 casos de RF-01, mais os de RNF-06 e RNF-07 em `tela-entrar.test.tsx`) | `TelaEntrar` em `apps/editor/src/telas/TelaEntrar.tsx`: formulários de entrar e cadastrar, cadastro seguido de login, recusa em `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona RNF-06 e RNF-07 da tela. Falta ligar o redirecionamento ao login no `main.tsx` (sem teste unitário) | `codificacao-2026-11-06T00-46-25-982Z.json` |
 | 42 | RF-02 | Editor | rodada B2a (17 casos de RF-02 e 4 de RF-14 em `minhas-fases.test.tsx`) | `MinhasFases` em `apps/editor/src/telas/MinhasFases.tsx`: lista relida após cada ação, campo único de título, confirmação só para fase publicada, importar por `input` de arquivo, recusa em `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-14 da tela | `codificacao-2026-11-06T00-50-25-256Z.json` |
 | 43 | RF-19 | Editor | rodada B2a (7 casos em `tela-conta.test.tsx`) | `TelaConta` em `apps/editor/src/telas/TelaConta.tsx`: "Excluir conta" abre o `alertdialog`, Confirmar chama a Api e só então `aoExcluirConta`, Cancelar não chama nada, erro em `role="alert"`; verde no 1º de 5 ciclos, suíte 543 de 543, sem reversão | `codificacao-2026-11-06T00-52-52-078Z.json` |
+| 44 | RF-03 | Editor | rodada B2b (4 casos de RF-03 em `tela-edicao.test.tsx`) | `TelaEdicao` em `apps/editor/src/telas/TelaEdicao.tsx`: abre a fase, valida o documento, cria o store e monta abas, palco (tamanho da janela, PEND-019) e painel; verde no 1º de 5 ciclos, sem reversão | `codificacao-2026-11-06T01-09-41-553Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -172,7 +173,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RF-02 (Minhas fases) | `sucesso` no 1º ciclo | 565.371 | 8.917 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-19 (tela de Conta) | `sucesso` no 1º ciclo | 346.943 | 4.639 | medido |
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada B2b: TelaEdicao (RF-03, RF-04, RF-06, RF-09 a RF-14, RNF-01) | `sucesso`; 54 casos, vermelhos só pelo stub; PEND-019 | 2.940.441 | 83.548 | medido |
-| **Total** | | | | **64.696.833** | **974.791** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar RF-03 na `TelaEdicao` (base da tela) | `sucesso` | 843.111 | 8.049 | medido |
+| **Total** | | | | **65.539.944** | **982.840** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
