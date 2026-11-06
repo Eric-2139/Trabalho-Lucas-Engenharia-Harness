@@ -6,7 +6,6 @@
 import type {
   PropsBarraFerramentas,
   PropsMinhasFases,
-  PropsPainelPropriedades,
   PropsTelaConta,
   PropsTelaEdicao,
   PropsTelaEntrar,
@@ -25,10 +24,8 @@ export { criarClienteApiEditor } from './cliente-api.ts';
 export { AbasParedes } from './componentes/AbasParedes.tsx';
 export { CanvasParede } from './componentes/CanvasParede.tsx';
 export { BibliotecaObjetos } from './componentes/BibliotecaObjetos.tsx';
+export { PainelPropriedades } from './componentes/PainelPropriedades.tsx';
 
-export function PainelPropriedades(_props: PropsPainelPropriedades): never {
-  return naoImplementado('PainelPropriedades');
-}
 export function BarraFerramentas(_props: PropsBarraFerramentas): never {
   return naoImplementado('BarraFerramentas');
 }

@@ -1,0 +1,21 @@
+{
+  "agente": "codificacao",
+  "execucao": "ac2881b0fa69f7287",
+  "inicio": "2026-11-06T00:27:02.896Z",
+  "fim": "2026-11-06T00:31:04.055Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-08",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/editor/src/componentes/PainelPropriedades.tsx",
+      "apps/editor/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}
