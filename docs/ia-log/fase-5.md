@@ -31,6 +31,9 @@ A prioridade dos defeitos e a assinatura do plano são da Sarah. As prioridades 
 | Data | Ferramenta / modelo | Objetivo | Resultado | Tokens entrada | Tokens saída | Origem |
 |---|---|---|---|---|---|---|
 | 06/11 | Claude Code / Opus 5.5 | Levantamento, imagem, suíte, cobertura e análise (sessão principal, até 12:29 UTC) | 607 de 607; meta de cobertura atingida | 1.896.323 | 25.497 | medido |
-| **Total** | | | | **1.896.323** | **25.497** | medido |
+| 06/11 | Claude Code (CLI) / agente 5 | `/verificar-rastreabilidade` pedido pelo Eric depois da fase 6 | `sucesso`: 28 de 28, 0 lacunas bloqueantes, 11 abertas (LAC-043 a LAC-053) | 1.020.706 | 26.155 | medido |
+| **Total** | | | | **2.917.029** | **51.652** | medido |
 
 A sessão foi uma só para as fases 5 e 6. O corte entre elas é o início da construção da suíte Playwright. A escrita dos documentos e o commit entram na fase 6.
+
+A rastreabilidade teve duas rodadas. A primeira, pela extensão do VS Code, rodou sem os hooks do agente: não gerou log nem relatório, foi descartada e não teve os tokens medidos, então não está no total. A rodada oficial, pela CLI, é a da tabela, com relatório em `harness/relatorios/projeto-2026-11-06T13-33-19-793Z.json`.

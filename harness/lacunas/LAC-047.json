@@ -1,0 +1,12 @@
+{
+  "id": "LAC-047",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-10", "Editor"],
+  "justificativa": "A decisão da PEND-021 (gravar no pagehide) só está especificada até o evento, não até o pedido chegar ao servidor. (a) cliente-api.ts, linha 53, usa fetch sem keepalive, e o termo não aparece no contrato nem no código; pedidos comuns podem ser cancelados quando a página é descarregada. Os testes (tests/editor/tela-edicao.test.tsx, linhas 1352 e 1379) disparam o evento no jsdom com cliente simulado, então não verificam isso, e a suíte E2E não tem caso de pagehide. Não reproduzi a perda em navegador real: é um risco a confirmar. (b) Com um PUT em andamento, salvarAgora espera o anterior (salvamento.ts, linha 70) e o novo pedido pode não sair antes de a página fechar. (c) contratos/editor.md, linha 24, e modulos-editor.md, linha 41, ainda listam os gatilhos sem a saída da tela e o novo login, que só constam em modulos-editor.md, linha 44, e telas.ts. O critério do RF-10 não exige gravar ao sair, por isso esta lacuna não é bloqueante.",
+  "proposta": "O arquiteto define a garantia pretendida: (1) gravação no pagehide com fetch keepalive, ciente do limite de cerca de 64 KiB do corpo, que precisa ser comparado ao tamanho do documento; (2) outro meio, como cópia local recuperada na volta; ou (3) melhor esforço assumido no contrato. Depois, alinhar editor.md e modulos-editor.md §3 aos gatilhos reais.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-021",
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

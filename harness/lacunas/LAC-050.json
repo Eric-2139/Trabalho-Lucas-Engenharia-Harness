@@ -1,0 +1,12 @@
+{
+  "id": "LAC-050",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-11", "Editor", "Player"],
+  "justificativa": "A ADR-009 reutiliza o motor no modo testar, mas não a tela de jogo, e o projeto não define uma fonte comum para os textos dela. modulos-editor.md, linha 77, diz que o campo funciona 'como na TelaJogo' e que os resultados usam MENSAGENS. MENSAGENS (packages/player/contrato/motor.ts, linha 24) não tem os rótulos do campo: 'Sua resposta' e 'Senha da porta' ficam em apps/player/src/mensagens.ts, linhas 34-35, implementação de outro app. O ModoTestar repete textos próprios (apps/editor/src/telas/ModoTestar.tsx, linhas 113 e 121), o que corresponde ao DEF-07 (prioridade baixa). As regras do jogo são as mesmas; o critério do RF-11 pede 'as regras do jogador' e não cita textos, por isso esta lacuna não é bloqueante. O log da fase 4 (docs/ia-log/fase-4.md, linha 131) já citava a repetição da lógica da TelaJogo no ModoTestar.",
+  "proposta": "O arquiteto define se os rótulos do jogo fazem parte do contrato comum. Opções: (a) estender o contrato de packages/player com esses rótulos; (b) mover a tela de jogo para packages/player, revendo a ADR-009; (c) aceitar textos próprios no modo testar e ajustar o caso test_RF11_modo_testar_usa_os_mesmos_rotulos_do_jogo. Em (a) ou (b), devolver ao agente 3 antes de o agente 4 corrigir o DEF-07.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

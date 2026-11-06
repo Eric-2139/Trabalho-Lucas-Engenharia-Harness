@@ -1,0 +1,12 @@
+{
+  "id": "LAC-049",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-01", "RF-10", "Editor"],
+  "justificativa": "Parte do contrato do Editor vem de decisões que ainda não têm ratificação humana registrada. As PEND-013 a 021 têm respondida_por 'Claude (sessão principal), com decisão delegada pelo Eric', enquanto .claude/rules/rastreabilidade.md diz que a resposta de pendência é só do humano. Duas decisões citadas em modulos-editor.md nem passaram por pendência: a saída do conflito (linha 43), que descarta a alteração local, e o contrato das telas (linha 82). A PEND-020 acrescentou uma propriedade ao contrato (telas.ts, linha 143). Nenhuma delas tem ADR própria. A delegação aparece nos textos dessas respostas e em docs/ia-log/fase-4.md, escritos na mesma sessão; não encontrei registro do próprio Eric nos artefatos lidos, o que não prova que ela não ocorreu. O próprio log (linha 132) deixa essa revisão como pendente.",
+  "proposta": "Eric revisa cada decisão e registra a ratificação ou a substituição em seu próprio nome, começando pelas que afetam dados do criador: saída do conflito, PEND-020 e PEND-021. Cabe a ele e à equipe definir se a delegação é aceita como regra, com a alteração correspondente em rastreabilidade.md, ou se foi exceção. Este agente não avalia o mérito das decisões.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-020",
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

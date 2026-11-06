@@ -1,0 +1,12 @@
+{
+  "id": "LAC-052",
+  "tipo": "lacuna_parcial",
+  "itens": ["RNF-03", "RNF-04", "RNF-05", "Editor", "Api", "Player"],
+  "justificativa": "As 17 ADRs de harness/projeto/decisoes/ continuam com 'Status: proposta (arquiteto: Eric)', inclusive as que sustentam os RNF críticos na matriz: ADR-007 (RNF-03), ADR-003 (RNF-04), ADR-004 e ADR-017 (RNF-05). O sistema já foi implementado e testado sobre elas. A situação não é uniforme com outros artefatos: arquitetura.md, linha 130, chama a leitura da ADR-003 de 'ratificada', e a LAC-008 registra essa ratificação pela PEND-009, mas o cabeçalho da ADR não mudou. Pode ser só status não atualizado: as ADRs têm responsável nomeado e o agente não lê aprovações fora dos artefatos. Por isso não classifiquei como rnf_sem_decisao: a decisão existe e está mapeada. Os artefatos lidos, porém, não mostram que alguma delas foi aceita.",
+  "proposta": "Eric confirma o status de cada ADR, começando pelas ADR-003, 004, 007 e 017, e registra a aceitação ou a revisão. Se o projeto não usa esse campo como aprovação, registrar isso e o que vale como aceite. Se o arquiteto entender que ADR apenas proposta não conta como decisão para RNF crítico, esta lacuna passa a ser impedimento e deve ser registrada de novo como rnf_sem_decisao.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "LAC-044",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-05", "Editor"],
+  "justificativa": "O RF-05 está coberto só em parte no projeto do programa. As ações existem no store (apps/editor/contrato/store.ts, linhas 51-54; modulos-editor.md, linhas 30-32) e contratos/editor.md, linha 20, promete camada, duplicar e excluir na seleção. Mas nenhum componente tem o controle que as dispara: PropsBarraFerramentas (componentes.ts, linhas 39-50) só tem desfazer, refazer, salvar, testar, publicar e exportar; o PainelPropriedades (modulos-editor.md, linhas 51 e 57) só tem tipo, campos e aplicar; ROTULOS_EDITOR só usa 'duplicar' para as fases (telas.ts, linhas 25 e 97-102). Assim, a ausência na interface (DEF-01, prioridade alta) não é só falha de implementação: o contrato não define onde esses controles ficam, e os testes de componente não tinham como cobri-los.",
+  "proposta": "Estender o contrato do Editor, sem componente novo: definir onde ficam excluir, duplicar e camada (por exemplo no PainelPropriedades, com objeto selecionado, ou na BarraFerramentas), com rótulos em ROTULOS_EDITOR e operação por teclado se o arquiteto entender que o RNF-07 se aplica. Atualizar modulos-editor.md e devolver ao agente 3 antes da correção do DEF-01 pelo agente 4.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

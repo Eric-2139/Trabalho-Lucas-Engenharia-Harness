@@ -1,0 +1,12 @@
+{
+  "id": "LAC-046",
+  "tipo": "conflito_contrato",
+  "itens": ["RF-03", "RF-15", "RF-16", "RNF-02", "Editor", "Player"],
+  "justificativa": "A ADR-006 (linha 11) diz que Editor e Player calculam o maior 16:9 'que cabe no contêiner', e packages/player/contrato/palco.ts (linha 13) e PropsCanvasParede usam o mesmo conceito. As convenções posteriores trocam contêiner por janela: modulos-player.md, linha 68 (PEND-012: 'medido por innerWidth/innerHeight'), e modulos-editor.md, linha 76 (PEND-019: 'o tamanho vem da janela'). As duas foram escritas por causa do jsdom, que não faz layout, mas não separam teste de produção, e nenhum documento reserva espaço para botões, fala, campo de resposta, biblioteca ou painel. A implementação passa a janela inteira (TelaJogo.tsx, linha 48; ModoTestar.tsx, linha 44), o que está na causa registrada do DEF-05 (prioridade alta) e é compatível com o DEF-04. Corrigir só o código deixaria o texto das convenções e os testes de jsdom apontando para a janela.",
+  "proposta": "O arquiteto decide como o tamanho do palco é medido em produção: por exemplo, medir o contêiner real e usar a janela só como reserva no jsdom. Também define o layout de cada tela, ou seja, onde ficam os demais elementos em 1280x720. Atualizar as convenções das PEND-012 e PEND-019 e devolver ao agente 3 antes de o agente 4 corrigir o DEF-04 e o DEF-05.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-019",
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

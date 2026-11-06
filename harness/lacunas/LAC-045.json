@@ -1,0 +1,12 @@
+{
+  "id": "LAC-045",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-04", "Editor"],
+  "justificativa": "O critério do RF-04 exige arrastar até a parede ativa, e contratos/editor.md (linha 19) e modulos-editor.md (linha 50) repetem isso. Mas a interface não sustenta o gesto: aoEscolher(ref, destino) não recebe posição (componentes.ts, linha 25), PropsCanvasParede não tem entrada para receber o item solto (linhas 53-58), e a convenção da PEND-017 fixa cada sprite como <button> (modulos-editor.md, linha 56), o que levou os testes ao clique. Falta definir a origem e o destino do arraste, e a posição em que o objeto nasce. É a origem provável de parte do DEF-02 (prioridade alta), cujo relatório nota que 'os testes de componente foram escritos para o clique'.",
+  "proposta": "Estender o contrato: definir como a Biblioteca inicia o arraste e como o palco recebe o item, inclusive se o objeto nasce no ponto solto ou no centro, e manter clique e Enter como alternativa de teclado. A adição é pequena nos componentes existentes. Revisar a convenção da PEND-017 e devolver ao agente 3 antes de o agente 4 corrigir o DEF-02.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-017",
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "LAC-051",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-18", "SchemaFase", "Player"],
+  "justificativa": "O projeto não define até onde vai a equivalência visual da fase original. modulos-schema.md toma posições e tamanhos do CSS do legado (linha 125) e diz que a pergunta da frente 'é o texto do quadro' (linha 129). Mas o enigma guarda a pergunta como campo de texto (packages/schema/contrato/fase.ts, linha 79), e o contrato do Player só diz que o enigma 'pede resposta' (contratos/player.md, linha 19), sem prever texto escrito na parede. O relatório de defeitos (DEF-06, prioridade média) registra o quadro vazio até o clique e a geometria diferente do legado. O critério do RF-18 exige perguntas iguais e não exige o desenho, por isso esta lacuna não é bloqueante. Ponto relacionado: modulos-schema.md, linha 140, já registra como projeto a não migração das falas da porta, do selo e das perguntas da esquerda, enquanto o relatório trata o mesmo assunto como decisão ainda aberta da Roberta (DIF-01). Não há pendência que acompanhe essa decisão.",
+  "proposta": "Definir se a equivalência visual está no escopo. Se estiver, o arquiteto escolhe o meio (texto desenhado no sprite, como já ocorre no quadro-setas, ou novo campo no schema, o que exige devolver ao agente 3) e a tolerância de geometria. Se não estiver, registrar isso em modulos-schema.md e encerrar o DEF-06 como diferença aceita. Roberta decide o DIF-01; a decisão deveria abrir pendência própria, que este agente não pode gravar.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto); Roberta Telles (escopo do RF-18 e DIF-01)",
+  "pendencia_vinculada": null,
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

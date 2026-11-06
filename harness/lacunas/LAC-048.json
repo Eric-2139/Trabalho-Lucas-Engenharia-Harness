@@ -1,0 +1,12 @@
+{
+  "id": "LAC-048",
+  "tipo": "lacuna_parcial",
+  "itens": ["RNF-01", "Editor", "Player"],
+  "justificativa": "A parte 1 do RNF-01 (duas últimas versões estáveis) foi adiada às fases 5-6 pela PEND-014 e continua sem fechar. (a) A ADR-006 (linha 16) pede browserslist 'last 2', mas infra/vite/comum.ts, linha 40, fixa chrome120, edge120 e firefox120 (DEF-08). Um alvo fixo não acompanha as versões com o tempo. (b) A verificação prevista na ADR não mede o critério: o relatório da fase 6 registra só uma versão de cada navegador (Chromium 158, Edge 157, Firefox 159), porque cada versão do Playwright traz uma só, e marca o RNF-01 como parcial. A ADR não diz como a versão anterior seria testada.",
+  "proposta": "O arquiteto decide (1) se aplica o browserslist da ADR ou se revê a ADR para aceitar o alvo fixo, com critério de atualização; (2) como medir a versão anterior: por exemplo, uma segunda versão do Playwright no CI, execução manual registrada na aceitação ou aceite formal do limite, que neste último caso é com a responsável pelos requisitos.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-014",
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}

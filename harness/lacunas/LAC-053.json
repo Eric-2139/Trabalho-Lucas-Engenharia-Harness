@@ -1,0 +1,12 @@
+{
+  "id": "LAC-053",
+  "tipo": "lacuna_parcial",
+  "itens": ["RF-09", "RNF-01", "Editor"],
+  "justificativa": "Três pontos do projeto do programa do Editor divergem do código ou ficam indefinidos. Nenhum corresponde a defeito do relatório da fase 6. (a) PropsTelaEdicao exige aoSair ('Voltar a Minhas fases'; apps/editor/contrato/telas.ts, linha 138) e main.tsx o fornece (linha 219), mas TelaEdicao não o recebe nem usa (TelaEdicao.tsx, linha 347 em diante; já citado na PEND-021). A volta depende só da navegação do app. (b) modulos-editor.md, linha 21, atribui o aviso de resolução do RNF-01 a src/telas/Edicao.tsx; o arquivo é TelaEdicao.tsx. (c) modulos-editor.md, linha 27, diz que ação aplicada é exatamente um passo de histórico, mas não define o caso em que um único Aplicar do painel gera mais de uma ação: o log da fase 4 (docs/ia-log/fase-4.md, linha 49) registra dois passos para uma porta que troca tipo e senha e nota que 'o contrato não diz'. Não reproduzi esse caso. O critério do RF-09 só cita mover objeto, por isso a lacuna não é bloqueante.",
+  "proposta": "Estender ou alinhar o contrato do Editor: (a) o arquiteto define se a Edição tem controle próprio de voltar, com aoSair em uso, ou se a prop sai do contrato; (b) corrigir o nome do arquivo; (c) definir se um Aplicar equivale a um passo de desfazer. Em (a) ou (c), devolver ao agente 3 antes de o agente 4 alterar o código.",
+  "bloqueante": false,
+  "dono_humano": "Eric (arquiteto)",
+  "pendencia_vinculada": "PEND-021",
+  "versao_baseline": "2026-11-03.1",
+  "status": "rascunho"
+}
