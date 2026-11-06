@@ -36,6 +36,8 @@ export DATABASE_URL=postgresql://postgres@127.0.0.1:5432/math_scape
 
 A Api roda sem `NODE_ENV=production`, como no `infra/e2e/entrada.sh`. Em produção o cookie pode exigir HTTPS, e o login falharia em `http://localhost`.
 
+**Alternativa: o ambiente publicado.** Com a pilha de produção no ar ([implantação](../operacao/implantacao.md)), as sessões podem usar os endereços públicos em vez dos comandos acima. Assim, cada participante usa o próprio computador e navegador, o que ajuda no A36. Antes da primeira sessão, rode `node infra/producao/verificar-implantacao.mjs`. Nesse caso, observe o [DEF-10](relatorio-defeitos-aceitacao.md): participantes na mesma fase podem disparar juntos o limite de tentativas da porta.
+
 **Fase original:** não existe seed ([DEF-09](relatorio-defeitos-aceitacao.md)). O `prisma.config.ts` cita `prisma/seed.ts`, mas o arquivo não está no repositório, então o banco começa sem nenhuma fase. Quando o Eric corrigir, troque este passo por `pnpm exec prisma db seed`. Para disponibilizar a Escola:
 
 1. Crie a conta do condutor no editor.

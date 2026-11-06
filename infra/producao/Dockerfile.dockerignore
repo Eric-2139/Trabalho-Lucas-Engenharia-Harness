@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/.vite
+**/coverage
+**/test-results
+**/playwright-report
+.git
+.env
+**/.env
+apps/api/armazenamento
+apps/api/src/gerado
+harness/estado
+harness/entrada/legado
+tests/e2e/resultado
+docs
+*.pdf
+*.docx

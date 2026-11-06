@@ -1,0 +1,96 @@
+# CD da fase 8: depois que o CI passa na main, constrói as imagens de produção, publica no GHCR
+# e atualiza o servidor por SSH (Docker Compose em infra/producao/). Sem os segredos, para depois do GHCR.
+#
+# Configuração no GitHub (Settings → Secrets and variables → Actions):
+#   variables: SITE_PLAYER, SITE_EDITOR (ex.: mathscape.exemplo.com e editor.mathscape.exemplo.com)
+#   secrets:   DEPLOY_HOST, DEPLOY_USUARIO, DEPLOY_CHAVE_SSH (chave privada), DEPLOY_DIRETORIO (onde está o clone)
+name: CD
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: producao
+  cancel-in-progress: false
+
+jobs:
+  imagens:
+    name: Imagens de produção
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - id: tag
+        run: |
+          echo "tag=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "repo=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+      - name: Variáveis obrigatórias
+        run: test -n "${{ vars.SITE_EDITOR }}" || (echo "defina a variável SITE_EDITOR do repositório" && exit 1)
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Api
+        run: |
+          imagem=ghcr.io/${{ steps.tag.outputs.repo }}/api
+          docker build -f infra/producao/Dockerfile --target api -t "$imagem:${{ steps.tag.outputs.tag }}" -t "$imagem:latest" .
+          docker push --all-tags "$imagem"
+      - name: Web (Caddy + Editor + Player)
+        run: |
+          imagem=ghcr.io/${{ steps.tag.outputs.repo }}/web
+          docker build -f infra/producao/Dockerfile --target web --build-arg URL_EDITOR=https://${{ vars.SITE_EDITOR }} \
+            -t "$imagem:${{ steps.tag.outputs.tag }}" -t "$imagem:latest" .
+          docker push --all-tags "$imagem"
+
+  implantar:
+    name: Implantar e verificar
+    needs: imagens
+    runs-on: ubuntu-24.04
+    environment: producao
+    env:
+      TEM_SERVIDOR: ${{ secrets.DEPLOY_HOST != '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Sem servidor configurado
+        if: env.TEM_SERVIDOR != 'true'
+        run: echo "::notice::Imagens publicadas no GHCR. Defina DEPLOY_HOST e os demais segredos para implantar automaticamente."
+      - name: Atualizar o servidor
+        if: env.TEM_SERVIDOR == 'true'
+        env:
+          CHAVE: ${{ secrets.DEPLOY_CHAVE_SSH }}
+          DESTINO: ${{ secrets.DEPLOY_USUARIO }}@${{ secrets.DEPLOY_HOST }}
+          DIRETORIO: ${{ secrets.DEPLOY_DIRETORIO }}
+          TAG: ${{ needs.imagens.outputs.tag }}
+        run: |
+          install -m 600 /dev/null ~/chave && printf '%s\n' "$CHAVE" > ~/chave
+          ssh -i ~/chave -o StrictHostKeyChecking=accept-new "$DESTINO" bash -s -- "$DIRETORIO" "$TAG" "${GITHUB_REPOSITORY,,}" <<'REMOTO'
+          set -euo pipefail
+          cd "$1"
+          git fetch --quiet origin main && git checkout --quiet "$2"
+          export IMAGEM_API="ghcr.io/$3/api:$2" IMAGEM_WEB="ghcr.io/$3/web:$2"
+          docker compose -f infra/producao/docker-compose.yml --env-file infra/producao/.env pull api web
+          docker compose -f infra/producao/docker-compose.yml --env-file infra/producao/.env up -d --no-build
+          REMOTO
+          rm -f ~/chave
+      - uses: actions/setup-node@v4
+        if: env.TEM_SERVIDOR == 'true'
+        with:
+          node-version: 24
+      - name: Verificação pós-implantação
+        if: env.TEM_SERVIDOR == 'true'
+        run: |
+          for i in $(seq 1 30); do curl -fsS "https://${{ vars.SITE_PLAYER }}/api/publicadas" >/dev/null && break; sleep 5; done
+          node infra/producao/verificar-implantacao.mjs "https://${{ vars.SITE_PLAYER }}" "https://${{ vars.SITE_EDITOR }}"

@@ -12,3 +12,4 @@ apps/api/armazenamento/
 test-results/
 playwright-report/
 apps/api/src/gerado/
+infra/producao/backups/

@@ -1,0 +1,46 @@
+# Proxy e hospedagem dos apps (fase 8, ADR-017).
+# SITE_PLAYER e SITE_EDITOR são endereços do Caddy: com domínio, o HTTPS é automático (Let's Encrypt).
+# Em teste local, use "localhost" e "editor.localhost" (certificado da CA interna do Caddy).
+
+(comum) {
+	encode zstd gzip
+	# /api/* vai para a Api sem o prefixo, no mesmo site: o cookie SameSite=Lax continua valendo.
+	# Corte de 55 MB: acima do maior limite da Api (importar, 50 MB). Os limites por rota (imagem 5 MB) são da Api.
+	handle_path /api/* {
+		request_body {
+			max_size 55MB
+		}
+		reverse_proxy api:3000
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+	# arquivos com hash no nome podem ficar em cache; o index.html, não
+	@estaticos path /assets/* /sprites/*
+	header @estaticos Cache-Control "public, max-age=604800"
+	log {
+		output stdout
+		format json
+	}
+}
+
+{$SITE_PLAYER} {
+	import comum
+	handle {
+		root * /srv/player
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+{$SITE_EDITOR} {
+	import comum
+	handle {
+		root * /srv/editor
+		try_files {path} /index.html
+		file_server
+	}
+}

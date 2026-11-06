@@ -2,13 +2,14 @@
 
 Responsável: Yuri Martinelli · Destino: Eric (correções) · Commit analisado: `8a236d6` · Data: 06/11/2026
 
-Defeitos encontrados na fase 7, no mesmo formato do [relatório de defeitos da Sarah](../testes/relatorio-defeitos.md). A numeração continua a dela (DEF-01 a DEF-08). O plano pede que cada defeito volte ao Eric com o caso que falha anexado.
+Defeitos encontrados na fase 7 e na preparação da fase 8, no mesmo formato do [relatório de defeitos da Sarah](../testes/relatorio-defeitos.md). A numeração continua a dela (DEF-01 a DEF-08). O plano pede que cada defeito volte ao Eric com o caso que falha anexado.
 
 ## Resumo
 
 | ID | Prioridade | Requisito | Defeito | Como verificar | Situação |
 |---|---|---|---|---|---|
 | DEF-09 | **Alta** | RF-18 | A fase original não entra no banco: o `prisma/seed.ts` especificado no projeto nunca foi criado | Banco limpo → `prisma db seed` falha e Escolher Fase vem vazia | Aberto |
+| DEF-10 | **Alta** | RF-15, ADR-003 | Atrás do proxy de produção, o limite de tentativas vale para todos os jogadores juntos: 30 senhas erradas de uma pessoa bloqueiam a porta da fase para todo mundo por 10 min | Pilha de `infra/producao/` → 30 tentativas erradas de um cliente → outro cliente, com outro IP, recebe 429 na primeira tentativa | Aberto |
 
 ## Defeitos
 
@@ -37,6 +38,25 @@ Encontrado na preparação do ambiente da aceitação, antes das sessões com pa
   - não duplicar a fase quando rodar de novo.
 - **Caso que deve passar depois da correção (sugestão para a Sarah ou o agente 3):** em banco limpo, rodar o seed duas vezes. `GET /publicadas` devolve exatamente uma fase com o título "Escola?". O login com `sistema@math-scape.local` é recusado com 401. Excluir uma conta comum não remove a Escola.
 - **Rastreabilidade:** RF-18 (Alta). A matriz e o plano de testes marcam o RF-18 como "Aprovado, com ressalva", e essa avaliação continua válida para o comportamento da fase. O defeito está na carga dela no banco, que ficou sem caso de teste.
+
+### DEF-10 · Limite de tentativas compartilhado por todos atrás do proxy (RF-15, ADR-003, Alta)
+
+Encontrado na preparação da implantação (fase 8), ao rodar a pilha de produção (`infra/producao/`) neste ambiente, antes de publicar.
+
+- **Passos:**
+  1. Subir a pilha de produção (`docs/operacao/implantacao.md`) e publicar a Escola com uma conta qualquer.
+  2. De um cliente A, mandar 30 senhas erradas para a porta: `POST /api/fases/<id>/verificar` com `{ objetoId: "frente-porta", resposta: "00000" }`.
+  3. De um cliente B, em outra máquina (outro IP), mandar a senha **certa** `92139` uma única vez.
+- **Esperado:** pela ADR-003 e pelo contrato `api.md`, o limite é "30 a cada 10 min (porta), **por IP e fase**". O cliente B, que nunca errou, recebe `200 { aberta: true }`.
+- **Obtido:** o cliente B recebe `429 {"tentarEmSegundos":600}` na primeira tentativa. Medido em 06/11/2026: o cliente A era o host (127.0.0.1) e o B, outro contêiner na rede do Compose (172.18.0.6, IP confirmado no log do Caddy).
+- **Causa:** em produção, o navegador não fala com a Api, fala com o proxy (ADR-017). A Api é criada com `Fastify()` sem `trustProxy` (`apps/api/src/app.ts`, linha 21), então o `request.ip` usado em `apps/api/src/rotas/verificar.ts`, linha 84, é sempre o endereço do proxy. Todos os jogadores do mundo viram um IP só. O mesmo vale para o limite dos enigmas (300/min).
+- **Por que os testes não pegaram:** a suíte de integração chama a Api direto e a de sistema roda sem proxy (`infra/e2e/entrada.sh`). O relatório da Sarah registra "nada foi testado atrás de proxy ou HTTPS (fase 8)".
+- **Efeito:**
+  - Uma pessoa (ou um robô) que erra 30 vezes tira a porta da Escola do ar para todos por 10 min. É uma negação de serviço de graça.
+  - Numa sala de aula, 30 alunos tentando a porta ao mesmo tempo já se bloqueiam. Nas sessões da fase 7 isso também pode aparecer.
+- **Correção esperada (decisão do Eric):** confiar só no proxy da própria pilha, por exemplo `Fastify({ trustProxy: <configurável por variável de ambiente> })`, com a pilha de produção definindo o valor. O Caddy já manda `X-Forwarded-For`. Não basta confiar em qualquer `X-Forwarded-For`: sem proxy na frente, o cliente forjaria o cabeçalho e escaparia do limite.
+- **Caso que deve passar depois da correção:** com a Api atrás de um proxy confiável, dois clientes com `X-Forwarded-For` diferentes têm limites separados. Sem proxy confiável configurado, um `X-Forwarded-For` forjado não muda o limite.
+- **Rastreabilidade:** RF-15 (Alta), ADR-003. A pilha de produção está pronta e não precisa mudar para a correção: basta ela definir a variável que o Eric escolher.
 
 ---
 Responsável (fase 7): Yuri Martinelli · Data: 06/11/2026

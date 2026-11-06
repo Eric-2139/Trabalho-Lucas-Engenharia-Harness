@@ -1,0 +1,20 @@
+# Verificação de disponibilidade (fase 8): a cada 30 min consulta o Player, a Api e o Editor publicados.
+# Falha → o GitHub avisa por e-mail quem ativou o workflow. Só roda com a variável SITE_PLAYER definida.
+name: Disponibilidade
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    if: vars.SITE_PLAYER != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Player, Api e Editor respondem
+        run: |
+          set -e
+          for url in "https://${{ vars.SITE_PLAYER }}/" "https://${{ vars.SITE_PLAYER }}/api/publicadas" "https://${{ vars.SITE_EDITOR }}/"; do
+            curl -fsS --retry 3 --retry-delay 10 --max-time 20 -o /dev/null -w "%{http_code} %{time_total}s $url\n" "$url"
+          done

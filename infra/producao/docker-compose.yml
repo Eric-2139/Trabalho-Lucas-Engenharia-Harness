@@ -1,0 +1,83 @@
+# Produção do Math Scape (fase 8): PostgreSQL + Api + Caddy (Editor, Player e /api) + backup diário.
+# Uso, a partir da raiz do repositório:
+#   cp infra/producao/.env.exemplo infra/producao/.env   # e preencha
+#   docker compose -f infra/producao/docker-compose.yml --env-file infra/producao/.env up -d --build
+name: math-scape
+
+services:
+  banco:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: math_scape
+      POSTGRES_USER: math_scape
+      POSTGRES_PASSWORD: ${SENHA_BANCO:?defina SENHA_BANCO no .env}
+    volumes:
+      - banco:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U math_scape -d math_scape"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # sem "ports": o banco só é visível na rede interna do Compose
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/producao/Dockerfile
+      target: api
+    image: ${IMAGEM_API:-math-scape-api}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://math_scape:${SENHA_BANCO}@banco:5432/math_scape
+    volumes:
+      - armazenamento:/dados/armazenamento
+    depends_on:
+      banco:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/producao/Dockerfile
+      target: web
+      args:
+        URL_EDITOR: https://${SITE_EDITOR:?defina SITE_EDITOR no .env}
+    image: ${IMAGEM_WEB:-math-scape-web}
+    restart: unless-stopped
+    environment:
+      SITE_PLAYER: ${SITE_PLAYER:?defina SITE_PLAYER no .env}
+      SITE_EDITOR: ${SITE_EDITOR}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_dados:/data
+      - caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Backup diário do banco (pg_dump comprimido), guardando os últimos DIAS_BACKUP dias.
+  backup:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      PGHOST: banco
+      PGUSER: math_scape
+      PGPASSWORD: ${SENHA_BANCO}
+      PGDATABASE: math_scape
+      DIAS_BACKUP: ${DIAS_BACKUP:-7}
+    volumes:
+      - ${DIRETORIO_BACKUP:-./backups}:/backups
+      - ./backup.sh:/usr/local/bin/backup.sh:ro
+    entrypoint: ["bash", "/usr/local/bin/backup.sh"]
+    depends_on:
+      banco:
+        condition: service_healthy
+
+volumes:
+  banco:
+  armazenamento:
+  caddy_dados:
+  caddy_config:
