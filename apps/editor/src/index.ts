@@ -4,7 +4,6 @@
  * O app em si (main.tsx, rotas, telas) também fica em src/.
  */
 import type {
-  PropsMinhasFases,
   PropsTelaConta,
   PropsTelaEdicao,
 } from '../contrato/index.ts';
@@ -25,10 +24,8 @@ export { BibliotecaObjetos } from './componentes/BibliotecaObjetos.tsx';
 export { PainelPropriedades } from './componentes/PainelPropriedades.tsx';
 export { BarraFerramentas } from './componentes/BarraFerramentas.tsx';
 export { TelaEntrar } from './telas/TelaEntrar.tsx';
+export { MinhasFases } from './telas/MinhasFases.tsx';
 
-export function MinhasFases(_props: PropsMinhasFases): never {
-  return naoImplementado('MinhasFases');
-}
 export function TelaConta(_props: PropsTelaConta): never {
   return naoImplementado('TelaConta');
 }

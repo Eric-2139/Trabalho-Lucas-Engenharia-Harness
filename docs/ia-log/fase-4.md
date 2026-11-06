@@ -49,6 +49,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 39 | RF-08 | Editor | rodada B1 (14 casos de RF-08 e 5 de RF-07 em `painel-propriedades.test.tsx`) | `PainelPropriedades` com rascunho local, `<select>` do tipo, campos de fala, enigma e porta, Propriedades da fase sem seleção, Aplicar que valida antes do store e erro em `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-07 do painel. Porta que troca tipo e senha na mesma aplicação gera dois passos de histórico (o contrato não diz) | `codificacao-2026-11-06T00-31-04-055Z.json` |
 | 40 | RNF-07 | Editor | rodada B1 (3 casos de teclado e 9 de RF-09/RF-10 em `barra-ferramentas.test.tsx`) | `BarraFerramentas` com botões nativos, desfazer/refazer desabilitados sem passo, indicador do estado de salvamento e aviso com "Publicar de novo"; verde no 1º de 5 ciclos, suíte 501 de 501, sem reversão; de carona os casos de RF-09 e RF-10 da barra. Foco visível e contraste no editor ficam para o E2E | `codificacao-2026-11-06T00-34-05-692Z.json` |
 | 41 | RF-01 | Editor | rodada B2a (7 casos de RF-01, mais os de RNF-06 e RNF-07 em `tela-entrar.test.tsx`) | `TelaEntrar` em `apps/editor/src/telas/TelaEntrar.tsx`: formulários de entrar e cadastrar, cadastro seguido de login, recusa em `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona RNF-06 e RNF-07 da tela. Falta ligar o redirecionamento ao login no `main.tsx` (sem teste unitário) | `codificacao-2026-11-06T00-46-25-982Z.json` |
+| 42 | RF-02 | Editor | rodada B2a (17 casos de RF-02 e 4 de RF-14 em `minhas-fases.test.tsx`) | `MinhasFases` em `apps/editor/src/telas/MinhasFases.tsx`: lista relida após cada ação, campo único de título, confirmação só para fase publicada, importar por `input` de arquivo, recusa em `role="alert"`; verde no 1º de 5 ciclos, sem reversão; de carona os casos de RF-14 da tela | `codificacao-2026-11-06T00-50-25-256Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -166,7 +167,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Implementar RNF-07 (barra de ferramentas) | `sucesso` no 1º ciclo | 273.462 | 4.255 | medido |
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada B2a: TelaEntrar, MinhasFases e TelaConta (RF-01, RF-02, RF-14, RF-19, RNF-06, RNF-07) | `sucesso`; 42 casos, vermelhos só pelos stubs; PEND-018 | 1.962.719 | 51.462 | medido |
 | 06/11 | idem, subagente `codificacao` | Implementar RF-01 (tela de login e cadastro) | `sucesso` no 1º ciclo | 499.783 | 6.784 | medido |
-| **Total** | | | | **60.844.078** | **877.687** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar RF-02 (Minhas fases) | `sucesso` no 1º ciclo | 565.371 | 8.917 | medido |
+| **Total** | | | | **61.409.449** | **886.604** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
