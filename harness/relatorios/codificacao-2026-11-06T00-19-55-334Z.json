@@ -1,0 +1,22 @@
+{
+  "agente": "codificacao",
+  "execucao": "aa2ba5e848b41f670",
+  "inicio": "2026-11-06T00:16:41.072Z",
+  "fim": "2026-11-06T00:19:55.334Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RF-03",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/editor/src/componentes/AbasParedes.tsx",
+      "apps/editor/src/componentes/CanvasParede.tsx",
+      "apps/editor/src/index.ts"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

@@ -4,10 +4,8 @@
  * O app em si (main.tsx, rotas, telas) também fica em src/.
  */
 import type {
-  PropsAbasParedes,
   PropsBarraFerramentas,
   PropsBibliotecaObjetos,
-  PropsCanvasParede,
   PropsMinhasFases,
   PropsPainelPropriedades,
   PropsTelaConta,
@@ -25,10 +23,9 @@ export { criarStoreEditor } from './store/index.ts';
 export { atalhoTeclado } from './atalhos.ts';
 export { criarSalvamento } from './salvamento.ts';
 export { criarClienteApiEditor } from './cliente-api.ts';
+export { AbasParedes } from './componentes/AbasParedes.tsx';
+export { CanvasParede } from './componentes/CanvasParede.tsx';
 
-export function AbasParedes(_props: PropsAbasParedes): never {
-  return naoImplementado('AbasParedes');
-}
 export function BibliotecaObjetos(_props: PropsBibliotecaObjetos): never {
   return naoImplementado('BibliotecaObjetos');
 }
@@ -37,9 +34,6 @@ export function PainelPropriedades(_props: PropsPainelPropriedades): never {
 }
 export function BarraFerramentas(_props: PropsBarraFerramentas): never {
   return naoImplementado('BarraFerramentas');
-}
-export function CanvasParede(_props: PropsCanvasParede): never {
-  return naoImplementado('CanvasParede');
 }
 export function TelaEntrar(_props: PropsTelaEntrar): never {
   return naoImplementado('TelaEntrar');

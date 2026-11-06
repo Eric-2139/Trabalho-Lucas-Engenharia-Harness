@@ -43,6 +43,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 33 | RF-04 | SchemaFase + Editor | rodada A (7 casos de `adicionarObjeto` em `tests/editor/store.test.ts`, mais os 3 de `resolverImagem`) | `objetoPadrao` em `packages/schema/src/padroes.ts` (tamanho do catálogo ou 0,2 para `asset:`, centralizado, camada 0); verde no 1º de 5 ciclos, análise limpa, sem reversão. A biblioteca na interface (arrastar até a parede) vem com a rodada B | `codificacao-2026-11-05T23-57-19-320Z.json` |
 | 34 | RF-09 | Editor | rodada A (6 casos em `tests/editor/atalhos.test.ts` e 10 de histórico no store) | `atalhoTeclado` em `apps/editor/src/atalhos.ts` (Ctrl ou Cmd + Z/Y, sem diferenciar maiúscula); os casos de histórico já estavam verdes pelo RF-05; verde no 1º de 5 ciclos, análise limpa, sem reversão. Ctrl+Shift+Z devolve `null`, como o contrato manda | `codificacao-2026-11-05T23-59-44-490Z.json` |
 | 35 | RF-10 | Editor | rodada A (14 casos em `tests/editor/salvamento.test.ts` e 3 em `cliente-api.test.ts`) | `criarSalvamento` em `apps/editor/src/salvamento.ts` (prazo de 30 s sem reiniciar, revisão encadeada, 409 → conflito, outras falhas → erro com a alteração guardada) e `criarClienteApiEditor` em `cliente-api.ts` (nunca rejeita, 401 → `aoNaoAutenticado`); verde no 1º de 5 ciclos, suíte 440 de 440, sem reversão; de carona os casos do RF-01 no cliente | `codificacao-2026-11-06T00-02-56-333Z.json` |
+| 36 | RF-03 | Editor | rodada B1 (8 casos em `abas-paredes.test.tsx` e `canvas-parede.test.tsx`) | `AbasParedes` (5 `role="tab"`, setas movem o foco, Enter/Espaço ativam) e `CanvasParede` (palco do tamanho do contêiner com a área 16:9 centralizada, só a parede ativa, clique seleciona e clique no vazio desmarca) em `apps/editor/src/componentes/`; verde no 1º de 5 ciclos, análise limpa, sem reversão | `codificacao-2026-11-06T00-19-55-334Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -152,7 +153,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 05/11 | idem, subagente `codificacao` | Implementar RF-09 (atalhos) | `sucesso` no 1º ciclo | 257.913 | 3.803 | medido |
 | 05/11 | idem, subagente `codificacao` | Implementar RF-10 (salvamento e cliente HTTP do editor) | `sucesso` no 1º ciclo | 561.577 | 10.731 | medido |
 | 05/11 | idem, subagente `testes` | Testes do Editor, rodada B1: os 5 componentes (RF-03 a RF-10, RNF-07) | `sucesso`; 61 casos, vermelhos só pelos stubs; PEND-017; 1 bloqueio P1 | 3.319.219 | 76.723 | medido |
-| **Total** | | | | **55.102.809** | **774.860** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar RF-03 (abas e palco) | `sucesso` no 1º ciclo | 894.326 | 10.660 | medido |
+| **Total** | | | | **55.997.135** | **785.520** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
