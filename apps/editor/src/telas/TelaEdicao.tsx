@@ -11,6 +11,8 @@
  * fase é lida de novo para atualizar o aviso.
  * Testar (RF-11): grava a alteração pendente, pede `jogoTeste` e mostra o ModoTestar (motor do player com o
  * `verificadorTeste`); a recusa aparece em role="alert" e a tela fica na edição. Sair volta à edição sem mudar o store.
+ * Exportar (RF-14): grava a alteração pendente, pede `exportarFase` e baixa o Blob sem alteração; a recusa aparece em
+ * role="alert" e nada é baixado.
  * O jsdom não faz layout: o palco usa o tamanho da janela, como na TelaJogo (PEND-019).
  */
 import { referenciasDeAsset, validarFase } from '@math-scape/schema';
@@ -110,6 +112,8 @@ function Edicao({
   // RF-11: projeção em teste (null fora do modo testar) e a recusa de `jogoTeste`.
   const [jogo, definirJogo] = useState<FaseJogo | null>(null);
   const [erroTeste, definirErroTeste] = useState<string | null>(null);
+  // RF-14: recusa de `exportarFase`.
+  const [erroExportar, definirErroExportar] = useState<string | null>(null);
   const testando = useRef(false);
   testando.current = jogo !== null;
   const documento = useStore(store, (estado) => estado.documento);
@@ -198,6 +202,27 @@ function Edicao({
     definirJogo(resposta.valor);
   }
 
+  // RF-14: grava a alteração pendente (sem gravação aceita, não exporta), pede o envelope e o entrega para download
+  // sem alteração, por `URL.createObjectURL(Blob)` num `<a download>` (modulos-editor.md §5). A recusa aparece em
+  // role="alert" e nada é baixado.
+  async function exportar(): Promise<void> {
+    const estadoGravacao = await salvamento.salvarAgora();
+    if (estadoGravacao === 'conflito' || estadoGravacao === 'erro') return;
+    const resposta = await cliente.exportarFase(faseId);
+    if (!resposta.ok) {
+      definirErroExportar(resposta.erro);
+      return;
+    }
+    definirErroExportar(null);
+    const url = URL.createObjectURL(resposta.valor);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `fase-${faseId}.json`;
+    link.click();
+    // Revogar depois do clique: revogar no mesmo passo pode cancelar o download em alguns navegadores.
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
   if (jogo !== null) {
     return (
       <ModoTestar fase={jogo} verificador={verificadorTeste} baseUrlApi={baseUrlApi} aoSair={() => definirJogo(null)} />
@@ -205,7 +230,6 @@ function Edicao({
   }
 
   const estado = store.getState();
-  const nada = () => undefined;
 
   return (
     <main>
@@ -226,7 +250,7 @@ function Edicao({
         aoSalvar={() => void salvamento.salvarAgora()}
         aoTestar={() => void testar()}
         aoPublicar={() => void publicar()}
-        aoExportar={nada}
+        aoExportar={() => void exportar()}
       />
       {recusaPublicacao !== null ? (
         <section>
@@ -250,6 +274,7 @@ function Edicao({
         </section>
       ) : null}
       {erroTeste !== null ? <p role="alert">{erroTeste}</p> : null}
+      {erroExportar !== null ? <p role="alert">{erroExportar}</p> : null}
       {estadoSalvamento === 'conflito' ? (
         <button type="button" onClick={aoRecarregar}>
           {ROTULOS_EDITOR.recarregarFase}
