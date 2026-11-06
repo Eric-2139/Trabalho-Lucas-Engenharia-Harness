@@ -1,0 +1,23 @@
+{
+  "agente": "codificacao",
+  "execucao": "ae4839f132fa600b5",
+  "inicio": "2026-11-06T19:58:11.650Z",
+  "fim": "2026-11-06T20:03:12.137Z",
+  "resultado": "sucesso",
+  "motivo_orcamento": null,
+  "criterios_nao_atendidos": [],
+  "metricas": {
+    "requisito": "RNF-02",
+    "ciclos_editar_testar": 1,
+    "reversoes_por_regressao": 0,
+    "arquivos_tocados": [
+      "apps/player/src/telas/TelaJogo.tsx",
+      "apps/player/src/main.tsx",
+      "apps/editor/src/telas/ModoTestar.tsx",
+      "apps/editor/src/main.tsx"
+    ]
+  },
+  "bloqueios_por_politica": {
+    "P1": 2
+  }
+}

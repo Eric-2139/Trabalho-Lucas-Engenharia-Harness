@@ -3,6 +3,9 @@
  * RenderizadorParede e a caixa de fala (RF-16). O motor decide o que cada clique faz;
  * decoração devolve `nenhum` e a tela não muda. Enigma e porta abrem um único campo de
  * resposta ou senha num `<form>` (RF-15); a porta aberta mostra o fim e chama `aoConcluir`.
+ * Layout (LAC-046): palco à esquerda, medido no contêiner por `ResizeObserver` (sem ele, a janela é a reserva), e
+ * coluna à direita com aviso, paredes, dicas, fala, pergunta, campo, resultado e dígitos (classes `jogo*`, estilo em
+ * main.tsx).
  */
 import {
   calcularPalco,
@@ -18,8 +21,13 @@ import { mensagens } from '../mensagens.ts';
 
 const PAREDES: readonly ParedeId[] = ['frente', 'direita', 'fundo', 'esquerda', 'teto'];
 
-/** Tamanho da janela (o jsdom não tem ResizeObserver; PEND-012). */
-function useJanela() {
+interface Medida {
+  largura: number;
+  altura: number;
+}
+
+/** Tamanho da janela, atualizado no `resize` (aviso de resolução e reserva da medida do palco). */
+function useJanela(): Medida {
   const [janela, definirJanela] = useState(() => ({ largura: window.innerWidth, altura: window.innerHeight }));
   useEffect(() => {
     const aoRedimensionar = () => definirJanela({ largura: window.innerWidth, altura: window.innerHeight });
@@ -27,6 +35,29 @@ function useJanela() {
     return () => window.removeEventListener('resize', aoRedimensionar);
   }, []);
   return janela;
+}
+
+/**
+ * LAC-046: tamanho do elemento que contém o palco, medido por `ResizeObserver`. Sem `ResizeObserver` (jsdom) e antes
+ * da primeira medida, devolve a `reserva` (a janela). Com medida, a janela não muda o palco.
+ */
+function useMedidaDoConteiner(reserva: Medida): [(elemento: HTMLElement | null) => void, Medida] {
+  const [elemento, definirElemento] = useState<HTMLElement | null>(null);
+  const [medida, definirMedida] = useState<Medida | null>(null);
+  useEffect(() => {
+    if (elemento === null || typeof ResizeObserver === 'undefined') return;
+    const observador = new ResizeObserver((entradas) => {
+      const ultima = entradas.at(-1);
+      if (!ultima) return;
+      const largura = Math.floor(ultima.contentRect.width);
+      const altura = Math.floor(ultima.contentRect.height);
+      // Contêiner sem tamanho (escondido): mantém a medida anterior para o palco não sumir.
+      if (largura > 0 && altura > 0) definirMedida({ largura, altura });
+    });
+    observador.observe(elemento);
+    return () => observador.disconnect();
+  }, [elemento]);
+  return [definirElemento, medida ?? reserva];
 }
 
 export function TelaJogo({ faseId, fase, baseUrlApi, verificador, aoConcluir }: PropsTelaJogo) {
@@ -37,6 +68,7 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador, aoConcluir }: 
   );
   const estado = useSyncExternalStore(partida.assinar, partida.estado);
   const janela = useJanela();
+  const [medirPalco, conteinerDoPalco] = useMedidaDoConteiner(janela);
   const [fala, definirFala] = useState<string | null>(null);
   const [pergunta, definirPergunta] = useState<string | null>(null);
   const [dica, definirDica] = useState<string | null>(null);
@@ -45,7 +77,7 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador, aoConcluir }: 
   const [texto, definirTexto] = useState('');
   const [resultado, definirResultado] = useState<string | null>(null);
 
-  const sala = calcularPalco(janela.largura, janela.altura);
+  const sala = calcularPalco(conteinerDoPalco.largura, conteinerDoPalco.altura);
   const palco = { x: 0, y: 0, largura: sala.largura, altura: sala.altura };
   const parede = fase.paredes[estado.paredeAtiva];
   // Só os enigmas com dica da parede ativa têm controle de dica (RF-17).
@@ -102,57 +134,65 @@ export function TelaJogo({ faseId, fase, baseUrlApi, verificador, aoConcluir }: 
   }
 
   return (
-    <main>
-      {precisaAvisoResolucao(janela.largura, janela.altura) && <p>{textos.avisoResolucao}</p>}
-      <nav aria-label={textos.rotuloParedes}>
-        {PAREDES.map((parede) => (
-          <button
-            key={parede}
-            type="button"
-            aria-pressed={estado.paredeAtiva === parede}
-            onClick={() => trocarParede(parede)}
-          >
-            {textos.paredes[parede]}
-          </button>
-        ))}
-      </nav>
-      <RenderizadorParede
-        parede={parede}
-        palco={palco}
-        baseUrlApi={baseUrlApi}
-        aoClicar={aoClicar}
-        aoVerDica={verDica}
-      />
-      {enigmasComDica.length > 0 && (
+    <main className="jogo">
+      {/* LAC-046: o elemento medido; o palco fica numa camada absoluta para não mudar a medida do contêiner. */}
+      <div className="jogo-palco" ref={medirPalco}>
         <div>
-          {enigmasComDica.map((objeto, indice) => (
+          <RenderizadorParede
+            parede={parede}
+            palco={palco}
+            baseUrlApi={baseUrlApi}
+            aoClicar={aoClicar}
+            aoVerDica={verDica}
+          />
+        </div>
+      </div>
+      {/* Coluna à direita (LAC-046): o que o clique mostra aparece sem rolar a página. */}
+      <div className="jogo-coluna">
+        {precisaAvisoResolucao(janela.largura, janela.altura) && <p>{textos.avisoResolucao}</p>}
+        <nav aria-label={textos.rotuloParedes}>
+          {PAREDES.map((parede) => (
             <button
-              key={objeto.id}
+              key={parede}
               type="button"
-              aria-label={textos.verDica(indice + 1, enigmasComDica.length)}
-              onClick={() => verDica(objeto.id)}
+              aria-pressed={estado.paredeAtiva === parede}
+              onClick={() => trocarParede(parede)}
             >
-              {textos.verDica(indice + 1, enigmasComDica.length)}
+              {textos.paredes[parede]}
             </button>
           ))}
-        </div>
-      )}
-      {fala !== null && <p aria-live="polite">{fala}</p>}
-      {pergunta !== null && <p aria-live="polite">{pergunta}</p>}
-      {dica !== null && <p aria-live="polite">{dica}</p>}
-      {pedido !== null && !estado.concluida && (
-        <form onSubmit={aoEnviar}>
-          <input
-            type="text"
-            aria-label={pedido.modo === 'senha' ? textos.rotuloSenha : textos.rotuloResposta}
-            value={texto}
-            onChange={(e) => definirTexto(e.target.value)}
-          />
-          <button type="submit">{textos.botaoResponder}</button>
-        </form>
-      )}
-      {resultado !== null && <p aria-live="polite">{resultado}</p>}
-      {algumDigito && <p>{textos.senhaRevelada(casasSenha)}</p>}
+        </nav>
+        {enigmasComDica.length > 0 && (
+          <div>
+            {enigmasComDica.map((objeto, indice) => (
+              <button
+                key={objeto.id}
+                type="button"
+                aria-label={textos.verDica(indice + 1, enigmasComDica.length)}
+                onClick={() => verDica(objeto.id)}
+              >
+                {textos.verDica(indice + 1, enigmasComDica.length)}
+              </button>
+            ))}
+          </div>
+        )}
+        {fala !== null && <p aria-live="polite">{fala}</p>}
+        {pergunta !== null && <p aria-live="polite">{pergunta}</p>}
+        {dica !== null && <p aria-live="polite">{dica}</p>}
+        {pedido !== null && !estado.concluida && (
+          <form onSubmit={aoEnviar}>
+            <input
+              type="text"
+              aria-label={pedido.modo === 'senha' ? textos.rotuloSenha : textos.rotuloResposta}
+              value={texto}
+              onChange={(e) => definirTexto(e.target.value)}
+            />
+            <button type="submit">{textos.botaoResponder}</button>
+          </form>
+        )}
+        {resultado !== null && <p aria-live="polite">{resultado}</p>}
+        {algumDigito && <p>{textos.senhaRevelada(casasSenha)}</p>}
+      </div>
     </main>
   );
 }

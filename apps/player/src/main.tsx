@@ -173,6 +173,15 @@ body { margin: 0; padding: 1rem; background: ${cores.fundo}; color: ${cores.text
 a { color: ${cores.primaria}; }
 [role="alert"] { color: ${cores.erro}; }
 :focus-visible { outline: ${foco.largura} ${foco.estilo} ${cores.foco}; outline-offset: 2px; }
+/* Jogo (LAC-046): ocupa a altura que sobra da janela (100dvh menos o padding do body) sem rolar a página; o link de
+   volta às fases, depois do fim, fica embaixo e também visível. */
+#raiz:has(> main.jogo) { display: flex; flex-direction: column; gap: 0.5rem; height: calc(100dvh - 2rem); }
+#raiz:has(> main.jogo) > p { flex: none; margin: 0; }
+main.jogo { flex: 1; min-height: 0; display: grid; gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) 18rem; grid-template-rows: minmax(0, 1fr); }
+.jogo-palco { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+.jogo-palco > div { position: absolute; inset: 0; }
+.jogo-coluna { min-height: 0; overflow: auto; }
 `;
 
 function App() {
