@@ -5,7 +5,8 @@
  * Sessão (RF-01): o login não é rota.
  * - Ao abrir o app, `GET /fases`: 401 mostra só o login, qualquer que seja a rota; depois de entrar, a rota pedida abre.
  * - Durante o uso, qualquer 401 do cliente (`aoNaoAutenticado`) mostra o login por cima da tela atual, sem desmontá-la:
- *   a Edição mantém o store e a alteração em memória, com o salvamento em `erro`; depois de entrar, salvar grava.
+ *   a Edição mantém o store e a alteração em memória, com o salvamento em `erro`; cada login aceito ali incrementa
+ *   `sessaoRenovada`, e a Edição grava a alteração guardada sem outra ação do criador (PEND-020).
  * - "Sair" e "Excluir conta" voltam ao login.
  * A Api fica em `/api` no mesmo site (ADR-017): um único cliente para o app.
  */
@@ -145,6 +146,8 @@ function App() {
   const [sessao, definirSessao] = useState<Sessao>('verificando');
   const [loginPorCima, definirLoginPorCima] = useState(false);
   const [erroSair, definirErroSair] = useState<string | null>(null);
+  // PEND-020: logins aceitos depois de um 401; a Edição grava a alteração guardada quando o valor muda.
+  const [sessaoRenovada, definirSessaoRenovada] = useState(0);
   // Um único cliente para o app (ADR-017); qualquer 401 fora de entrar/cadastrar abre o login por cima.
   const [cliente] = useState(() =>
     criarClienteApiEditor(BASE_URL_API, { aoNaoAutenticado: () => definirLoginPorCima(true) }),
@@ -166,6 +169,12 @@ function App() {
     definirErroSair(null);
     definirLoginPorCima(false);
     definirSessao('ativa');
+  }
+
+  /** Login aceito por cima da tela, depois de um 401 (`aoNaoAutenticado`). */
+  function aoEntrarDepoisDe401() {
+    aoEntrar();
+    definirSessaoRenovada((valor) => valor + 1);
   }
 
   function encerrarSessao() {
@@ -208,6 +217,7 @@ function App() {
             relogio={relogio}
             baseUrlApi={BASE_URL_API}
             aoSair={() => navegar('/')}
+            sessaoRenovada={sessaoRenovada}
           />
         );
         break;
@@ -246,7 +256,7 @@ function App() {
         </div>
         {loginPorCima ? (
           <LoginPorCima>
-            <TelaEntrar cliente={cliente} aoEntrar={aoEntrar} />
+            <TelaEntrar cliente={cliente} aoEntrar={aoEntrarDepoisDe401} />
           </LoginPorCima>
         ) : null}
       </>

@@ -4,7 +4,8 @@
  * CanvasParede (só a parede ativa, palco 16:9), BibliotecaObjetos e PainelPropriedades.
  * Salvamento (RF-10, ADR-002): toda mudança do documento chama `marcarAlterado`; trocar de aba e o botão salvar chamam
  * `salvarAgora`. Em `conflito`, "Recarregar a fase" lê a fase de novo, `store.carregar` e cria um salvamento novo com a
- * revisão lida; a alteração local é descartada.
+ * revisão lida; a alteração local é descartada. Ao desmontar e no `pagehide` da janela, grava a alteração pendente
+ * (PEND-021); quando `sessaoRenovada` muda (novo login depois de um 401), também (PEND-020).
  * Publicar (RF-12): grava a alteração pendente e chama `publicarFase`; o 422 mostra as posições da senha sem enigma
  * num bloco com o título ROTULOS_EDITOR.posicoesSemEnigma; outra recusa mostra só a mensagem em role="alert".
  * Alterações não publicadas (RF-13): o aviso vem de `abrirFase`; depois de cada PUT aceito numa fase publicada, a
@@ -350,6 +351,7 @@ export function TelaEdicao({
   baseUrlApi,
   gerarId = gerarIdPadrao,
   verificadorTeste,
+  sessaoRenovada = 0,
 }: PropsTelaEdicao) {
   // RF-11: o modo testar confere as respostas no servidor com `modo=teste` (contrato telas.ts).
   const verificador = useMemo(
@@ -423,11 +425,43 @@ export function TelaEdicao({
   }, [ler, faseId, cliente, relogio, atualizarAviso, relerAviso]);
 
   // Fechar a fase (ou trocar de salvamento) para o agendamento.
+  const salvamentoAtual = useRef<Salvamento | null>(null);
   useEffect(() => {
     if (aberta === null) return;
     const { salvamento } = aberta;
+    salvamentoAtual.current = salvamento;
     return () => salvamento.parar();
   }, [aberta]);
+
+  // PEND-021: ao desmontar (sair da rota) com alteração pendente, grava sem esperar antes de parar. Só na desmontagem:
+  // trocar de salvamento (recarregar depois do conflito) descarta a alteração local.
+  useEffect(
+    () => () => {
+      const salvamento = salvamentoAtual.current;
+      if (salvamento === null) return;
+      void salvamento.salvarAgora();
+      salvamento.parar();
+    },
+    [],
+  );
+
+  // PEND-021: a janela sendo escondida (fechar a aba, navegar para fora) também grava a alteração pendente.
+  useEffect(() => {
+    if (aberta === null) return;
+    const { salvamento } = aberta;
+    const aoEsconder = () => void salvamento.salvarAgora();
+    window.addEventListener('pagehide', aoEsconder);
+    return () => window.removeEventListener('pagehide', aoEsconder);
+  }, [aberta]);
+
+  // PEND-020: o app incrementa `sessaoRenovada` a cada login aceito depois de um 401; quando o valor muda, grava a
+  // alteração guardada em memória (sem pendência, `salvarAgora` não grava).
+  const sessaoVista = useRef(sessaoRenovada);
+  useEffect(() => {
+    if (sessaoVista.current === sessaoRenovada) return;
+    sessaoVista.current = sessaoRenovada;
+    if (aberta !== null) void aberta.salvamento.salvarAgora();
+  }, [sessaoRenovada, aberta]);
 
   const recarregar = useCallback(() => {
     if (aberta === null) return;

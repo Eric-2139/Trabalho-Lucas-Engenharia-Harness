@@ -66,6 +66,7 @@ A fase 4 avança um requisito por vez: o agente 3 escreve os testes de uma camad
 | 56 | RNF-07 | Player + Editor | testes das rodadas A a B2b | nenhuma edição: as entregas anteriores já atendiam; o harness confirmou verde com 0 ciclos (597 de 597) | `codificacao-2026-11-06T04-36-07-435Z.json` |
 | 57 | RF-13 | Player | sem teste unitário (composição; o fluxo ponta a ponta fica para o E2E, PEND-014) | `main.tsx` do app do jogador com as rotas `/`, `/fases` e `/jogar/:id` (`history.pushState`, sem dependência nova), `TelaInicial`, Api em `/api`, carregando e falha em `role="status"`/`role="alert"`, estilo global com o `tema` comum; ao concluir, link de volta em vez de navegação automática, para o jogador ver o fim; suíte verde, análise limpa, 1 ciclo | `codificacao-2026-11-06T04-40-41-680Z.json` |
 | 58 | RF-01 | Editor | sem teste unitário (composição; o fluxo ponta a ponta fica para o E2E, PEND-014) | `main.tsx` do app do criador com as rotas `/`, `/fases/:id` e `/conta`, um único cliente com `aoNaoAutenticado`, login inicial em 401 e login por cima (modal, tela atual `inert` e montada) durante o uso, "Sair", relógio real na Edição e `src/mensagens.ts`; suíte verde, análise limpa, 1 ciclo; abriu PEND-020 e PEND-021 | `codificacao-2026-11-06T04-45-30-214Z.json` |
+| 59 | RF-10 | Editor | rodada C (6 casos de desmontagem e `pagehide`; de carona 4 de `sessaoRenovada` do RF-01) | `TelaEdicao` grava a alteração pendente ao desmontar e no `pagehide`, e chama `salvarAgora` quando `sessaoRenovada` muda; `main.tsx` incrementa o contador a cada login depois de um 401; verde no 1º de 5 ciclos, suíte 607 de 607, sem reversão | `codificacao-2026-11-06T04-52-44-165Z.json` |
 
 Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Commit `f7a1d6e` sem relatório.** O `cliente-api.ts` e o `http.ts` do app Player (RF-13) entraram num commit manual, sem rodada do agente 4 registrada. Os 5 casos de `tests/player/cliente-api.test.ts` passam. O RF-13 do Player volta ao agente 4 só para o harness confirmar.
@@ -82,6 +83,7 @@ Sessão de 05/11 à noite (Eric fora, decisões delegadas à IA):
 - **Rodada B2a do Editor (agente 3).** 42 casos em `tests/editor/{tela-entrar,minhas-fases,tela-conta}.test.tsx` com o cliente falso em `tests/support/cliente-editor-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-018 (estrutura acessível das telas) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
 - **Rodada B2b do Editor (agente 3).** 54 casos em `tests/editor/tela-edicao.test.tsx` com um cliente falso que imita a Api (409, `alteracoesNaoPublicadas`, publicar, exportar) em `tests/support/cliente-edicao-falso.ts`. Tipos conferidos com `tsc -p tests`. A PEND-019 (palco no jsdom, modo testar, lista do 422, exportar, seleção e atalhos) foi respondida (a) pela IA e registrada em `modulos-editor.md` §5.
 - **Limite de uso no meio do RF-09 (madrugada de 06/11).** O agente 4 parou por limite de gasto da conta. Quando o limite voltou, a IA retomou o mesmo agente. O `SubagentStart` (`ciclo.js`) zerou o estado da execução na retomada, e o gate recusou a primeira edição ("inicie a tarefa antes de editar"). O agente rodou `iniciar-tarefa` de novo antes de qualquer edição, então o `baseline_verde` ficou igual. Achado para o dono do harness: decidir se a retomada mantém a tarefa ou documentar que é preciso reiniciá-la.
+- **Gravar ao sair, ressalva do agente 4.** A gravação ao desmontar fica num efeito que só roda na desmontagem real, não na limpeza ligada à fase aberta. Essa limpeza também roda em "Recarregar a fase", e gravar ali faria um PUT com a revisão antiga (outro 409), contra a regra de descartar a alteração local. O contador `sessaoRenovada` do `main.tsx` não tem teste, porque nenhum teste monta o app inteiro.
 
 O RF-15 fecha só a camada SchemaFase: a revelação dos dígitos no motor do Player e a rota de verificação da Api voltam ao agente 3 e ao agente 4 nas camadas seguintes.
 
@@ -204,7 +206,8 @@ Ao ler o repositório para a fase 4, a IA achou dois defeitos do harness que der
 | 06/11 | idem, subagente `codificacao` | Ligar o `main.tsx` do app do jogador (RF-13) | `sucesso` | 502.917 | 14.430 | medido |
 | 06/11 | idem, subagente `codificacao` | Ligar o `main.tsx` do app do criador (RF-01) | `sucesso` | 888.402 | 17.722 | medido |
 | 06/11 | idem, subagente `testes` | Testes do Editor, rodada C: gravar ao sair da Edição e depois do novo login (RF-10, RF-01; PEND-020 e PEND-021) | `sucesso`; 10 casos, 6 vermelhos | 501.545 | 12.393 | medido |
-| **Total** | | | | **75.229.783** | **1.108.376** | medido |
+| 06/11 | idem, subagente `codificacao` | Implementar PEND-021 e PEND-020 (gravar ao sair e depois do novo login) | `sucesso` | 385.665 | 8.051 | medido |
+| **Total** | | | | **75.615.448** | **1.116.427** | medido |
 
 As linhas das sessões principais foram medidas ao escrever este log. O commit e o push vêm depois e não entram na conta.
 
