@@ -3,6 +3,7 @@
  * Edita num rascunho local; o botão Aplicar só chama o store com valores que passaram na verificação do painel,
  * e o store ainda valida o documento inteiro (validarFase). Qualquer recusa aparece em `role="alert"`.
  * Sem objeto selecionado: "Propriedades da fase" (título e senha).
+ * RF-05 (LAC-044): com objeto selecionado, botões de camada, duplicar (seleciona a cópia) e excluir.
  */
 import { type Interacao, LIMITES, TIPOS_INTERACAO, type TipoInteracao } from '@math-scape/schema/contrato';
 import { type FormEvent, useId, useState } from 'react';
@@ -95,8 +96,18 @@ function mensagemDe(resultado: ResultadoAcao): string | null {
   return resultado.erros.map((erro) => erro.mensagem).join(' ');
 }
 
+function gerarIdPadrao(): string {
+  return crypto.randomUUID();
+}
+
+/** RF-05 (LAC-044): recusa do store mostrada pelo painel = a mensagem do primeiro erro. */
+function primeiraMensagem(resultado: ResultadoAcao): string | null {
+  if (resultado.ok) return null;
+  return resultado.erros[0]?.mensagem ?? null;
+}
+
 export function PainelPropriedades(props: PropsPainelPropriedades) {
-  const { objeto, fase, store } = props;
+  const { objeto, fase, store, gerarId = gerarIdPadrao } = props;
   const id = useId();
   const origem = origemDe(props);
   const [origemAtual, setOrigemAtual] = useState(origem);
@@ -193,6 +204,23 @@ export function PainelPropriedades(props: PropsPainelPropriedades) {
   }
 
   const posicoes = Array.from({ length: fase.senha.length }, (_, indice) => indice + 1);
+  const objetoId = objeto.id;
+
+  // RF-05 (LAC-044): camada, duplicar e excluir chamam as ações do store; a recusa aparece no alerta do painel.
+  function mudarCamada(direcao: 'frente' | 'tras'): void {
+    setErro(primeiraMensagem(store.getState().mudarCamada(objetoId, direcao)));
+  }
+
+  function duplicar(): void {
+    const novoId = gerarId();
+    const resultado = store.getState().duplicarObjeto(objetoId, novoId);
+    setErro(primeiraMensagem(resultado));
+    if (resultado.ok) store.getState().selecionar(novoId);
+  }
+
+  function excluir(): void {
+    setErro(primeiraMensagem(store.getState().excluirObjeto(objetoId)));
+  }
 
   return (
     <form onSubmit={aplicar}>
@@ -260,6 +288,20 @@ export function PainelPropriedades(props: PropsPainelPropriedades) {
 
       {erro !== null && <p role="alert">{erro}</p>}
       <button type="submit">{ROTULOS_EDITOR.aplicar}</button>
+      <p>
+        <button type="button" onClick={() => mudarCamada('frente')}>
+          {ROTULOS_EDITOR.trazerParaFrente}
+        </button>
+        <button type="button" onClick={() => mudarCamada('tras')}>
+          {ROTULOS_EDITOR.enviarParaTras}
+        </button>
+        <button type="button" onClick={duplicar}>
+          {ROTULOS_EDITOR.duplicarObjeto}
+        </button>
+        <button type="button" onClick={excluir}>
+          {ROTULOS_EDITOR.excluirObjeto}
+        </button>
+      </p>
     </form>
   );
 }

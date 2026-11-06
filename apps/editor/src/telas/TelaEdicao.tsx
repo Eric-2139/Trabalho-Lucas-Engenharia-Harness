@@ -134,9 +134,17 @@ function Edicao({
       if (testando.current || emCampoDeTexto(evento.target)) return;
       const acao = atalhoTeclado(evento);
       if (acao === null) return;
+      const estadoAtual = store.getState();
+      // RF-05 (LAC-044): Delete/Backspace exclui o objeto selecionado; sem seleção, nada acontece.
+      if (acao === 'excluir') {
+        if (estadoAtual.selecionado === null) return;
+        evento.preventDefault();
+        estadoAtual.excluirObjeto(estadoAtual.selecionado);
+        return;
+      }
       evento.preventDefault();
-      if (acao === 'desfazer') store.getState().desfazer();
-      else store.getState().refazer();
+      if (acao === 'desfazer') estadoAtual.desfazer();
+      else estadoAtual.refazer();
     };
     document.addEventListener('keydown', aoTeclar);
     return () => document.removeEventListener('keydown', aoTeclar);
@@ -303,6 +311,7 @@ function Edicao({
           objeto={objeto}
           fase={{ titulo: documento.titulo, senha: documento.senha }}
           store={store}
+          gerarId={gerarId}
         />
       </aside>
     </main>
