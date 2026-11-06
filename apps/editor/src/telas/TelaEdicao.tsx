@@ -25,7 +25,7 @@ import { CATALOGO, type Fase, type FaseJogo, type RefImagem } from '@math-scape/
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from 'zustand';
 import type { ClienteApiEditor, EstadoSalvamento, Relogio, Salvamento } from '../../contrato/salvamento.ts';
-import type { StoreEditor } from '../../contrato/store.ts';
+import type { ResultadoAcao, StoreEditor } from '../../contrato/store.ts';
 import type { PropsTelaEdicao } from '../../contrato/telas.ts';
 import { ROTULOS_EDITOR } from '../../contrato/telas.ts';
 import { AbasParedes } from '../componentes/AbasParedes.tsx';
@@ -111,6 +111,7 @@ function Edicao({
   const estadoSalvamento = useEstadoSalvamento(salvamento);
   const [enviadas, definirEnviadas] = useState<RefImagem[]>([]);
   const [erroEnvio, definirErroEnvio] = useState<string | null>(null);
+  const [erroEscolha, definirErroEscolha] = useState<string | null>(null);
   const [recusaPublicacao, definirRecusaPublicacao] = useState<RecusaNaTela | null>(null);
   // RF-11: projeção em teste (null fora do modo testar) e a recusa de `jogoTeste`.
   const [jogo, definirJogo] = useState<FaseJogo | null>(null);
@@ -159,15 +160,20 @@ function Edicao({
     [store, salvamento],
   );
 
-  const imagensEnviadas = semRepeticao([...(referenciasDeAsset(documento) as RefImagem[]), ...enviadas]);
+  // LAC-043: `referenciasDeAsset` devolve uuids puros; em Minhas imagens viram `asset:<uuid>`, somados às enviadas.
+  const imagensEnviadas = semRepeticao([
+    ...referenciasDeAsset(documento).map((uuid): RefImagem => `asset:${uuid}`),
+    ...enviadas,
+  ]);
 
+  // RF-06: a recusa do store ao usar a imagem aparece em role="alert" em vez de ser ignorada.
   function escolher(ref: RefImagem | null, destino: 'objeto' | 'fundo'): void {
     const estado = store.getState();
-    if (destino === 'fundo') {
-      estado.definirFundo(estado.paredeAtiva, ref);
-      return;
-    }
-    if (ref !== null) estado.adicionarObjeto('decoracao', ref, gerarId());
+    let resultado: ResultadoAcao | null = null;
+    if (destino === 'fundo') resultado = estado.definirFundo(estado.paredeAtiva, ref);
+    else if (ref !== null) resultado = estado.adicionarObjeto('decoracao', ref, gerarId());
+    if (resultado === null) return;
+    definirErroEscolha(resultado.ok ? null : resultado.erros.map((e) => e.mensagem).join(' '));
   }
 
   function enviarImagem(arquivo: File): void {
@@ -307,6 +313,7 @@ function Edicao({
         aoEnviarImagem={enviarImagem}
       />
       {erroEnvio !== null ? <p role="alert">{erroEnvio}</p> : null}
+      {erroEscolha !== null ? <p role="alert">{erroEscolha}</p> : null}
       <aside>
         <PainelPropriedades
           objeto={objeto}
