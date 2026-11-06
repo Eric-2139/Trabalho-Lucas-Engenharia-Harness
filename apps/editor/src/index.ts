@@ -5,7 +5,6 @@
  */
 import type {
   PropsBarraFerramentas,
-  PropsBibliotecaObjetos,
   PropsMinhasFases,
   PropsPainelPropriedades,
   PropsTelaConta,
@@ -25,10 +24,8 @@ export { criarSalvamento } from './salvamento.ts';
 export { criarClienteApiEditor } from './cliente-api.ts';
 export { AbasParedes } from './componentes/AbasParedes.tsx';
 export { CanvasParede } from './componentes/CanvasParede.tsx';
+export { BibliotecaObjetos } from './componentes/BibliotecaObjetos.tsx';
 
-export function BibliotecaObjetos(_props: PropsBibliotecaObjetos): never {
-  return naoImplementado('BibliotecaObjetos');
-}
 export function PainelPropriedades(_props: PropsPainelPropriedades): never {
   return naoImplementado('PainelPropriedades');
 }
