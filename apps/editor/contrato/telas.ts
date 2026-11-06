@@ -54,6 +54,9 @@ export const ROTULOS_EDITOR = {
     erro: 'Erro ao salvar',
   } satisfies Record<EstadoSalvamento, string>,
 
+  /** Em conflito (409): lê a fase de novo (abrirFase), descarta a alteração local e recomeça o salvamento (ADR-002). */
+  recarregarFase: 'Recarregar a fase',
+
   // Painel de propriedades (RF-07, RF-08, PEND-007).
   propriedadesDaFase: 'Propriedades da fase',
   tipo: 'Tipo',
@@ -117,6 +120,8 @@ export interface PropsTelaConta {
  * - Testar: `salvarAgora`, `jogoTeste` e o motor do packages/player; ROTULOS_EDITOR.sairDoTeste volta à edição
  *   com o documento igual ao de antes (RF-11).
  * - Exportar baixa o envelope de `exportarFase` (RF-14).
+ * - Salvamento em `conflito`: o automático não grava mais; ROTULOS_EDITOR.recarregarFase chama `abrirFase`, `store.carregar`
+ *   e cria um salvamento novo com a revisão lida (ADR-002: duas abas não se sobrescrevem em silêncio).
  */
 export interface PropsTelaEdicao {
   faseId: string;
