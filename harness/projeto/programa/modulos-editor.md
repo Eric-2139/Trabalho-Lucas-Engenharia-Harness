@@ -41,6 +41,7 @@ Decisões: ADR-001, ADR-002, ADR-003, ADR-004, ADR-006, ADR-007, ADR-008, ADR-00
 - `salvarAgora()` grava imediatamente; é chamado pelo botão salvar, ao trocar de aba (RF-10) e antes do modo testar (RF-11).
 - Usa a `revisao` devolvida por cada `PUT` como a próxima (ADR-002). Depois de salvar uma fase publicada, a tela de edição pede `GET /fases/:id` de novo para atualizar o aviso "alterações não publicadas" (contrato editor.md).
 - **Saída do conflito** (decisão da IA com a delegação do Eric, 05/11/2026): em `conflito`, o salvamento automático não grava mais, para não repetir o 409 a cada 30 s. A Edição mostra "Recarregar a fase" (`ROTULOS_EDITOR.recarregarFase`), que chama `abrirFase`, `store.carregar` e cria um salvamento novo com a revisão lida. A alteração local é descartada: a outra aba gravou primeiro (ADR-002).
+- **Gravar ao sair e depois do novo login** (PEND-020 e PEND-021, decisões da IA com a delegação do Eric, 06/11/2026): ao desmontar com alteração pendente, a Edição chama `salvarAgora()` antes de `parar()`, e grava também no `pagehide` da janela. Depois de um 401, o app incrementa `sessaoRenovada` a cada login aceito, e a Edição chama `salvarAgora` quando o valor muda.
 - Relógio injetado (`Relogio`): os testes avançam o tempo sem esperar.
 
 ## 4. Componentes

@@ -2,7 +2,9 @@
   "id": "PEND-021",
   "tipo": "defeito_codigo",
   "agente_origem": "codificacao",
-  "req_ids": ["RF-10"],
+  "req_ids": [
+    "RF-10"
+  ],
   "chamado_id": null,
   "pergunta": "Ao sair da Edição (link 'Minhas fases' ou 'Conta' na navegação, botão voltar do navegador, outra fase), a TelaEdicao desmonta e chama só `salvamento.parar()`, que cancela o agendamento: a alteração ainda pendente (até 30 s) é descartada sem ser gravada. A Edição deve gravar antes de fechar?",
   "opcoes": [
@@ -13,5 +15,9 @@
   ],
   "contexto": "apps/editor/src/telas/TelaEdicao.tsx: o efeito `useEffect(() => { ...; return () => salvamento.parar(); }, [aberta])` e apps/editor/src/salvamento.ts: `parar: cancelar` (só cancela o temporizador). Ficou visível ao ligar as rotas do RF-01 em apps/editor/src/main.tsx: a navegação deixa sair da Edição a qualquer momento. Além disso, a prop `aoSair` de PropsTelaEdicao não é usada pela TelaEdicao (não há controle de voltar dentro da Edição); a navegação do app cobre a volta.",
   "impacto": "Perda silenciosa de até 30 s de edição ao navegar para fora da fase. Não há teste cobrindo a desmontagem, então a suíte segue verde. Mudar a TelaEdicao está no escopo de arquivos do agente 4, mas muda o comportamento de um componente já testado e não estava no pedido do RF-01; fica para decisão.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Opção (a): ao desmontar com alteração pendente, a TelaEdicao chama `salvarAgora()` (sem esperar) antes de `parar()`, e grava também no `pagehide` da janela. O agente 3 cobre com teste de desmontagem e o agente 4 implementa.",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T04:55:00.000Z"
 }

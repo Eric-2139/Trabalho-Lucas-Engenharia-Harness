@@ -120,6 +120,8 @@ export interface PropsTelaConta {
  * - Testar: `salvarAgora`, `jogoTeste` e o motor do packages/player; ROTULOS_EDITOR.sairDoTeste volta à edição
  *   com o documento igual ao de antes (RF-11).
  * - Exportar baixa o envelope de `exportarFase` (RF-14).
+ * - Ao desmontar (sair da rota) com alteração pendente, chama `salvarAgora` antes de `parar` (PEND-021); o app também grava
+ *   no `pagehide` da janela.
  * - Salvamento em `conflito`: o automático não grava mais; ROTULOS_EDITOR.recarregarFase chama `abrirFase`, `store.carregar`
  *   e cria um salvamento novo com a revisão lida (ADR-002: duas abas não se sobrescrevem em silêncio).
  */
@@ -134,4 +136,9 @@ export interface PropsTelaEdicao {
   verificadorTeste?: Verificador;
   /** Voltar a Minhas fases. */
   aoSair: () => void;
+  /**
+   * PEND-020: contador que o app incrementa a cada login aceito depois de um 401 (`aoNaoAutenticado`). Quando o valor muda,
+   * a Edição chama `salvarAgora`, e a alteração guardada em memória é gravada sem outra ação do criador.
+   */
+  sessaoRenovada?: number;
 }

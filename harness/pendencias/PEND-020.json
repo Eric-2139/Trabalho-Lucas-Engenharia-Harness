@@ -2,7 +2,10 @@
   "id": "PEND-020",
   "tipo": "arquitetura",
   "agente_origem": "codificacao",
-  "req_ids": ["RF-01", "RF-10"],
+  "req_ids": [
+    "RF-01",
+    "RF-10"
+  ],
   "chamado_id": null,
   "pergunta": "Depois do login por cima da Edição (401 durante o uso), quem chama `salvarAgora`? O main.tsx não tem acesso ao salvamento, e PropsTelaEdicao (apps/editor/contrato/telas.ts, fora do escopo de escrita do agente 4) não tem como avisar a Edição de que a sessão voltou.",
   "opcoes": [
@@ -13,5 +16,9 @@
   ],
   "contexto": "modulos-editor.md §5: 'o login aparece por cima da tela sem recarregar, o salvamento fica em erro com a alteração guardada na memória e, depois de entrar, salvarAgora grava.' Implementado no RF-01 (apps/editor/src/main.tsx): o login aparece por cima, a TelaEdicao continua montada (inert) e o store e o salvamento não são perdidos. Não há chamada automática de salvarAgora após aoEntrar, porque a TelaEdicao não expõe o salvamento e o contrato não tem sinal de sessão renovada.",
   "impacto": "Com (a), uma alteração feita antes do 401 só é gravada se o criador clicar em Salvar ou alterar algo de novo; se ele sair da Edição antes disso, a alteração se perde (ver PEND-021). Não bloqueia o RF-01: a suíte está verde e o fluxo de login funciona.",
-  "status": "aberta"
+  "status": "respondida",
+  "resposta": "Opção (b): PropsTelaEdicao ganha `sessaoRenovada?: number`; o app o incrementa a cada login aceito depois de um 401 e a Edição chama `salvarAgora` quando ele muda. O agente 3 cobre com teste e o agente 4 implementa (TelaEdicao e main.tsx).",
+  "respondida_por": "Claude (sessão principal), com decisão delegada pelo Eric",
+  "registrada_por": "Claude (sessão principal)",
+  "respondida_em": "2026-11-06T04:55:00.000Z"
 }
