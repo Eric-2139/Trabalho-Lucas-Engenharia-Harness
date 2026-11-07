@@ -10,7 +10,7 @@
  * - "Sair" e "Excluir conta" voltam ao login.
  * A Api fica em `/api` no mesmo site (ADR-017): um único cliente para o app.
  */
-import { tema } from '@math-scape/player';
+import { estiloTema, tema } from '@math-scape/player';
 import { type MouseEvent, type ReactNode, useEffect, useId, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Relogio } from '../contrato/index.ts';
@@ -123,14 +123,11 @@ function LoginPorCima({ children }: { children: ReactNode }) {
 
 // ---- Tema comum (ADR-014, RNF-07) ----
 
-const { cores, fonte, foco } = tema;
-const estiloGlobal = `
-body { margin: 0; padding: 1rem; background: ${cores.fundo}; color: ${cores.texto};
-  font-family: ${fonte.familia}; font-size: ${fonte.tamanhoBase}; }
-a { color: ${cores.primaria}; }
-[role="alert"] { color: ${cores.erro}; }
-:focus-visible { outline: ${foco.largura} ${foco.estilo} ${cores.foco}; outline-offset: 2px; }
-header nav ul { display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0 0 1rem; align-items: center; }
+const { cores } = tema;
+const estiloGlobal = `${estiloTema}
+header nav { margin-bottom: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: ${cores.superficie}; }
+header nav ul { display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0; align-items: center; }
+header nav li:last-child { margin-left: auto; }
 /* Edição e modo testar (LAC-046): ocupam a altura que sobra da janela (100dvh menos o padding do body) sem rolar. */
 #raiz > div:has(> main.edicao), #raiz > div:has(> main.testar) {
   display: flex; flex-direction: column; height: calc(100dvh - 2rem); }

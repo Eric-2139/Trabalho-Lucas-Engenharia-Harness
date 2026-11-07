@@ -6,5 +6,5 @@ export * from '../contrato/index.ts';
 export { criarPartida } from './motor.ts';
 export { calcularPalco, paraPixels, precisaAvisoResolucao } from './palco.ts';
 export { RenderizadorParede } from './RenderizadorParede.tsx';
-export { razaoContraste, tema } from './tema.ts';
+export { estiloTema, razaoContraste, tema } from './tema.ts';
 export { criarVerificadorHttp } from './verificador-http.ts';
