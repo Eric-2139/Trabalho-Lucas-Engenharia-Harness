@@ -10,6 +10,7 @@ Trabalho de Engenharia de Software feito em cascata, com IA em todas as fases. O
 | Quem implanta e opera | [Implantação e operação](docs/operacao/implantacao.md) · [Plano de manutenção](docs/operacao/plano-manutencao.md) |
 | Quem desenvolve | Este README · [`CLAUDE.md`](CLAUDE.md) · [arquitetura](harness/projeto/arquitetura.md) · [projeto do programa](harness/projeto/programa/README.md) |
 | Quem testa | [Plano de testes](docs/testes/plano-de-testes.md) · [Relatório do sistema](docs/testes/relatorio-teste-sistema.md) · [Aceitação](docs/aceitacao/checklist-aceitacao.md) |
+| Quem avalia o processo | [Avaliação do piloto](docs/avaliacao/avaliacao-piloto.md) · [Norma do processo com IA](docs/avaliacao/norma-processo-ia.md) |
 
 ## Estrutura
 
